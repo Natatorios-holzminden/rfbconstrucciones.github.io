@@ -1,0 +1,100 @@
+.icon-strip {
+    padding: 80px 20px;
+    background-color: var(--bg-light);
+    text-align: center;
+}
+
+.icon-strip h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #111;
+    line-height: 1.1;
+}
+
+.icon-strip h2 br {
+    display: block;
+}
+
+.icon-strip-subtitle {
+    display: none;
+    /* Hide subtitle to match target look if necessary, or keep and adjust */
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+}
+
+.icon-strip-subtitle strong {
+    color: #111;
+    font-weight: 700;
+}
+
+.icon-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    text-align: center;
+}
+
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    /* Simply icon container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.icon-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+    .icon-strip {
+        padding: 40px 10px;
+    }
+
+    .icon-strip h2 {
+        display: none;
+        /* Hide title to match target look */
+    }
+
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px 10px;
+    }
+
+    .icon-item {
+        width: 100%;
+    }
+
+    .icon-circle {
+        margin-bottom: 8px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .icon-label {
+        font-size: 10px;
+        font-weight: 600;
+        white-space: normal;
+    }
+}

@@ -1,0 +1,81 @@
+.listing-section {
+    padding: 20px 0 80px;
+    background-color: #f9f9f9;
+}
+
+.filters-container {
+    margin-bottom: 40px;
+    display: flex;
+    /* Flex container */
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    /* Space between the two big columns */
+    width: 100%;
+}
+
+/* Allow columns to share space equally or naturally */
+.filter-row {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    /* Don't force equal width, but allow shrinking */
+}
+
+.filter-group-title {
+    font-size: 15px;
+    /* Slightly larger */
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1a1a1a;
+}
+
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    /* Tighter gap between pills */
+}
+
+.filter-pill {
+    padding: 6px 16px;
+    /* Slightly smaller padding */
+    background-color: #e5e5e5;
+    /* Darker grey background */
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 600;
+    /* Bolder text */
+    color: #777;
+    /* Grey text */
+    transition: all 0.2s;
+    border: none;
+}
+
+.filter-pill:hover {
+    background-color: #d5d5d5;
+    color: #333;
+}
+
+.filter-pill.active {
+    background-color: #333;
+    color: white;
+}
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 32px;
+}
+
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .listings-grid {
+        grid-template-columns: 1fr;
+    }
+}

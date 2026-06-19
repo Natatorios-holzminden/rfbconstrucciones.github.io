@@ -1,0 +1,249 @@
+.contact-section {
+    padding: 10px 20px;
+    background-color: #fafafa;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center;
+    position: relative;
+    gap: 0;
+    min-height: 100vh;
+    /* Ensure it takes full height but content is centered */
+}
+
+.contact-intro {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 10px;
+}
+
+.contact-intro h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+}
+
+.contact-intro p {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #666;
+    padding: 0 10px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 550px;
+    /* Wider as requested */
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 15px 24px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+}
+
+.homy-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Tighter gap */
+}
+
+.form-group {
+    width: 100%;
+}
+
+.homy-form input,
+.homy-form select,
+.homy-form textarea {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 50px;
+    /* Pill shape */
+    background-color: #ffffff;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.homy-form textarea {
+    border-radius: 20px;
+    /* Textarea cannot be fully pill/circle */
+}
+
+.homy-form input::placeholder,
+.homy-form select::placeholder,
+.homy-form textarea::placeholder {
+    color: #999;
+}
+
+.homy-form input:hover,
+.homy-form select:hover,
+.homy-form textarea:hover {
+    border-color: #ccc;
+}
+
+.homy-form input:focus,
+.homy-form select:focus,
+.homy-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+}
+
+.homy-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    color: #666;
+}
+
+.homy-form textarea {
+    resize: none;
+    min-height: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.text-small-legal {
+    font-size: 9px;
+    color: #999;
+    line-height: 1.2;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.text-small-legal a {
+    text-decoration: underline;
+    color: inherit;
+}
+
+.form-privacy {
+    margin: 4px 0 10px 0;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 10px;
+    color: #666;
+    line-height: 1.2;
+}
+
+.checkbox-container input {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    margin: 0;
+    accent-color: var(--primary-green);
+    cursor: pointer;
+}
+
+.privacy-text a {
+    color: #333;
+    text-decoration: underline;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: #00C389;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 4px;
+}
+
+.btn-submit:hover {
+    background-color: #00a876;
+}
+
+/* Floating Chat Button */
+.floating-chat-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    background-color: #0F4C3A;
+    /* Dark green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.form-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    gap: 12px;
+}
+
+.form-success-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #00C389;
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-success-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.form-success-text {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .contact-section {
+        padding: 40px 16px;
+    }
+
+    .form-container {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .floating-chat-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 18px;
+    }
+}

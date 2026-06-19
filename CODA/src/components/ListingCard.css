@@ -1,0 +1,167 @@
+/* ListingCard.css additions */
+
+.listing-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    /* Make sure the link takes up the block */
+}
+
+/* Original contents below */
+.listing-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* Soft premium shadow */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f0f0f0;
+}
+
+.listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.card-image-container {
+    position: relative;
+    height: 240px;
+    width: 100%;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-badge-top {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    z-index: 10;
+    /* Ensure on top */
+    transition: all 0.2s ease;
+}
+
+.card-badge-top.interactive:hover {
+    background: white;
+    transform: scale(1.05);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--primary-green, #00d084);
+    /* Highlight color */
+}
+
+.card-badge-top.interactive:active {
+    transform: scale(0.95);
+}
+
+.card-badge-bottom {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.supplies-tag {
+    color: var(--primary-green);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-main);
+}
+
+.card-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+}
+
+.price-unit {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.card-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.card-footer {
+    margin-top: auto;
+    /* Push to bottom */
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.availability-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.availability-date {
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.btn-book {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 8px 24px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.btn-book:hover {
+    background-color: var(--primary-green-hover);
+}

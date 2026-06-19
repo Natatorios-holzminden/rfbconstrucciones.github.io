@@ -1,0 +1,205 @@
+.interactive-gallery {
+    margin-bottom: 40px;
+    margin-top: 24px;
+}
+
+.gallery-grid-slider {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr 1fr;
+    gap: 16px;
+    height: 500px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-slot {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #f5f5f5;
+    /* Placeholder bg */
+}
+
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.inset-0 {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.z-0 {
+    z-index: 0;
+}
+
+.z-10 {
+    z-index: 10;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* --- SLOW & SMOOTH ANIMATIONS --- */
+/* Using transform translate creates the 'moving' illusion */
+
+/* Moving Forward (Next) > Content flows Left */
+.enter-next {
+    animation: slideInRight 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.exit-next {
+    animation: slideOutLeft 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Moving Backward (Prev) > Content flows Right */
+.enter-prev {
+    animation: slideInLeft 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.exit-prev {
+    animation: slideOutRight 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slideInRight {
+    0% {
+        transform: translateX(100%);
+        filter: brightness(1.1);
+    }
+
+    100% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+}
+
+@keyframes slideOutLeft {
+    0% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+
+    100% {
+        transform: translateX(-100%);
+        filter: brightness(0.9);
+    }
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+        filter: brightness(0.9);
+    }
+
+    100% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+}
+
+@keyframes slideOutRight {
+    0% {
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+
+    100% {
+        transform: translateX(100%);
+        filter: brightness(1.1);
+    }
+}
+
+
+/* Layout */
+.gallery-col {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.mid-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mid-item {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.relative {
+    position: relative;
+}
+
+/* Nav Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    width: 56px;
+    /* Slightly larger */
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    color: #111;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn.prev {
+    left: 24px;
+}
+
+.nav-btn.next {
+    right: 24px;
+}
+
+
+
+/* Responsive */
+@media (max-width: 900px) {
+    .gallery-grid-slider {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .gallery-col {
+        height: 350px;
+    }
+
+    .gallery-col.mid-col,
+    .gallery-col.big-col:last-child {
+        display: none;
+    }
+}
