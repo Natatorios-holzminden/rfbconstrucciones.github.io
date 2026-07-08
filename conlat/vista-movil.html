@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista móvil — Conlat</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    min-height:100vh;
+    background:radial-gradient(circle at 50% 0%, #2c3a4f 0%, #1a2332 60%, #12161f 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;padding:40px 16px;
+    font-family:'Jost',system-ui,sans-serif;
+  }
+  .caption{
+    color:rgba(255,255,255,.75);font-size:13px;letter-spacing:.18em;
+    text-transform:uppercase;text-align:center;
+  }
+  .caption strong{color:#C49A55;font-weight:600}
+  .phone{
+    position:relative;
+    width:392px;height:812px;
+    background:#0c0e13;
+    border-radius:54px;
+    padding:13px;
+    box-shadow:0 40px 90px rgba(0,0,0,.55), inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  .screen{
+    position:relative;width:100%;height:100%;
+    border-radius:42px;overflow:hidden;background:#F7F4EF;
+  }
+  .notch{
+    position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:150px;height:30px;background:#0c0e13;
+    border-bottom-left-radius:18px;border-bottom-right-radius:18px;z-index:10;
+  }
+  iframe{width:100%;height:100%;border:0;display:block}
+  .hint{color:rgba(255,255,255,.45);font-size:12px;text-align:center;max-width:360px;line-height:1.6}
+  @media (max-width:460px){
+    .phone{transform:scale(.86);margin:-56px 0}
+  }
+</style>
+</head>
+<body>
+  <div class="caption">Conlat · vista <strong>móvil</strong></div>
+  <div class="phone">
+    <div class="screen">
+      <div class="notch"></div>
+      <iframe src="index.html" title="Vista móvil Conlat"></iframe>
+    </div>
+  </div>
+  <p class="hint">Deslizá dentro del teléfono para recorrer la página como se ve en un celular real.</p>
+</body>
+</html>
