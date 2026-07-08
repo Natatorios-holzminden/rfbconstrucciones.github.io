@@ -1,482 +1,1056 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Construcciones en CABA y GBA | RFB Construcciones</title>
-  <meta name="description" content="Empresa constructora especializada en obras de hormigón, piletas y construcción general en CABA y GBA. Más de 20 años de trayectoria." />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --primary: #e63020;
-      --dark: #1a1a2e;
-      --gray: #6b7280;
-      --light: #f9fafb;
-      --white: #ffffff;
-      --shadow: 0 4px 24px rgba(0,0,0,0.10);
-    }
-    body { font-family: 'Nunito', sans-serif; color: var(--dark); background: var(--white); }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; display: block; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Gestión de coliving para propietarios | Maximizá el ingreso de tu inmueble</title>
+<meta name="description" content="Convierto tu departamento en coliving profesional con comunidad curada. Cobro solo el 20% de lo recaudado: solo gano si vos ganás. Arquitecto y constructor. Evaluación gratuita.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F7F4EF;
+  --cream-dark: #EDE7DC;
+  --navy: #1A2332;
+  --navy-mid: #2C3A4F;
+  --ink: #1C1C1C;
+  --muted: #5E6570;
+  --gold: #A67C3A;
+  --gold-light: #C49A55;
+  --white: #FFFFFF;
+  --rule: rgba(26,35,50,0.12);
+  --green: #25D366;
+  --ok: #1F6B4A;
+}
 
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: var(--white); box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 70px;
-    }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--dark); line-height: 1.1; }
-    .nav-logo span { display: block; font-size: 0.65rem; font-family: 'Nunito', sans-serif; font-weight: 600; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
-    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; font-weight: 600; }
-    .nav-links a:hover { color: var(--primary); }
-    .nav-phone { font-size: 0.9rem; color: var(--gray); }
-    .nav-phone a { font-weight: 700; color: var(--dark); }
-    .nav-cta {
-      background: var(--primary); color: var(--white);
-      padding: 10px 22px; border-radius: 4px;
-      font-weight: 700; font-size: 0.88rem; letter-spacing: 0.5px;
-      transition: background 0.2s;
-    }
-    .nav-cta:hover { background: #c0251a; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.75;
+  font-weight: 300;
+  overflow-x: hidden;
+}
 
-    /* HERO */
-    .hero {
-      min-height: 100vh; padding-top: 70px;
-      display: flex; align-items: center;
-      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-        url('https://fa-arq.github.io/assets/img/external/video_background.jpg?v=2') center/cover no-repeat;
-    }
-    .hero-inner {
-      max-width: 1200px; margin: 0 auto; padding: 60px 40px;
-      display: flex; gap: 60px; align-items: center; width: 100%;
-    }
-    .hero-text { flex: 1; color: var(--white); }
-    .hero-eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--primary); margin-bottom: 18px; }
-    .hero-title { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1.15; margin-bottom: 20px; }
-    .hero-title em { color: var(--primary); font-style: italic; }
-    .hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.82); margin-bottom: 32px; line-height: 1.7; }
-    .hero-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
-    .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: var(--white); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; }
-    .btn-primary {
-      display: inline-block; background: var(--primary); color: var(--white);
-      padding: 16px 36px; border-radius: 4px; font-weight: 800; font-size: 1rem;
-      letter-spacing: 0.5px; transition: background 0.2s; text-transform: uppercase;
-    }
-    .btn-primary:hover { background: #c0251a; }
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 68px;
+  background: rgba(247,244,239,0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+}
+.logo { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.logo-rule { display: block; width: 100%; height: 0.5px; background: var(--navy); opacity: 0.45; }
+.logo-wordmark { display: flex; align-items: center; gap: 8px; }
+.logo-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600; font-size: 19px; letter-spacing: 0.28em;
+  color: var(--navy); text-transform: uppercase;
+}
+.logo-diamond { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
+.logo-sub { font-size: 9px; letter-spacing: 0.22em; color: var(--muted); text-transform: uppercase; }
+nav ul { display: flex; gap: 24px; list-style: none; }
+nav ul a {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--navy-mid); text-decoration: none;
+}
+nav ul a:hover { color: var(--gold); }
+.nav-cta {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 10px 22px; background: var(--navy); color: var(--white); text-decoration: none;
+}
+.nav-cta:hover { background: var(--gold); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px;
+}
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--navy); transition: .25s; }
+.mobile-menu {
+  position: fixed; top: 68px; left: 0; right: 0; background: var(--cream);
+  border-bottom: 1px solid var(--rule); padding: 24px; display: none;
+  flex-direction: column; gap: 18px; z-index: 999;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; color: var(--navy-mid);
+}
 
-    /* FORM CARD */
-    .hero-form {
-      background: var(--white); border-radius: 10px; padding: 36px 32px;
-      width: 340px; flex-shrink: 0; box-shadow: 0 8px 40px rgba(0,0,0,0.25);
-    }
-    .hero-form h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
-    .hero-form p { font-size: 0.88rem; color: var(--gray); margin-bottom: 22px; }
-    .form-group { margin-bottom: 14px; }
-    .form-group input, .form-group select {
-      width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb;
-      border-radius: 6px; font-size: 0.92rem; font-family: 'Nunito', sans-serif;
-      outline: none; transition: border 0.2s;
-    }
-    .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
-    .btn-form {
-      width: 100%; background: var(--primary); color: var(--white);
-      border: none; padding: 14px; border-radius: 6px;
-      font-weight: 800; font-size: 0.95rem; cursor: pointer;
-      font-family: 'Nunito', sans-serif; letter-spacing: 0.5px;
-      text-transform: uppercase; transition: background 0.2s; margin-top: 6px;
-    }
-    .btn-form:hover { background: #c0251a; }
-    .form-disclaimer { font-size: 0.78rem; color: var(--gray); text-align: center; margin-top: 10px; }
-    .form-success { display: none; text-align: center; padding: 20px 0; }
-    .form-success h3 { color: #16a34a; font-size: 1.3rem; margin-bottom: 8px; }
-    .form-success a { display: inline-block; margin-top: 14px; background: #25d366; color: white; padding: 12px 24px; border-radius: 6px; font-weight: 700; }
+/* TOP BAR */
+.top-bar {
+  margin-top: 68px; background: var(--navy); color: var(--white);
+  text-align: center; padding: 11px 20px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+}
+.top-bar strong { color: var(--gold-light); }
 
-    /* SECTIONS */
-    section { padding: 80px 40px; }
-    .section-inner { max-width: 1200px; margin: 0 auto; }
-    .section-tag { font-size: 0.78rem; font-weight: 700; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px; }
+/* HERO */
+#hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 86vh; }
+.hero-img { position: relative; overflow: hidden; min-height: 320px; }
+.hero-img img { width: 100%; height: 100%; object-fit: cover; }
+.hero-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(26,35,50,0.35) 0%, transparent 70%);
+}
+.hero-badge {
+  position: absolute; bottom: 28px; left: 28px;
+  background: var(--gold); color: var(--white);
+  padding: 10px 18px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.hero-content {
+  background: var(--white); display: flex; flex-direction: column; justify-content: center;
+  padding: 64px 52px; border-left: 1px solid var(--rule);
+}
+.eyebrow {
+  font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.eyebrow::before { content: ''; width: 26px; height: 1px; background: var(--gold); }
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4.2vw, 54px); font-weight: 300;
+  color: var(--navy); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 18px;
+}
+h1 em { color: var(--gold); font-style: italic; }
+.hero-sub {
+  font-size: 16px; color: var(--muted); line-height: 1.8; font-weight: 300;
+  margin-bottom: 16px; max-width: 460px;
+}
+.hero-note {
+  font-size: 14px; color: var(--navy-mid); background: var(--cream);
+  border-left: 3px solid var(--gold); padding: 12px 16px; margin-bottom: 28px; max-width: 460px;
+}
+.hero-actions { display: flex; flex-direction: column; gap: 12px; max-width: 360px; }
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--navy); color: var(--white); padding: 16px 28px;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; transition: .2s;
+}
+.btn-primary:hover { background: var(--gold); transform: translateY(-1px); }
+.btn-wa {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--green); color: var(--white); padding: 15px 28px;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.btn-wa:hover { background: #20b959; }
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--rule); color: var(--navy-mid); padding: 14px 28px;
+  text-decoration: none; font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* COMO FUNCIONA */
-    .steps { background: var(--light); }
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .step-card { background: var(--white); border-radius: 10px; padding: 32px 28px; box-shadow: var(--shadow); }
-    .step-num { width: 44px; height: 44px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 18px; }
-    .step-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; }
-    .step-card p { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
+/* CREDIBILITY */
+.cred-bar {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--cream-dark); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.cred-item { padding: 26px 24px; text-align: center; border-right: 1px solid var(--rule); }
+.cred-item:last-child { border-right: none; }
+.cred-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;
+  color: var(--navy); margin-bottom: 4px;
+}
+.cred-label { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
 
-    /* SERVICIOS */
-    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
-    .service-card { border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
-    .service-img { height: 220px; overflow: hidden; }
-    .service-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-    .service-card:hover .service-img img { transform: scale(1.05); }
-    .service-body { padding: 24px; }
-    .service-body h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
-    .service-body p { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
-    .service-features { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
-    .service-features span { font-size: 0.85rem; color: var(--gray); }
-    .service-features span::before { content: "✓ "; color: var(--primary); font-weight: 700; }
+/* SECTIONS */
+.wrap { max-width: 1100px; margin: 0 auto; }
+.section { padding: 80px 48px; }
+.section-header { display: flex; gap: 40px; margin-bottom: 48px; align-items: flex-start; }
+.section-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 13px;
+  color: var(--gold); letter-spacing: 0.2em; margin-top: 6px;
+}
+.section-tag {
+  font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px; font-weight: 500;
+}
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 3.4vw, 44px); font-weight: 300;
+  color: var(--navy); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 12px;
+}
+h2 em { color: var(--gold); font-style: italic; }
+.section-desc { font-size: 16px; color: var(--muted); max-width: 520px; font-weight: 300; }
 
-    /* ABOUT */
-    .about { background: var(--light); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-    .about-text .check-list { margin: 20px 0 28px; display: flex; flex-direction: column; gap: 10px; }
-    .about-text .check-list li { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-    .about-text .check-list li::before { content: "✅"; }
-    .about-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .about-imgs img { border-radius: 10px; height: 200px; object-fit: cover; width: 100%; }
-    .stats-row { display: flex; gap: 32px; margin-top: 20px; }
-    .stat { text-align: center; }
-    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--primary); }
-    .stat-label { font-size: 0.82rem; color: var(--gray); }
+/* COMPARE */
+#compare { background: var(--white); }
+.compare-table {
+  width: 100%; border-collapse: collapse; border: 1px solid var(--rule);
+  overflow: hidden;
+}
+.compare-table th, .compare-table td {
+  padding: 18px 20px; text-align: left; border-bottom: 1px solid var(--rule);
+  font-size: 14px; vertical-align: top;
+}
+.compare-table th {
+  background: var(--navy); color: var(--white); font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px;
+}
+.compare-table th.highlight { background: var(--gold); }
+.compare-table td.highlight {
+  background: rgba(166,124,58,0.06); font-weight: 400; color: var(--navy);
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-note {
+  margin-top: 18px; font-size: 13px; color: var(--muted);
+  background: var(--cream); padding: 14px 18px; border-left: 3px solid var(--gold);
+}
+.placeholder {
+  display: inline-block; border-bottom: 1.5px dashed var(--gold);
+  color: var(--navy); font-weight: 500; padding: 0 2px;
+}
 
-    /* FAQ */
-    .faq-list { display: flex; flex-direction: column; gap: 12px; }
-    .faq-item { border: 1.5px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
-    .faq-q { padding: 18px 20px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
-    .faq-q:hover { background: var(--light); }
-    .faq-a { display: none; padding: 0 20px 18px; font-size: 0.9rem; color: var(--gray); line-height: 1.7; }
-    .faq-item.open .faq-a { display: block; }
-    .faq-item.open .faq-q { color: var(--primary); }
+/* BENEFITS */
+#benefits { background: var(--cream); }
+.benefits-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+}
+.benefit {
+  background: var(--cream); padding: 32px 28px; transition: background .2s;
+}
+.benefit:hover { background: var(--white); }
+.benefit-icon { font-size: 24px; margin-bottom: 14px; display: block; }
+.benefit h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  font-weight: 600; color: var(--navy); margin-bottom: 8px; line-height: 1.25;
+}
+.benefit p { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
-    /* PROYECTOS */
-    .projects { background: var(--light); }
-    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
-    .project-card { background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
-    .project-img { height: 200px; overflow: hidden; }
-    .project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-    .project-card:hover .project-img img { transform: scale(1.05); }
-    .project-body { padding: 20px; }
-    .project-meta { font-size: 0.78rem; color: var(--gray); margin-bottom: 8px; }
-    .project-body h3 { font-size: 0.95rem; font-weight: 800; line-height: 1.4; }
+/* HOW */
+#how { background: var(--navy); color: var(--white); }
+#how h2 { color: var(--white); }
+#how .section-tag { color: rgba(255,255,255,0.5); }
+#how .section-desc { color: rgba(255,255,255,0.55); }
+#how .section-num { color: var(--gold-light); }
+.steps {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+}
+.step { background: var(--navy); padding: 32px 24px; }
+.step-n {
+  font-family: 'Cormorant Garamond', serif; font-size: 28px;
+  color: var(--gold-light); margin-bottom: 14px; font-weight: 300;
+}
+.step h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+  font-weight: 600; margin-bottom: 10px; color: var(--white);
+}
+.step p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; }
 
-    /* CTA FINAL */
-    .cta-final {
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-        url('https://fa-arq.github.io/assets/img/external/about_1.jpg?v=2') center/cover;
-      text-align: center; color: var(--white);
-    }
-    .cta-final .section-tag { color: rgba(255,255,255,0.6); }
-    .cta-final .section-title { color: var(--white); margin-bottom: 20px; }
-    .cta-final p { color: rgba(255,255,255,0.8); margin-bottom: 32px; font-size: 1.05rem; }
+/* HUMAN */
+#human { background: var(--white); }
+.human-grid {
+  display: grid; grid-template-columns: 360px 1fr; gap: 56px; align-items: center;
+}
+.human-photo { position: relative; max-width: 360px; }
+.human-video {
+  width: 100%; aspect-ratio: 9 / 16; background: var(--navy);
+  overflow: hidden; position: relative;
+}
+.human-video-btn {
+  display: block; width: 100%; height: 100%; border: 0; padding: 0;
+  cursor: pointer; position: relative; background: var(--navy);
+}
+.human-video-btn img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.human-video-play {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(26,35,50,0.22); transition: background .2s;
+}
+.human-video-btn:hover .human-video-play { background: rgba(26,35,50,0.38); }
+.human-video iframe {
+  width: 100%; height: 100%; border: 0; display: none;
+}
+.human-video.is-playing .human-video-btn { display: none; }
+.human-video.is-playing iframe { display: block; }
+.human-photo-badge {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(26,35,50,0.88), transparent);
+  padding: 48px 22px 18px;
+}
+.human-photo-badge strong {
+  display: block; font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; color: var(--white); font-weight: 600;
+}
+.human-photo-badge span {
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+}
+.human-copy .eyebrow { margin-bottom: 16px; }
+.human-copy p {
+  font-size: 16px; color: var(--muted); line-height: 1.85; margin-bottom: 16px;
+}
+.human-firms {
+  display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 8px;
+}
+.chip {
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  border: 1px solid var(--rule); padding: 8px 12px; color: var(--navy-mid);
+  background: var(--cream);
+}
+.sig {
+  margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--rule);
+}
+.sig strong {
+  display: block; font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; color: var(--navy);
+}
+.sig span { font-size: 13px; color: var(--muted); }
+.sig em {
+  display: block; margin-top: 6px; font-style: normal;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); font-weight: 600;
+}
 
-    /* FOOTER */
-    footer { background: var(--dark); color: rgba(255,255,255,0.7); padding: 60px 40px 30px; }
-    .footer-inner { max-width: 1200px; margin: 0 auto; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-    .footer-brand .nav-logo { color: var(--white); margin-bottom: 14px; }
-    .footer-brand p { font-size: 0.88rem; line-height: 1.7; }
-    footer h4 { color: var(--white); font-size: 0.95rem; margin-bottom: 16px; font-weight: 800; }
-    footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    footer ul li a { font-size: 0.88rem; transition: color 0.2s; }
-    footer ul li a:hover { color: var(--primary); }
-    .footer-contact p { font-size: 0.88rem; margin-bottom: 8px; }
-    .footer-contact a { color: var(--white); font-weight: 700; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; text-align: center; font-size: 0.82rem; }
+/* AGENTS */
+#agents { background: var(--cream-dark); }
+.agents-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--rule); border: 1px solid var(--rule);
+}
+.agent-card { background: var(--cream-dark); padding: 36px 30px; }
+.agent-card:hover { background: var(--white); }
+.agent-card h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  color: var(--navy); margin: 10px 0 10px; font-weight: 600;
+}
+.agent-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.agent-icon { font-size: 24px; }
 
-    @media (max-width: 900px) {
-      .hero-inner { flex-direction: column; }
-      .hero-form { width: 100%; }
-      .steps-grid, .services-grid, .projects-grid { grid-template-columns: 1fr; }
-      .about-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr; }
-      .nav-links, .nav-phone { display: none; }
-    }
-  </style>
+/* REQUIREMENTS */
+#requirements { background: var(--white); }
+.req-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--rule); border: 1px solid var(--rule);
+}
+.req {
+  background: var(--white); padding: 32px 26px;
+}
+.req:hover { background: var(--cream); }
+.req-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+.req h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 19px;
+  color: var(--navy); margin-bottom: 8px; font-weight: 600;
+}
+.req p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.tag {
+  display: inline-block; margin-top: 12px; background: var(--navy); color: var(--white);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 4px 10px;
+}
+
+/* FAQ */
+#faq { background: var(--cream); }
+.faq-list { max-width: 820px; }
+.faq-item { border-bottom: 1px solid var(--rule); }
+.faq-q {
+  width: 100%; text-align: left; background: none; border: none;
+  padding: 22px 36px 22px 0; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 21px;
+  color: var(--navy); position: relative; line-height: 1.3;
+}
+.faq-q::after {
+  content: '+'; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  font-family: 'Jost', sans-serif; color: var(--gold); font-size: 22px; font-weight: 300;
+}
+.faq-q.active::after { content: '−'; }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.faq-a.open { max-height: 420px; padding-bottom: 22px; }
+.faq-a p { font-size: 15px; color: var(--muted); line-height: 1.8; padding-right: 24px; }
+
+/* CTA */
+#cta { background: var(--white); border-top: 1px solid var(--rule); }
+.cta-grid {
+  display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: start;
+}
+.cta-copy p { color: var(--muted); margin-bottom: 22px; max-width: 440px; }
+.micro {
+  font-size: 13px; color: var(--navy-mid); background: var(--cream);
+  border-left: 3px solid var(--ok); padding: 14px 16px; margin: 18px 0 26px;
+}
+.form-box {
+  background: var(--cream); border: 1px solid var(--rule); padding: 36px;
+}
+.form-box h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 26px;
+  color: var(--navy); font-weight: 400; margin-bottom: 6px;
+}
+.form-box .form-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--navy-mid); font-weight: 600; margin-bottom: 7px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--rule);
+  background: var(--white); font-family: 'Jost', sans-serif;
+  font-size: 15px; color: var(--ink); outline: none; border-radius: 0;
+  -webkit-appearance: none;
+}
+.form-group textarea { min-height: 90px; resize: vertical; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--gold);
+}
+.form-submit {
+  width: 100%; margin-top: 8px; padding: 16px; border: none;
+  background: var(--navy); color: var(--white); cursor: pointer;
+  font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.form-submit:hover { background: var(--gold); }
+.field-error { border-color: #c0392b !important; }
+.field-hint { display: none; font-size: 11px; color: #c0392b; margin-top: 4px; }
+.field-hint.show { display: block; }
+.form-feedback { display: none; margin-top: 14px; font-size: 14px; }
+.form-feedback.success, .form-feedback.error { display: block; }
+.form-feedback.success { color: var(--ok); }
+.form-feedback.error { color: #c0392b; }
+
+/* FOOTER */
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 36px 48px; text-align: center;
+}
+footer .logo-word { color: var(--white); }
+footer .logo-sub { color: rgba(255,255,255,0.5); }
+footer .logo-rule { background: rgba(255,255,255,0.35); }
+.footer-line { margin: 18px 0 10px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 17px; color: rgba(255,255,255,0.75); }
+.footer-copy { font-size: 12px; line-height: 1.6; }
+
+/* STICKY WA */
+.sticky-wa {
+  position: fixed; bottom: 24px; right: 24px; z-index: 1300;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--green); color: var(--white); padding: 14px 20px;
+  text-decoration: none; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(37,211,102,0.35);
+}
+.sticky-wa:hover { background: #20b959; transform: translateY(-2px); }
+
+.fade-in { opacity: 0; transform: translateY(20px); transition: .7s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+@media (max-width: 960px) {
+  nav { padding: 0 20px; }
+  nav ul, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  #hero { grid-template-columns: 1fr; }
+  .hero-img { height: 260px; min-height: 0; }
+  .hero-content { padding: 40px 24px; border-left: none; }
+  .cred-bar { grid-template-columns: 1fr; }
+  .cred-item { border-right: none; border-bottom: 1px solid var(--rule); }
+  .section { padding: 56px 24px; }
+  .section-header { flex-direction: column; gap: 8px; margin-bottom: 32px; }
+  .benefits-grid, .steps, .req-grid, .agents-grid, .cta-grid, .human-grid {
+    grid-template-columns: 1fr;
+  }
+  .human-photo { max-width: 320px; margin: 0 auto; }
+  .form-row { grid-template-columns: 1fr; }
+  .compare-table { display: block; overflow-x: auto; }
+}
+@media (max-width: 600px) {
+  h1 { font-size: 32px; }
+  h2 { font-size: 28px; }
+  .sticky-wa span { display: none; }
+  .sticky-wa { padding: 15px; border-radius: 50%; }
+  .form-box { padding: 24px 18px; }
+  .faq-q { font-size: 18px; }
+}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">RFB<br><span>Construcciones</span></a>
-  <div class="nav-links">
-    <a href="#">Inicio</a>
-    <a href="#about">Nosotros</a>
-    <a href="#services">Servicios</a>
-    <a href="#projects">Proyectos</a>
-  </div>
-  <div class="nav-phone">Hablemos: <a href="https://wa.me/541154932199">(+54) 11 5493 2199</a></div>
-  <a href="#contact-form" class="nav-cta">CONTACTO</a>
+  <a href="#hero" class="logo">
+    <span class="logo-rule"></span>
+    <div class="logo-wordmark">
+      <span class="logo-word">Conlat</span>
+      <div class="logo-diamond"></div>
+      <span class="logo-sub">Gestión · Comunidad</span>
+    </div>
+    <span class="logo-rule"></span>
+  </a>
+  <ul>
+    <li><a href="#compare">Compará</a></li>
+    <li><a href="#how">Cómo funciona</a></li>
+    <li><a href="#human">Quién soy</a></li>
+    <li><a href="#agents">Inmobiliarias</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">Evaluación gratis</a>
+  <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-eyebrow">Empresa Constructora · CABA Y GBA</div>
-      <h1 class="hero-title">Construcciones <em>por Arquitectos</em></h1>
-      <p class="hero-sub">Hormigón, piletas, obras civiles y refacciones. Planificación, ejecución y entrega. Todo resuelto por nosotros.</p>
-      <div class="hero-badges">
-        <span class="badge">+20 años de trayectoria</span>
-        <span class="badge">Garantía en todos los trabajos</span>
-        <span class="badge">CABA y GBA</span>
-      </div>
-      <a href="#contact-form" class="btn-primary">PRESUPUESTO SIN CARGO</a>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#compare" onclick="closeMenu()">Compará</a>
+  <a href="#how" onclick="closeMenu()">Cómo funciona</a>
+  <a href="#human" onclick="closeMenu()">Quién soy</a>
+  <a href="#agents" onclick="closeMenu()">Inmobiliarias</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#cta" onclick="closeMenu()">Evaluación gratis</a>
+</div>
+
+<div class="top-bar">
+  <strong>Cobro solo el 20% de lo recaudado</strong> — sin costo fijo, sin renta garantizada que no puedo cumplir, sin letra chica.
+</div>
+
+<section id="hero">
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1000&q=85&fm=webp" alt="Departamento luminoso listo para coliving profesional" width="1000" height="750" fetchpriority="high">
+    <div class="hero-img-overlay"></div>
+    <div class="hero-badge">Arquitecto · Constructor · Gestor</div>
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow">Para propietarios</div>
+    <h1>Tu propiedad.<br><em>Mi responsabilidad.</em></h1>
+    <p class="hero-sub">Maximizá el ingreso de tu inmueble sin mover un dedo. Lo convierto en coliving con comunidad curada — locales y extranjeros — y me ocupo de todo: residentes, cobros, mantenimiento y convivencia.</p>
+    <div class="hero-note">Solo gano si vos ganás. Cobro el <strong>20% de lo recaudado</strong>. Sin fee fijo. Sin que pongas un peso. Sin que me firmes un alquiler.</div>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Agendá una evaluación gratuita</a>
+      <a class="btn-wa" href="https://wa.me/54911XXXXXXXX?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad." target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="white"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.817.737 5.46 2.027 7.754L0 32l8.463-2.001A15.935 15.935 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.284 21.983c-.398-.2-2.355-1.162-2.72-1.295-.366-.133-.632-.2-.898.2-.265.4-1.03 1.295-1.263 1.562-.232.265-.465.3-.863.1-.398-.2-1.681-.62-3.202-1.976-1.183-1.055-1.982-2.358-2.213-2.757-.232-.4-.025-.615.174-.814.179-.178.398-.465.597-.697.2-.232.265-.4.398-.665.133-.265.067-.497-.033-.697-.1-.2-.898-2.166-1.23-2.963-.324-.778-.653-.672-.898-.685-.232-.012-.498-.015-.764-.015-.265 0-.697.1-1.063.498-1.495.598-2.457 2.027-2.457 3.878 0 1.85 1.363 3.638 1.562 3.89.2.252 2.678 4.088 6.49 5.731.907.392 1.615.626 2.167.801.91.29 1.737.249 2.39.15.729-.109 2.355-.962 2.688-1.891.332-.929.332-1.724.232-1.891-.099-.166-.365-.265-.763-.465z"/></svg>
+        Hablar por WhatsApp
+      </a>
     </div>
-    <div class="hero-form" id="contact-form">
-      <div id="form-fields">
-        <h3>Presupuesto sin Cargo</h3>
-        <p>Completá tus datos y te contactamos hoy.</p>
-        <div class="form-group"><input type="text" placeholder="Nombre y Apellido *" required /></div>
-        <div class="form-group"><input type="tel" placeholder="Teléfono *" required /></div>
-        <div class="form-group">
-          <select>
-            <option value="" disabled selected>¿Qué necesitás? ...</option>
-            <option>Obra de hormigón</option>
-            <option>Instalación de pileta</option>
-            <option>Construcción general</option>
-            <option>Refacción / Remodelación</option>
-            <option>Otro</option>
-          </select>
-        </div>
-        <button class="btn-form" onclick="submitForm()">SOLICITAR PRESUPUESTO</button>
-        <p class="form-disclaimer">Sin compromiso · CABA y GBA · Tus datos están seguros</p>
+  </div>
+</section>
+
+<div class="cred-bar fade-in">
+  <div class="cred-item">
+    <div class="cred-title">Arquitecto matriculado</div>
+    <div class="cred-label">F+A Arquitectos · entendimiento de obra y espacio</div>
+  </div>
+  <div class="cred-item">
+    <div class="cred-title">Constructor</div>
+    <div class="cred-label">RFB Construcciones · mantenimiento con criterio</div>
+  </div>
+  <div class="cred-item">
+    <div class="cred-title">Gestión con comunidad</div>
+    <div class="cred-label">Coliving curado · reporte mensual transparente</div>
+  </div>
+</div>
+
+<section id="compare" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div>
+        <div class="section-tag">Comparación clara</div>
+        <h2>Alquiler tradicional<br>vs <em>gestión de coliving</em></h2>
+        <p class="section-desc">Sin promesas de renta fija. Con números editables según tu propiedad. La idea: sumar más ingreso neto para vos, con alguien que opera el día a día.</p>
       </div>
-      <div class="form-success" id="form-success">
-        <h3>¡Gracias! ✅</h3>
-        <p>Nos estaremos comunicando pronto.</p>
-        <a href="https://wa.me/541154932199?text=Hola,%20busco%20presupuesto%20para%20construccion">Escribinos por WhatsApp</a>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Ítem</th>
+          <th>Alquiler tradicional</th>
+          <th class="highlight">Con mi gestión de coliving</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Modelo</td>
+          <td>1 contrato / 1 familia o pareja</td>
+          <td class="highlight">Habitaciones + comunidad (locales y extranjeros)</td>
+        </tr>
+        <tr>
+          <td>Ingreso bruto estimado / mes</td>
+          <td><span class="placeholder">USD XXX / ARS XXX</span></td>
+          <td class="highlight"><span class="placeholder">USD XXX / ARS XXX</span></td>
+        </tr>
+        <tr>
+          <td>Tu ingreso neto estimado / mes</td>
+          <td><span class="placeholder">USD XXX / ARS XXX</span></td>
+          <td class="highlight"><span class="placeholder">USD XXX / ARS XXX</span> <small>(después del 20%)</small></td>
+        </tr>
+        <tr>
+          <td>Mi fee</td>
+          <td>—</td>
+          <td class="highlight">20% de lo recaudado · solo si hay ingreso</td>
+        </tr>
+        <tr>
+          <td>Quién busca y filtra residentes</td>
+          <td>Vos / inmobiliaria</td>
+          <td class="highlight">Yo (screening + convivencia)</td>
+        </tr>
+        <tr>
+          <td>Operación diaria</td>
+          <td>A cargo tuyo</td>
+          <td class="highlight">A cargo mío: cobros, mantenimiento, comunidad</td>
+        </tr>
+        <tr>
+          <td>Riesgo de vacancia</td>
+          <td>Tuyas las vacías</td>
+          <td class="highlight">También tuyas — pero mi incentivo es llenar rápido (solo cobro si se recauda)</td>
+        </tr>
+        <tr>
+          <td>Capital que ponés</td>
+          <td>Según contrato</td>
+          <td class="highlight">Ninguno por mi fee. Sin lease conmigo.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="compare-note">Los montos son <strong>placeholders</strong> por propiedad. En la evaluación gratuita te armo el escenario con números reales de tu barrio y tipología. <em>No garantizo un monto fijo mensual</em>: optimizo el ingreso y gano solo si se genera.</p>
+  </div>
+</section>
+
+<section id="benefits" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="section-tag">Qué obtenés</div>
+        <h2>Más rendimiento.<br><em>Menos fricción.</em></h2>
+        <p class="section-desc">Cobro solo un % de lo que se recauda, sin costos ocultos. Nuestro incentivo está alineado.</p>
+      </div>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <span class="benefit-icon">📈</span>
+        <h3>Mayor rendimiento potencial</h3>
+        <p>Alquiler por habitación suele superar al contrato tradicional en deptos grandes. Te muestro el rango en la evaluación — sin inventar números mágicos.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🧘</span>
+        <h3>Sin dolores de cabeza</h3>
+        <p>Vos no gestionás whatsapps de vecinos ni rotaciones. Yo coordino la operación para que recibas la liquidación, no el stress.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🕵️</span>
+        <h3>Yo consigo y filtro residentes</h3>
+        <p>Screening riguroso: perfil, referencias y reglas de convivencia. Mezcla de argentinos y extranjeros, curada, no “quien sea”.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🔧</span>
+        <h3>Mantenimiento coordinado</h3>
+        <p>Incidencias, proveedores y seguimiento. Como arquitecto y constructor, priorizo soluciones que cuiden el activo, no parches.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🤝</span>
+        <h3>Comunidad curada</h3>
+        <p>El diferencial: convivencia con criterio, no un piso improvisado. Eventos y curaduría para bajar rotación y conflictos.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">📊</span>
+        <h3>Reporte mensual transparente</h3>
+        <p>Ocupación, ingresos, mi 20% y tu liquidación. Todo por escrito, todos los meses.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">💸</span>
+        <h3>Sin costo fijo para vos</h3>
+        <p>No me pagás un retainer. Si ese mes no se recauda, no cobro fee. Solo el 20% de lo efectivamente producido.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🧾</span>
+        <h3>Sin lease conmigo</h3>
+        <p>No asumo yo el alquiler del depto. No te “alquilo” la unidad para subalquilar. Gestión revenue-share: socios en el resultado.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">🏠</span>
+        <h3>Trato tu propiedad como propia</h3>
+        <p>Ojo de obra + criterio de espacio. No es una gestora anónima: es un profesional de la construcción a cargo de tu activo.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COMO FUNCIONA -->
-<section class="steps">
-  <div class="section-inner">
-    <div class="section-tag">Cómo Funciona</div>
-    <h2 class="section-title">¿Cómo empezamos tu proyecto?</h2>
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <h3>Contáctanos</h3>
-        <p>Envianos tus datos y nos pondremos en contacto para entender tus necesidades y coordinar una visita sin cargo.</p>
+<section id="how" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div>
+        <div class="section-tag">Proceso</div>
+        <h2>Cómo <em>funciona</em></h2>
+        <p class="section-desc">Cuatro pasos. Sin burocracia innecesaria. Vos cobrás; yo gestiono.</p>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <h3>Visita y Diagnóstico</h3>
-        <p>Un arquitecto visitará tu propiedad para evaluar el terreno o estado actual y proponerte las mejores soluciones técnicas.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h3>Evalúo tu propiedad</h3>
+        <p>Miramos tipología, zona, potencial por habitación y reglas del edificio. Te digó si conviene — o si no.</p>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <h3>Propuesta y Obra</h3>
-        <p>Recibís tu presupuesto detallado y cronograma. Una vez aprobado, comenzamos la ejecución con supervisión profesional.</p>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h3>Diseñamos la estrategia</h3>
+        <p>Layout de habitaciones, pricing estimado, perfil de residentes y estándar de comunidad.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h3>Consigo y filtro residentes</h3>
+        <p>Captación, screening, contratos y onboarding. Locales y extranjeros, con filtros claros.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <h3>Vos cobrás, yo gestiono</h3>
+        <p>Operación completa + reporte. Cobro mi <strong>20% de lo recaudado</strong>. Sin fijo. Sin costos ocultos.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SERVICIOS -->
-<section id="services">
-  <div class="section-inner">
-    <div class="section-tag">Excelencia Técnica</div>
-    <h2 class="section-title">Nuestros Servicios</h2>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_3_iluminacion.jpg?v=2" alt="Hormigón" /></div>
-        <div class="service-body">
-          <h3>Obras de Hormigón</h3>
-          <p>Losas, fundaciones, columnas y estructuras. Ejecutamos con precisión técnica y materiales de primera calidad.</p>
-          <div class="service-features">
-            <span>Colado de losa con bomba</span>
-            <span>Armado de hierros y fundaciones</span>
-            <span>Supervisión estructural profesional</span>
-          </div>
+<section id="human" class="section fade-in">
+  <div class="wrap">
+    <div class="human-grid">
+      <div class="human-photo">
+        <div class="human-video" id="human-video">
+          <button type="button" class="human-video-btn" id="human-video-btn" aria-label="Reproducir video de Maxi Flores">
+            <img
+              src="https://i.ytimg.com/vi/8A2wTiKr20Y/oardefault.jpg"
+              alt="Maxi Flores — Conlat con Mariana Fabbiani"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/8A2wTiKr20Y/hqdefault.jpg'"
+            >
+            <span class="human-video-play" aria-hidden="true">
+              <svg viewBox="0 0 68 48" width="68" height="48" role="img" aria-label="Play">
+                <path d="M66.52 7.74a8.2 8.2 0 0 0-5.77-5.79C55.55 1 34 1 34 1S12.45 1 7.25 1.95a8.2 8.2 0 0 0-5.77 5.79C.31 12.95.31 24 .31 24s0 11.05 1.17 16.26a8.2 8.2 0 0 0 5.77 5.79C12.45 47 34 47 34 47s21.55 0 26.75-1.95a8.2 8.2 0 0 0 5.77-5.79C67.69 35.05 67.69 24 67.69 24s0-11.05-1.17-16.26z" fill="#f00"/>
+                <path d="M45 24 27 14v20" fill="#fff"/>
+              </svg>
+            </span>
+          </button>
+          <iframe
+            id="human-video-frame"
+            title="Maxi Flores — Conlat con Mariana Fabbiani"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        <div class="human-photo-badge">
+          <strong>Maxi Flores</strong>
+          <span>Arquitecto · Constructor · Gestor de coliving</span>
         </div>
       </div>
-      <div class="service-card">
-        <div class="service-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_1.jpg?v=2" alt="Piletas" /></div>
-        <div class="service-body">
-          <h3>Piletas y Natatorios</h3>
-          <p>Diseño, construcción y renovación de piletas residenciales y comerciales. Llave en mano.</p>
-          <div class="service-features">
-            <span>Piletas de hormigón proyectado</span>
-            <span>Instalación de equipos y filtración</span>
-            <span>Renovación y reparación</span>
-          </div>
+      <div class="human-copy">
+        <div class="eyebrow">El humano detrás</div>
+        <h2>No le estás dejando el depto<br>a una empresa sin cara.<br><em>Me lo estás confiando a mí.</em></h2>
+        <p>Soy arquitecto matriculado y constructor. Trabajo con <strong>F+A Arquitectos</strong> y <strong>RFB Construcciones</strong>. Entiendo planos, obra húmeda, instalaciones, consorcios y el desgaste real de un inmueble — no solo “publicar el aviso”.</p>
+        <p>Por eso gestiono coliving distinto: cada propiedad la trato como un activo construido, no como un listing. Comunidad curada, mantenimiento con criterio, y un fee honesto: <strong>solo el 20% de lo que se recauda</strong>.</p>
+        <p>No te garantizo una renta fija que después no puedo sostener. Te prometo esfuerzo alineado: llenar rápido, filtrar bien, reportar claro. Si la propiedad produce, los dos ganamos. Si no, yo tampoco cobro.</p>
+        <div class="human-firms">
+          <span class="chip">F+A Arquitectos</span>
+          <span class="chip">RFB Construcciones</span>
+          <span class="chip">20% revenue-share</span>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_2.jpg?v=2" alt="Construcción" /></div>
-        <div class="service-body">
-          <h3>Construcción General</h3>
-          <p>Mampostería, ampliaciones, locales comerciales y viviendas. Construimos desde cero con dirección de obra.</p>
-          <div class="service-features">
-            <span>Construcción de mampostería</span>
-            <span>Ampliaciones y refacciones</span>
-            <span>Dirección de obra profesional</span>
-          </div>
-        </div>
-      </div>
-      <div class="service-card">
-        <div class="service-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_4_pisos.jpg?v=2" alt="Remodelación" /></div>
-        <div class="service-body">
-          <h3>Remodelación e Instalaciones</h3>
-          <p>Renovamos espacios y ejecutamos instalaciones sanitarias, eléctricas y de gas con precisión técnica.</p>
-          <div class="service-features">
-            <span>Pisos y revestimientos</span>
-            <span>Instalaciones sanitarias y eléctricas</span>
-            <span>Terminaciones de alta calidad</span>
-          </div>
+        <div class="sig">
+          <strong>Maxi Flores</strong>
+          <span>Arquitecto matriculado · Constructor</span>
+          <em>Gestión de coliving con comunidad · Conlat</em>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="section-inner">
-    <div class="about-grid">
-      <div class="about-text">
-        <div class="section-tag">Empresa Constructora CABA</div>
-        <h2 class="section-title" style="margin-bottom:16px;">Detrás de cada proyecto hay una estrategia inteligente</h2>
-        <p style="color:var(--gray);line-height:1.7;font-size:0.95rem;">Nuestros servicios están diseñados para maximizar el potencial de tu inversión, a través de planificación estratégica, ejecución profesional y materiales de primera calidad.</p>
-        <ul class="check-list">
-          <li>Diagnósticos estructurales precisos.</li>
-          <li>Materiales de alta calidad y durabilidad.</li>
-          <li>Equipos de trabajo especializados.</li>
-          <li>Cumplimiento estricto de plazos.</li>
-        </ul>
-        <div class="stats-row">
-          <div class="stat"><div class="stat-num">20+</div><div class="stat-label">Años de trayectoria</div></div>
-          <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Satisfacción de clientes</div></div>
-          <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Proyectos completados</div></div>
-        </div>
+<section id="agents" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div>
+        <div class="section-tag">Para agentes e inmobiliarias</div>
+        <h2>No te puenteo.<br><em>Te resuelvo propiedades difíciles.</em></h2>
+        <p class="section-desc">Si tenés un 3 o 4 ambientes que no se coloca, o un dueño que no quiere más dolores de cabeza: soy una opción seria de gestión. El broker cobra su comisión normal del propietario.</p>
       </div>
-      <div class="about-imgs">
-        <img src="https://fa-arq.github.io/assets/img/external/about_1.jpg?v=2" alt="Obra" />
-        <img src="https://fa-arq.github.io/assets/img/external/about_2_stats.jpg?v=2" alt="Construcción" />
-        <img src="https://fa-arq.github.io/assets/img/external/gallery_2.jpg?v=2" alt="Mampostería" />
-        <img src="https://fa-arq.github.io/assets/img/external/gallery_3_iluminacion.jpg?v=2" alt="Estructura" />
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-icon">🤝</div>
+        <h3>Tu comisión, intacta</h3>
+        <p>No reemplazo tu relación con el dueño. Si intermediás el acuerdo de gestión, cobrás tu comisión habitual del propietario. Yo no te saco del medio.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🏠</div>
+        <h3>Propiedades difíciles de colocar</h3>
+        <p>Deptos grandes, vacíos o con rotación lenta. El modelo por habitación + comunidad puede activarlos cuando el alquiler tradicional no cierra.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🔧</div>
+        <h3>Menos reclamos después</h3>
+        <p>Screening, reglas y mantenimiento coordinado. Menos llamadas tuyas por problemas de convivencia una vez cerrado el deal.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📞</div>
+        <h3>Un profesional con quién hablar</h3>
+        <p>Arquitecto y constructor, no una plataforma anónima. Cuando me presentás a tu cliente, presentás a alguien responsable del activo.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FAQ -->
-<section id="faq">
-  <div class="section-inner">
-    <div class="section-tag">Preguntas Frecuentes</div>
-    <h2 class="section-title">¿Tenés preguntas?</h2>
-    <div style="display:flex;gap:40px;margin-bottom:32px;flex-wrap:wrap;">
-      <span style="font-size:0.9rem;color:var(--gray);">Llamanos directamente <a href="https://wa.me/541154932199" style="color:var(--dark);font-weight:700;">(+54) 11 5493 2199</a></span>
-      <span style="font-size:0.9rem;color:var(--gray);">@ <a href="mailto:maxi.flores.mp@gmail.com" style="color:var(--dark);font-weight:700;">maxi.flores.mp@gmail.com</a></span>
+<section id="requirements" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div>
+        <div class="section-tag">Selectivo, no desesperado</div>
+        <h2>Qué propiedades <em>busco</em></h2>
+        <p class="section-desc">Si tu depto no cierra, te lo digo. Prefiero menos operaciones bien hechas.</p>
+      </div>
+    </div>
+    <div class="req-grid">
+      <div class="req">
+        <span class="req-icon">🛏️</span>
+        <h3>3–4 ambientes o más</h3>
+        <p>Departamentos o PH con potencial real de habitaciones. No monoambientes.</p>
+        <span class="tag">Mínimo 3 ambientes</span>
+      </div>
+      <div class="req">
+        <span class="req-icon">📍</span>
+        <h3>Buena ubicación</h3>
+        <p>Preferentemente <strong>GBA Norte</strong> y <strong>CABA</strong> con demanda de residentes locales y extranjeros.</p>
+        <span class="tag">GBA Norte · CABA</span>
+      </div>
+      <div class="req">
+        <span class="req-icon">🚇</span>
+        <h3>Conectividad</h3>
+        <p>Cerca de transporte, universidades, polos de trabajo remoto o barrios con movimiento expat.</p>
+      </div>
+      <div class="req">
+        <span class="req-icon">🪟</span>
+        <h3>Habitaciones dignas</h3>
+        <p>Luz y ventilación. No armo cuartos “sótano”. Si el plano no da, no lo forzo.</p>
+      </div>
+      <div class="req">
+        <span class="req-icon">📋</span>
+        <h3>Consorcio viable</h3>
+        <p>Revisamos reglamento. Si el edificio no admite el esquema, no avanzamos.</p>
+      </div>
+      <div class="req">
+        <span class="req-icon">✨</span>
+        <h3>Dueño alineado</h3>
+        <p>Busco propietarios que valoren comunidad y cuidado del activo, no maximizar camas a cualquier costo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="section fade-in">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div>
+        <div class="section-tag">Objeciones reales</div>
+        <h2>Preguntas <em>frecuentes</em></h2>
+      </div>
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">¿Por qué contratar una empresa constructora profesional? <span>+</span></div>
-        <div class="faq-a">Una empresa constructora profesional aporta experiencia técnica y dirección que garantiza el éxito de tu obra. Optimiza costos y tiempos, selecciona materiales adecuados, asegura el cumplimiento de normativas y coordina equipos eficientemente. No es un gasto, es una inversión que ahorra tiempo, dinero y problemas futuros.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">¿Se sobreocupa la propiedad?</button>
+        <div class="faq-a"><p>No. Definimos un layout sensato con luz y ventilación real. Preferimos menos residentes bien filtrados a densificar mal. El screening y las reglas de convivencia son parte del servicio — no es un piso de Facebook.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">¿Realizan presupuestos personalizados? <span>+</span></div>
-        <div class="faq-a">Sí, cada proyecto se presupuesta a medida según las características específicas de la obra, materiales requeridos y plazos acordados. El presupuesto es sin cargo y sin compromiso.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">¿Pagan a tiempo?</button>
+        <div class="faq-a"><p>Hago screening, contratos claros y seguimiento de cobros. No soy mago: si un mes hay atraso, se gestiona con proceso. Por eso el modelo es revenue-share: yo cobro solo cuando se recauda, así priorizo ocupación y cobrabilidad.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">¿Qué garantía tienen los trabajos? <span>+</span></div>
-        <div class="faq-a">Ofrecemos garantía escrita sobre la mano de obra y los materiales provistos por nosotros, asegurando la calidad y durabilidad de la construcción.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">¿Me garantizás una renta fija?</button>
+        <div class="faq-a"><p><strong>No.</strong> No firmo un master lease ni asumo yo el alquiler. No prometo “cero vacancia” ni un monto fijo mensual. Prometo maximizar el ingreso con operación profesional; mi 20% solo aparece si hay recaudación. Incentivos alineados.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">¿Se encargan de la compra de materiales? <span>+</span></div>
-        <div class="faq-a">Nos encargamos de la gestión integral incluyendo la compra y logística de materiales, para que no tengas que preocuparte por nada durante la obra.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si un residente causa daños?</button>
+        <div class="faq-a"><p>Depósitos de residentes, inventario, reglas y seguimiento. Los daños imputables se cubren según contrato (depósito / responsabilidad del residente). Las estructurales o de sistema se tratan aparte. Como constructor, documento y priorizo reparación correcta.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">¿Cuál es el tiempo estimado de obra? <span>+</span></div>
-        <div class="faq-a">El tiempo varía según la complejidad del proyecto, pero entregamos un cronograma detallado antes de comenzar y trabajamos para cumplir estrictamente los plazos acordados.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">¿En qué estado me devolvés la propiedad?</button>
+        <div class="faq-a"><p>Al cerrar el acuerdo de gestión, entrega con inventario y condiciones acordadas: limpia y en estado equivalente al recibido, menos el uso normal y razonable. Queda por escrito desde el día uno.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Tengo que poner capital o firmarte un alquiler?</button>
+        <div class="faq-a"><p>No. No me firmás un lease a mí. No te cobro un fee fijo de entrada por “estar”. Mi compensación es el 20% de lo que produce la operación. Si hace falta acondicionar, lo vemos: puede ser tuyo, mío en acuerdo, o mixto — siempre transparente.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROYECTOS -->
-<section class="projects" id="projects">
-  <div class="section-inner">
-    <div class="section-tag">Nuestros Proyectos</div>
-    <h2 class="section-title">Proyectos</h2>
-    <div class="projects-grid">
-      <div class="project-card">
-        <div class="project-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_1.jpg?v=2" alt="Proyecto" /></div>
-        <div class="project-body">
-          <div class="project-meta">15 Mar, 2024 / por RFB Construcciones</div>
-          <h3>Casa moderna con piscina en Tortugas Country Club: Proyecto finalizado.</h3>
-        </div>
+<section id="cta" class="section fade-in">
+  <div class="wrap">
+    <div class="cta-grid">
+      <div class="cta-copy">
+        <div class="eyebrow">Siguiente paso</div>
+        <h2>Agendá tu<br><em>evaluación gratuita</em></h2>
+        <p>Contame dónde está la propiedad y qué tipología es. En 48 hs te digo si tiene sentido el coliving y te armo un escenario de ingresos (con placeholders reales según zona).</p>
+        <div class="micro">Transparencia: cobro solo un % de lo que se recauda (20%), sin costos ocultos, sin renta “garantizada” de marketing.</div>
+        <a class="btn-wa" href="https://wa.me/54911XXXXXXXX?text=Hola%2C%20quiero%20agendar%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad%20para%20coliving." target="_blank" rel="noopener">WhatsApp directo</a>
       </div>
-      <div class="project-card">
-        <div class="project-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_2.jpg?v=2" alt="Proyecto" /></div>
-        <div class="project-body">
-          <div class="project-meta">22 Ago, 2023 / por RFB Construcciones</div>
-          <h3>Construcción de mampostería en Martínez: Obra en progreso.</h3>
-        </div>
-      </div>
-      <div class="project-card">
-        <div class="project-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_3_iluminacion.jpg?v=2" alt="Proyecto" /></div>
-        <div class="project-body">
-          <div class="project-meta">10 Nov, 2022 / por RFB Construcciones</div>
-          <h3>Colado de losa con bomba en Vicente López: Técnica profesional.</h3>
-        </div>
-      </div>
-      <div class="project-card">
-        <div class="project-img"><img src="https://fa-arq.github.io/assets/img/external/gallery_4_pisos.jpg?v=2" alt="Proyecto" /></div>
-        <div class="project-body">
-          <div class="project-meta">18 Jun, 2022 / por RFB Construcciones</div>
-          <h3>Armado de hierros para fundación en Mercedes: Estructura sólida.</h3>
-        </div>
+      <div class="form-box">
+        <h3>Datos de tu propiedad</h3>
+        <p class="form-sub">Formulario corto. Te respondo por WhatsApp.</p>
+        <form id="owner-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre *</label>
+              <input type="text" name="name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label>Teléfono / WhatsApp *</label>
+              <input type="tel" name="phone" required placeholder="+54 9 11 …" autocomplete="tel">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Ubicación de la propiedad *</label>
+            <input type="text" name="location" required placeholder="Barrio / localidad (ej. Belgrano, Vicente López)">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo *</label>
+              <select name="type" required>
+                <option value="">Elegir</option>
+                <option>Departamento</option>
+                <option>PH</option>
+                <option>Casa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ambientes</label>
+              <select name="rooms">
+                <option value="">Elegir</option>
+                <option>3 ambientes</option>
+                <option>4 ambientes</option>
+                <option>5 o más</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Comentario (opcional)</label>
+            <textarea name="notes" placeholder="Amoblado, disponibilidad, reglamento del edificio…"></textarea>
+          </div>
+          <button type="submit" class="form-submit">Pedir evaluación gratuita</button>
+          <div id="form-feedback" class="form-feedback"></div>
+        </form>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="cta-final">
-  <div class="section-inner">
-    <div class="section-tag">Iniciá tu Proyecto</div>
-    <h2 class="section-title">Construí con los mejores</h2>
-    <p>Más de 20 años transformando ideas en obras reales.</p>
-    <a href="#contact-form" class="btn-primary">Solicitar Presupuesto</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="nav-logo" style="color:white;margin-bottom:14px;">RFB<span style="color:var(--primary)">Construcciones</span></div>
-        <p>Especialistas en construcción, hormigón, piletas y refacciones. Creamos obras de calidad en CABA y GBA.</p>
-      </div>
-      <div>
-        <h4>Enlaces Útiles</h4>
-        <ul>
-          <li><a href="#about">Nosotros</a></li>
-          <li><a href="#services">Servicios</a></li>
-          <li><a href="#projects">Proyectos</a></li>
-          <li><a href="#contact-form">Contacto</a></li>
-          <li><a href="#faq">Preguntas Frecuentes</a></li>
-        </ul>
-      </div>
-      <div class="footer-contact">
-        <h4>Contacto</h4>
-        <p>Llamanos<br><a href="https://wa.me/541154932199">(+54) 11 5493 2199</a></p>
-        <p style="margin-top:10px;">@ <a href="mailto:maxi.flores.mp@gmail.com">maxi.flores.mp@gmail.com</a></p>
-      </div>
+  <a href="#hero" class="logo" style="display:inline-flex;margin:0 auto;">
+    <span class="logo-rule"></span>
+    <div class="logo-wordmark">
+      <span class="logo-word">Conlat</span>
+      <div class="logo-diamond"></div>
+      <span class="logo-sub">Gestión · Comunidad</span>
     </div>
-    <div class="footer-bottom">© 2026 RFB Construcciones. Todos los derechos reservados.</div>
-  </div>
+    <span class="logo-rule"></span>
+  </a>
+  <p class="footer-line">Solo gano si vos ganás. 20% de lo recaudado.</p>
+  <p class="footer-copy">
+    Conlat · Gestión de coliving · F+A Arquitectos · RFB Construcciones<br>
+    &copy; 2026 · Buenos Aires · Revenue-share, no master lease
+  </p>
 </footer>
 
+<a class="sticky-wa" href="https://wa.me/54911XXXXXXXX?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita." target="_blank" rel="noopener">
+  <svg width="18" height="18" viewBox="0 0 32 32" fill="white"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.817.737 5.46 2.027 7.754L0 32l8.463-2.001A15.935 15.935 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.284 21.983c-.398-.2-2.355-1.162-2.72-1.295-.366-.133-.632-.2-.898.2-.265.4-1.03 1.295-1.263 1.562-.232.265-.465.3-.863.1-.398-.2-1.681-.62-3.202-1.976-1.183-1.055-1.982-2.358-2.213-2.757-.232-.4-.025-.615.174-.814.179-.178.398-.465.597-.697.2-.232.265-.4.398-.665.133-.265.067-.497-.033-.697-.1-.2-.898-2.166-1.23-2.963-.324-.778-.653-.672-.898-.685-.232-.012-.498-.015-.764-.015-.265 0-.697.1-1.063.498-1.495.598-2.457 2.027-2.457 3.878 0 1.85 1.363 3.638 1.562 3.89.2.252 2.678 4.088 6.49 5.731.907.392 1.615.626 2.167.801.91.29 1.737.249 2.39.15.729-.109 2.355-.962 2.688-1.891.332-.929.332-1.724.232-1.891-.099-.166-.365-.265-.763-.465z"/></svg>
+  <span>WhatsApp</span>
+</a>
+
 <script>
-  function submitForm() {
-    document.getElementById('form-fields').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
-  }
-  function toggleFaq(el) {
-    const item = el.parentElement;
-    item.classList.toggle('open');
-    el.querySelector('span').textContent = item.classList.contains('open') ? '−' : '+';
-  }
+const ham = document.getElementById('hamburger');
+const menu = document.getElementById('mobile-menu');
+function closeMenu() {
+  menu.classList.remove('open');
+  ham.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+}
+ham.addEventListener('click', () => {
+  menu.classList.toggle('open');
+  const spans = ham.querySelectorAll('span');
+  if (menu.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else closeMenu();
+});
+
+(function () {
+  const VIDEO_ID = '8A2wTiKr20Y';
+  const wrap = document.getElementById('human-video');
+  const btn = document.getElementById('human-video-btn');
+  const frame = document.getElementById('human-video-frame');
+  if (!wrap || !btn || !frame) return;
+
+  btn.addEventListener('click', () => {
+    if (location.protocol === 'file:') {
+      window.open('https://www.youtube.com/shorts/' + VIDEO_ID, '_blank', 'noopener');
+      return;
+    }
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0&modestbranding=1';
+    wrap.classList.add('is-playing');
+  });
+})();
+
+function toggleFaq(btn) {
+  const a = btn.nextElementSibling;
+  const open = btn.classList.contains('active');
+  document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('active'));
+  document.querySelectorAll('.faq-a').forEach(x => x.classList.remove('open'));
+  if (!open) { btn.classList.add('active'); a.classList.add('open'); }
+}
+
+function hint(field, msg) {
+  let h = field.parentNode.querySelector('.field-hint');
+  if (!h) { h = document.createElement('div'); h.className = 'field-hint'; field.parentNode.appendChild(h); }
+  h.textContent = msg; h.classList.add('show');
+}
+
+document.querySelectorAll('#owner-form input, #owner-form select, #owner-form textarea').forEach(f => {
+  f.addEventListener('input', () => {
+    f.classList.remove('field-error');
+    const h = f.parentNode.querySelector('.field-hint');
+    if (h) h.classList.remove('show');
+  });
+});
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const fb = document.getElementById('form-feedback');
+  const name = form.name, phone = form.phone, location = form.location, type = form.type;
+  let ok = true;
+  [name, phone, location, type].forEach(f => f.classList.remove('field-error'));
+  if (!name.value.trim()) { name.classList.add('field-error'); hint(name, 'Ingresá tu nombre'); ok = false; }
+  if (!phone.value.trim()) { phone.classList.add('field-error'); hint(phone, 'Ingresá tu WhatsApp'); ok = false; }
+  if (!location.value.trim()) { location.classList.add('field-error'); hint(location, 'Indicá la ubicación'); ok = false; }
+  if (!type.value) { type.classList.add('field-error'); hint(type, 'Elegí el tipo'); ok = false; }
+  if (!ok) return;
+
+  const msg = encodeURIComponent(
+    'Hola, quiero una evaluación gratuita de mi propiedad.\n\n' +
+    'Nombre: ' + name.value + '\n' +
+    'Tel: ' + phone.value + '\n' +
+    'Ubicación: ' + location.value + '\n' +
+    'Tipo: ' + type.value + '\n' +
+    'Ambientes: ' + (form.rooms.value || 'No indicado') + '\n' +
+    'Notas: ' + (form.notes.value || '—')
+  );
+  fb.className = 'form-feedback success';
+  fb.textContent = 'Listo. Te abro WhatsApp con los datos cargados.';
+  window.open('https://wa.me/54911XXXXXXXX?text=' + msg, '_blank');
+}
+
+(function(){
+  const els = document.querySelectorAll('.fade-in');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+})();
 </script>
 </body>
 </html>
