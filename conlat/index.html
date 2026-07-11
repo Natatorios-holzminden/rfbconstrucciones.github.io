@@ -69,6 +69,32 @@ nav ul a:hover { color: var(--gold); }
   padding: 10px 22px; background: var(--navy); color: var(--white); text-decoration: none;
 }
 .nav-cta:hover { background: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.lang-switch {
+  display: flex; align-items: center; gap: 6px;
+}
+.lang-switch button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-width: 0; height: 36px; padding: 0 14px 0 10px;
+  border-radius: 999px; border: 1px solid var(--rule);
+  background: transparent; cursor: pointer;
+  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.04em; color: var(--muted);
+  transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+  white-space: nowrap;
+}
+.lang-switch button:hover {
+  color: var(--navy); border-color: rgba(166,124,58,0.45);
+}
+.lang-switch button.active {
+  background: var(--gold); color: var(--white); border-color: var(--gold);
+}
+.lang-flag {
+  width: 20px; height: 20px; border-radius: 50%;
+  overflow: hidden; flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+}
+.lang-flag svg { width: 100%; height: 100%; display: block; }
 .hamburger {
   display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px;
 }
@@ -451,6 +477,22 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
   nav { padding: 0 20px; }
   nav ul, .nav-cta { display: none; }
   .hamburger { display: flex; }
+  .nav-right { gap: 10px; }
+  .lang-switch { gap: 8px; }
+  .lang-switch button {
+    width: 30px; height: 30px; padding: 0;
+    border: 2px solid transparent; background: transparent;
+    border-radius: 50%;
+  }
+  .lang-switch button:hover {
+    background: transparent; border-color: rgba(26,35,50,0.2);
+  }
+  .lang-switch button.active {
+    background: transparent; border-color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(166,124,58,0.25);
+  }
+  .lang-switch .lang-label { display: none; }
+  .lang-flag { width: 26px; height: 26px; box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
   #hero { grid-template-columns: 1fr; }
   .hero-img { height: 260px; min-height: 0; }
   .hero-content { padding: 40px 24px; border-left: none; }
@@ -557,50 +599,87 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="logo-wordmark">
       <span class="logo-word">Conlat</span>
       <div class="logo-diamond"></div>
-      <span class="logo-sub">Gestión · Comunidad</span>
+      <span class="logo-sub" data-i18n="nav.logoSub">Gestión · Comunidad</span>
     </div>
     <span class="logo-rule"></span>
   </a>
   <ul>
-    <li><a href="#compare">Compará</a></li>
-    <li><a href="#how">Cómo funciona</a></li>
-    <li><a href="#human">Quién soy</a></li>
-    <li><a href="#agents">Inmobiliarias</a></li>
-    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#compare" data-i18n="nav.compare">Compará</a></li>
+    <li><a href="#how" data-i18n="nav.how">Cómo funciona</a></li>
+    <li><a href="#human" data-i18n="nav.human">Quién soy</a></li>
+    <li><a href="#agents" data-i18n="nav.agents">Inmobiliarias</a></li>
+    <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
   </ul>
-  <a href="#cta" class="nav-cta">Evaluación gratis</a>
-  <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+  <div class="nav-right">
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="es" class="active" aria-pressed="true" aria-label="Español">
+        <span class="lang-flag" aria-hidden="true">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <rect width="60" height="60" fill="#c60b1e"/>
+            <rect y="15" width="60" height="30" fill="#ffc400"/>
+          </svg>
+        </span>
+        <span class="lang-label">Español</span>
+      </button>
+      <button type="button" data-lang="en" aria-pressed="false" aria-label="English">
+        <span class="lang-flag" aria-hidden="true">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <rect width="60" height="60" fill="#b22234"/>
+            <rect y="4.6" width="60" height="4.6" fill="#fff"/>
+            <rect y="13.8" width="60" height="4.6" fill="#fff"/>
+            <rect y="23" width="60" height="4.6" fill="#fff"/>
+            <rect y="32.2" width="60" height="4.6" fill="#fff"/>
+            <rect y="41.4" width="60" height="4.6" fill="#fff"/>
+            <rect y="50.6" width="60" height="4.6" fill="#fff"/>
+            <rect width="28" height="32" fill="#3c3b6e"/>
+            <g fill="#fff">
+              <circle cx="5" cy="5" r="1.2"/><circle cx="11" cy="5" r="1.2"/><circle cx="17" cy="5" r="1.2"/><circle cx="23" cy="5" r="1.2"/>
+              <circle cx="8" cy="9" r="1.2"/><circle cx="14" cy="9" r="1.2"/><circle cx="20" cy="9" r="1.2"/>
+              <circle cx="5" cy="13" r="1.2"/><circle cx="11" cy="13" r="1.2"/><circle cx="17" cy="13" r="1.2"/><circle cx="23" cy="13" r="1.2"/>
+              <circle cx="8" cy="17" r="1.2"/><circle cx="14" cy="17" r="1.2"/><circle cx="20" cy="17" r="1.2"/>
+              <circle cx="5" cy="21" r="1.2"/><circle cx="11" cy="21" r="1.2"/><circle cx="17" cy="21" r="1.2"/><circle cx="23" cy="21" r="1.2"/>
+              <circle cx="8" cy="25" r="1.2"/><circle cx="14" cy="25" r="1.2"/><circle cx="20" cy="25" r="1.2"/>
+              <circle cx="5" cy="29" r="1.2"/><circle cx="11" cy="29" r="1.2"/><circle cx="17" cy="29" r="1.2"/><circle cx="23" cy="29" r="1.2"/>
+            </g>
+          </svg>
+        </span>
+        <span class="lang-label">Inglés</span>
+      </button>
+    </div>
+    <a href="#cta" class="nav-cta" data-i18n="nav.cta">Evaluación gratis</a>
+    <button class="hamburger" id="hamburger" data-i18n-aria="nav.menu" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
 </nav>
 
 <div class="mobile-menu" id="mobile-menu">
-  <a href="#compare" onclick="closeMenu()">Compará</a>
-  <a href="#how" onclick="closeMenu()">Cómo funciona</a>
-  <a href="#human" onclick="closeMenu()">Quién soy</a>
-  <a href="#agents" onclick="closeMenu()">Inmobiliarias</a>
-  <a href="#faq" onclick="closeMenu()">FAQ</a>
-  <a href="#cta" onclick="closeMenu()">Evaluación gratis</a>
+  <a href="#compare" onclick="closeMenu()" data-i18n="nav.compare">Compará</a>
+  <a href="#how" onclick="closeMenu()" data-i18n="nav.how">Cómo funciona</a>
+  <a href="#human" onclick="closeMenu()" data-i18n="nav.human">Quién soy</a>
+  <a href="#agents" onclick="closeMenu()" data-i18n="nav.agents">Inmobiliarias</a>
+  <a href="#faq" onclick="closeMenu()" data-i18n="nav.faq">FAQ</a>
+  <a href="#cta" onclick="closeMenu()" data-i18n="nav.cta">Evaluación gratis</a>
 </div>
 
-<div class="top-bar">
+<div class="top-bar" data-i18n-html="topbar">
   <strong>Cobro solo el 20% de lo recaudado</strong> — sin costo fijo, sin renta garantizada que no puedo cumplir, sin letra chica.
 </div>
 
 <section id="hero">
   <div class="hero-img">
-    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1000&q=85&fm=webp" alt="Departamento luminoso listo para coliving profesional" width="1000" height="750" fetchpriority="high">
+    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1000&q=85&fm=webp" data-i18n-alt="hero.imgAlt" alt="Departamento luminoso listo para coliving profesional" width="1000" height="750" fetchpriority="high">
     <div class="hero-img-overlay"></div>
-    <div class="hero-badge">Arquitecto · Constructor · Gestor</div>
+    <div class="hero-badge" data-i18n="hero.badge">Arquitecto · Constructor · Gestor</div>
   </div>
   <div class="hero-content">
-    <div class="eyebrow">Para propietarios</div>
-    <h1>Tu propiedad.<br><em>Mi responsabilidad.</em></h1>
-    <p class="hero-sub">Maximizá el ingreso de tu inmueble sin mover un dedo. Lo convierto en coliving con residentes bien seleccionados — argentinos y extranjeros — y me ocupo de todo: inquilinos, cobros, mantenimiento y convivencia.</p>
-    <div class="hero-note">Solo gano si vos ganás. Cobro el <strong>20% de lo recaudado</strong>. Sin fee fijo. Sin que pongas un peso. Sin que me firmes un alquiler.</div>
+    <div class="eyebrow" data-i18n="hero.eyebrow">Para propietarios</div>
+    <h1 data-i18n-html="hero.title">Tu propiedad.<br><em>Mi responsabilidad.</em></h1>
+    <p class="hero-sub" data-i18n="hero.sub">Maximizá el ingreso de tu inmueble sin mover un dedo. Lo convierto en coliving con residentes bien seleccionados — argentinos y extranjeros — y me ocupo de todo: inquilinos, cobros, mantenimiento y convivencia.</p>
+    <div class="hero-note" data-i18n-html="hero.note">Solo gano si vos ganás. Cobro el <strong>20% de lo recaudado</strong>. Sin fee fijo. Sin que pongas un peso. Sin que me firmes un alquiler.</div>
     <div class="hero-actions">
-      <a href="#cta" class="btn-primary">Agendá una evaluación gratuita</a>
-      <a class="btn-wa" href="https://wa.me/5491154932199?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad." target="_blank" rel="noopener">
+      <a href="#cta" class="btn-primary" data-i18n="hero.btnPrimary">Agendá una evaluación gratuita</a>
+      <a class="btn-wa" data-i18n-wa="wa.hero" href="https://wa.me/5491154932199?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad." target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 32 32" fill="white"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.817.737 5.46 2.027 7.754L0 32l8.463-2.001A15.935 15.935 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.284 21.983c-.398-.2-2.355-1.162-2.72-1.295-.366-.133-.632-.2-.898.2-.265.4-1.03 1.295-1.263 1.562-.232.265-.465.3-.863.1-.398-.2-1.681-.62-3.202-1.976-1.183-1.055-1.982-2.358-2.213-2.757-.232-.4-.025-.615.174-.814.179-.178.398-.465.597-.697.2-.232.265-.4.398-.665.133-.265.067-.497-.033-.697-.1-.2-.898-2.166-1.23-2.963-.324-.778-.653-.672-.898-.685-.232-.012-.498-.015-.764-.015-.265 0-.697.1-1.063.498-1.495.598-2.457 2.027-2.457 3.878 0 1.85 1.363 3.638 1.562 3.89.2.252 2.678 4.088 6.49 5.731.907.392 1.615.626 2.167.801.91.29 1.737.249 2.39.15.729-.109 2.355-.962 2.688-1.891.332-.929.332-1.724.232-1.891-.099-.166-.365-.265-.763-.465z"/></svg>
-        Hablar por WhatsApp
+        <span data-i18n="hero.btnWa">Hablar por WhatsApp</span>
       </a>
     </div>
   </div>
@@ -608,16 +687,16 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
 
 <div class="cred-bar fade-in">
   <div class="cred-item">
-    <div class="cred-title">Arquitecto matriculado</div>
-    <div class="cred-label">F+A Arquitectos · entendimiento de obra y espacio</div>
+    <div class="cred-title" data-i18n="cred.1.title">Arquitecto matriculado</div>
+    <div class="cred-label" data-i18n="cred.1.label">F+A Arquitectos · entendimiento de obra y espacio</div>
   </div>
   <div class="cred-item">
-    <div class="cred-title">Constructor</div>
-    <div class="cred-label">RFB Construcciones · mantenimiento con criterio</div>
+    <div class="cred-title" data-i18n="cred.2.title">Constructor</div>
+    <div class="cred-label" data-i18n="cred.2.label">RFB Construcciones · mantenimiento con criterio</div>
   </div>
   <div class="cred-item">
-    <div class="cred-title">Gestión con comunidad</div>
-    <div class="cred-label">Coliving bien armado · reporte mensual transparente</div>
+    <div class="cred-title" data-i18n="cred.3.title">Gestión con comunidad</div>
+    <div class="cred-label" data-i18n="cred.3.label">Coliving bien armado · reporte mensual transparente</div>
   </div>
 </div>
 
@@ -626,53 +705,53 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">01</div>
       <div>
-        <div class="section-tag">Comparación clara</div>
-        <h2>Alquiler tradicional<br>vs <em>gestión de coliving</em></h2>
-        <p class="section-desc">Sin promesas de renta fija. Con números editables según tu propiedad. La idea: sumar más ingreso neto para vos, con alguien que opera el día a día.</p>
+        <div class="section-tag" data-i18n="compare.tag">Comparación clara</div>
+        <h2 data-i18n-html="compare.title">Alquiler tradicional<br>vs <em>gestión de coliving</em></h2>
+        <p class="section-desc" data-i18n="compare.desc">Sin promesas de renta fija. Con números editables según tu propiedad. La idea: sumar más ingreso neto para vos, con alguien que opera el día a día.</p>
       </div>
     </div>
     <table class="compare-table">
       <thead>
         <tr>
-          <th>Ítem</th>
-          <th>Alquiler tradicional</th>
-          <th class="highlight">Con mi gestión de coliving</th>
+          <th data-i18n="compare.th.item">Ítem</th>
+          <th data-i18n="compare.th.trad">Alquiler tradicional</th>
+          <th class="highlight" data-i18n="compare.th.coliv">Con mi gestión de coliving</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Modelo</td>
-          <td>1 contrato / 1 familia o pareja</td>
-          <td class="highlight">Habitaciones + comunidad (locales y extranjeros)</td>
+          <td data-i18n="compare.r1.label">Modelo</td>
+          <td data-i18n="compare.r1.trad">1 contrato / 1 familia o pareja</td>
+          <td class="highlight" data-i18n="compare.r1.coliv">Habitaciones + comunidad (locales y extranjeros)</td>
         </tr>
         <tr>
-          <td>Mi fee</td>
-          <td>—</td>
-          <td class="highlight">20% de lo recaudado · solo si hay ingreso</td>
+          <td data-i18n="compare.r2.label">Mi fee</td>
+          <td data-i18n="compare.r2.trad">—</td>
+          <td class="highlight" data-i18n="compare.r2.coliv">20% de lo recaudado · solo si hay ingreso</td>
         </tr>
         <tr>
-          <td>Quién busca y filtra residentes</td>
-          <td>Vos / inmobiliaria</td>
-          <td class="highlight">Yo (filtro de inquilinos + convivencia)</td>
+          <td data-i18n="compare.r3.label">Quién busca y filtra residentes</td>
+          <td data-i18n="compare.r3.trad">Vos / inmobiliaria</td>
+          <td class="highlight" data-i18n="compare.r3.coliv">Yo (filtro de inquilinos + convivencia)</td>
         </tr>
         <tr>
-          <td>Operación diaria</td>
-          <td>A cargo tuyo</td>
-          <td class="highlight">A cargo mío: cobros, mantenimiento, comunidad</td>
+          <td data-i18n="compare.r4.label">Operación diaria</td>
+          <td data-i18n="compare.r4.trad">A cargo tuyo</td>
+          <td class="highlight" data-i18n="compare.r4.coliv">A cargo mío: cobros, mantenimiento, comunidad</td>
         </tr>
         <tr>
-          <td>Riesgo de vacancia</td>
-          <td>Tuyas las vacías</td>
-          <td class="highlight">También tuyas — pero mi incentivo es llenar rápido (solo cobro si se recauda)</td>
+          <td data-i18n="compare.r5.label">Riesgo de vacancia</td>
+          <td data-i18n="compare.r5.trad">Tuyas las vacías</td>
+          <td class="highlight" data-i18n="compare.r5.coliv">También tuyas — pero mi incentivo es llenar rápido (solo cobro si se recauda)</td>
         </tr>
         <tr>
-          <td>Capital que ponés</td>
-          <td>Según contrato</td>
-          <td class="highlight">Ninguno por mi fee. Sin lease conmigo.</td>
+          <td data-i18n="compare.r6.label">Capital que ponés</td>
+          <td data-i18n="compare.r6.trad">Según contrato</td>
+          <td class="highlight" data-i18n="compare.r6.coliv">Ninguno por mi fee. Sin lease conmigo.</td>
         </tr>
       </tbody>
     </table>
-    <p class="compare-note">En la evaluación gratuita te armo el escenario con números reales de tu barrio y tipología. <em>No garantizo un monto fijo mensual</em>: optimizo el ingreso y gano solo si se genera.</p>
+    <p class="compare-note" data-i18n-html="compare.note">En la evaluación gratuita te armo el escenario con números reales de tu barrio y tipología. <em>No garantizo un monto fijo mensual</em>: optimizo el ingreso y gano solo si se genera.</p>
   </div>
 </section>
 
@@ -681,56 +760,56 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">02</div>
       <div>
-        <div class="section-tag">Qué obtenés</div>
-        <h2>Más rendimiento.<br><em>Menos fricción.</em></h2>
-        <p class="section-desc">Cobro solo un % de lo que se recauda, sin costos ocultos. Nuestro incentivo está alineado.</p>
+        <div class="section-tag" data-i18n="benefits.tag">Qué obtenés</div>
+        <h2 data-i18n-html="benefits.title">Más rendimiento.<br><em>Menos fricción.</em></h2>
+        <p class="section-desc" data-i18n="benefits.desc">Cobro solo un % de lo que se recauda, sin costos ocultos. Nuestro incentivo está alineado.</p>
       </div>
     </div>
     <div class="benefits-grid">
       <div class="benefit">
         <span class="benefit-icon">📈</span>
-        <h3>Mayor rendimiento potencial</h3>
-        <p>Alquiler por habitación suele superar al contrato tradicional en deptos grandes. Te muestro el rango en la evaluación — sin inventar números mágicos.</p>
+        <h3 data-i18n="benefits.1.title">Mayor rendimiento potencial</h3>
+        <p data-i18n="benefits.1.text">Alquiler por habitación suele superar al contrato tradicional en deptos grandes. Te muestro el rango en la evaluación — sin inventar números mágicos.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🧘</span>
-        <h3>Sin dolores de cabeza</h3>
-        <p>Vos no gestionás whatsapps de vecinos ni rotaciones. Yo coordino la operación para que recibas la liquidación, no el stress.</p>
+        <h3 data-i18n="benefits.2.title">Sin dolores de cabeza</h3>
+        <p data-i18n="benefits.2.text">Vos no gestionás whatsapps de vecinos ni rotaciones. Yo coordino la operación para que recibas la liquidación, no el stress.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🕵️</span>
-        <h3>Yo consigo y filtro residentes</h3>
-        <p>Filtro riguroso: perfil, referencias y reglas de convivencia. Mezcla de argentinos y extranjeros bien elegida — no entra cualquiera.</p>
+        <h3 data-i18n="benefits.3.title">Yo consigo y filtro residentes</h3>
+        <p data-i18n="benefits.3.text">Filtro riguroso: perfil, referencias y reglas de convivencia. Mezcla de argentinos y extranjeros bien elegida — no entra cualquiera.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🔧</span>
-        <h3>Mantenimiento coordinado</h3>
-        <p>Incidencias, proveedores y seguimiento. Como arquitecto y constructor, priorizo soluciones que cuiden el activo, no parches.</p>
+        <h3 data-i18n="benefits.4.title">Mantenimiento coordinado</h3>
+        <p data-i18n="benefits.4.text">Incidencias, proveedores y seguimiento. Como arquitecto y constructor, priorizo soluciones que cuiden el activo, no parches.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🤝</span>
-        <h3>Gente bien seleccionada</h3>
-        <p>El diferencial: convivencia con criterio, no un piso improvisado. Eventos y seguimiento para bajar rotación y conflictos.</p>
+        <h3 data-i18n="benefits.5.title">Gente bien seleccionada</h3>
+        <p data-i18n="benefits.5.text">El diferencial: convivencia con criterio, no un piso improvisado. Eventos y seguimiento para bajar rotación y conflictos.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">📊</span>
-        <h3>Reporte mensual transparente</h3>
-        <p>Ocupación, ingresos, mi 20% y tu liquidación. Todo por escrito, todos los meses.</p>
+        <h3 data-i18n="benefits.6.title">Reporte mensual transparente</h3>
+        <p data-i18n="benefits.6.text">Ocupación, ingresos, mi 20% y tu liquidación. Todo por escrito, todos los meses.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">💸</span>
-        <h3>Sin costo fijo para vos</h3>
-        <p>No me pagás un retainer. Si ese mes no se recauda, no cobro fee. Solo el 20% de lo efectivamente producido.</p>
+        <h3 data-i18n="benefits.7.title">Sin costo fijo para vos</h3>
+        <p data-i18n="benefits.7.text">No me pagás un retainer. Si ese mes no se recauda, no cobro fee. Solo el 20% de lo efectivamente producido.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🧾</span>
-        <h3>Sin lease conmigo</h3>
-        <p>No asumo yo el alquiler del depto. No te “alquilo” la unidad para subalquilar. Gestión revenue-share: socios en el resultado.</p>
+        <h3 data-i18n="benefits.8.title">Sin lease conmigo</h3>
+        <p data-i18n="benefits.8.text">No asumo yo el alquiler del depto. No te “alquilo” la unidad para subalquilar. Gestión revenue-share: socios en el resultado.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🏠</span>
-        <h3>Trato tu propiedad como propia</h3>
-        <p>Ojo de obra + criterio de espacio. No es una gestora anónima: es un profesional de la construcción a cargo de tu activo.</p>
+        <h3 data-i18n="benefits.9.title">Trato tu propiedad como propia</h3>
+        <p data-i18n="benefits.9.text">Ojo de obra + criterio de espacio. No es una gestora anónima: es un profesional de la construcción a cargo de tu activo.</p>
       </div>
     </div>
   </div>
@@ -741,31 +820,31 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">03</div>
       <div>
-        <div class="section-tag">Proceso</div>
-        <h2>Cómo <em>funciona</em></h2>
-        <p class="section-desc">Cuatro pasos. Sin burocracia innecesaria. Vos cobrás; yo gestiono.</p>
+        <div class="section-tag" data-i18n="how.tag">Proceso</div>
+        <h2 data-i18n-html="how.title">Cómo <em>funciona</em></h2>
+        <p class="section-desc" data-i18n="how.desc">Cuatro pasos. Sin burocracia innecesaria. Vos cobrás; yo gestiono.</p>
       </div>
     </div>
     <div class="steps">
       <div class="step">
         <div class="step-n">01</div>
-        <h3>Evalúo tu propiedad</h3>
-        <p>Miramos tipología, zona, potencial por habitación y reglas del edificio. Te digó si conviene — o si no.</p>
+        <h3 data-i18n="how.1.title">Evalúo tu propiedad</h3>
+        <p data-i18n="how.1.text">Miramos tipología, zona, potencial por habitación y reglas del edificio. Te digo si conviene — o si no.</p>
       </div>
       <div class="step">
         <div class="step-n">02</div>
-        <h3>Diseñamos la estrategia</h3>
-        <p>Layout de habitaciones, pricing estimado, perfil de residentes y estándar de comunidad.</p>
+        <h3 data-i18n="how.2.title">Diseñamos la estrategia</h3>
+        <p data-i18n="how.2.text">Layout de habitaciones, pricing estimado, perfil de residentes y estándar de comunidad.</p>
       </div>
       <div class="step">
         <div class="step-n">03</div>
-        <h3>Consigo y filtro residentes</h3>
-        <p>Captación, selección de inquilinos, contratos y onboarding. Argentinos y extranjeros, con filtros claros.</p>
+        <h3 data-i18n="how.3.title">Consigo y filtro residentes</h3>
+        <p data-i18n="how.3.text">Captación, selección de inquilinos, contratos y onboarding. Argentinos y extranjeros, con filtros claros.</p>
       </div>
       <div class="step">
         <div class="step-n">04</div>
-        <h3>Vos cobrás, yo gestiono</h3>
-        <p>Operación completa + reporte. Cobro mi <strong>20% de lo recaudado</strong>. Sin fijo. Sin costos ocultos.</p>
+        <h3 data-i18n="how.4.title">Vos cobrás, yo gestiono</h3>
+        <p data-i18n-html="how.4.text">Operación completa + reporte. Cobro mi <strong>20% de lo recaudado</strong>. Sin fijo. Sin costos ocultos.</p>
       </div>
     </div>
   </div>
@@ -776,7 +855,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="human-grid">
       <div class="human-photo">
         <div class="human-video" id="human-video">
-          <button type="button" class="human-video-btn" id="human-video-btn" aria-label="Reproducir video de Maxi Flores">
+          <button type="button" class="human-video-btn" id="human-video-btn" data-i18n-aria="human.play" aria-label="Reproducir video de Maxi Flores">
             <img
               src="https://i.ytimg.com/vi/8A2wTiKr20Y/oardefault.jpg"
               alt="Maxi Flores — Conlat con Mariana Fabbiani"
@@ -800,15 +879,15 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
         </div>
         <div class="human-photo-badge">
           <strong>Maxi Flores</strong>
-          <span>Arquitecto · Constructor · Gestor de coliving</span>
+          <span data-i18n="human.badgeRole">Arquitecto · Constructor · Gestor de coliving</span>
         </div>
       </div>
       <div class="human-copy">
-        <div class="eyebrow">El humano detrás</div>
-        <h2>No le estás dejando el depto<br>a una empresa sin cara.<br><em>Me lo estás confiando a mí.</em></h2>
-        <p>Soy arquitecto matriculado y constructor. Trabajo con <strong>F+A Arquitectos</strong> y <strong>RFB Construcciones</strong>. Entiendo planos, obra húmeda, instalaciones, consorcios y el desgaste real de un inmueble — no solo “publicar el aviso”.</p>
-        <p>Por eso gestiono coliving distinto: cada propiedad la trato como un activo construido, no como un aviso más. Residentes bien seleccionados, mantenimiento con criterio, y un fee honesto: <strong>solo el 20% de lo que se recauda</strong>.</p>
-        <p>No te garantizo una renta fija que después no puedo sostener. Te prometo esfuerzo alineado: llenar rápido, filtrar bien, reportar claro. Si la propiedad produce, los dos ganamos. Si no, yo tampoco cobro.</p>
+        <div class="eyebrow" data-i18n="human.eyebrow">El humano detrás</div>
+        <h2 data-i18n-html="human.title">No le estás dejando el depto<br>a una empresa sin cara.<br><em>Me lo estás confiando a mí.</em></h2>
+        <p data-i18n-html="human.p1">Soy arquitecto matriculado y constructor. Trabajo con <strong>F+A Arquitectos</strong> y <strong>RFB Construcciones</strong>. Entiendo planos, obra húmeda, instalaciones, consorcios y el desgaste real de un inmueble — no solo “publicar el aviso”.</p>
+        <p data-i18n-html="human.p2">Por eso gestiono coliving distinto: cada propiedad la trato como un activo construido, no como un aviso más. Residentes bien seleccionados, mantenimiento con criterio, y un fee honesto: <strong>solo el 20% de lo que se recauda</strong>.</p>
+        <p data-i18n="human.p3">No te garantizo una renta fija que después no puedo sostener. Te prometo esfuerzo alineado: llenar rápido, filtrar bien, reportar claro. Si la propiedad produce, los dos ganamos. Si no, yo tampoco cobro.</p>
         <div class="human-firms">
           <span class="chip">F+A Arquitectos</span>
           <span class="chip">RFB Construcciones</span>
@@ -816,8 +895,8 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
         </div>
         <div class="sig">
           <strong>Maxi Flores</strong>
-          <span>Arquitecto matriculado · Constructor</span>
-          <em>Gestión de coliving con comunidad · Conlat</em>
+          <span data-i18n="human.sigRole">Arquitecto matriculado · Constructor</span>
+          <em data-i18n="human.sigTag">Gestión de coliving con comunidad · Conlat</em>
         </div>
       </div>
     </div>
@@ -829,31 +908,31 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">04</div>
       <div>
-        <div class="section-tag">Para agentes e inmobiliarias</div>
-        <h2>No te puenteo.<br><em>Te resuelvo propiedades difíciles.</em></h2>
-        <p class="section-desc">Si tenés un 3 o 4 ambientes que no se coloca, o un dueño que no quiere más dolores de cabeza: soy una opción seria de gestión. El broker cobra su comisión normal del propietario.</p>
+        <div class="section-tag" data-i18n="agents.tag">Para agentes e inmobiliarias</div>
+        <h2 data-i18n-html="agents.title">No te puenteo.<br><em>Te resuelvo propiedades difíciles.</em></h2>
+        <p class="section-desc" data-i18n="agents.desc">Si tenés un 3 o 4 ambientes que no se coloca, o un dueño que no quiere más dolores de cabeza: soy una opción seria de gestión. El broker cobra su comisión normal del propietario.</p>
       </div>
     </div>
     <div class="agents-grid">
       <div class="agent-card">
         <div class="agent-icon">🤝</div>
-        <h3>Tu comisión, intacta</h3>
-        <p>No reemplazo tu relación con el dueño. Si intermediás el acuerdo de gestión, cobrás tu comisión habitual del propietario. Yo no te saco del medio.</p>
+        <h3 data-i18n="agents.1.title">Tu comisión, intacta</h3>
+        <p data-i18n="agents.1.text">No reemplazo tu relación con el dueño. Si intermediás el acuerdo de gestión, cobrás tu comisión habitual del propietario. Yo no te saco del medio.</p>
       </div>
       <div class="agent-card">
         <div class="agent-icon">🏠</div>
-        <h3>Propiedades difíciles de colocar</h3>
-        <p>Deptos grandes, vacíos o con rotación lenta. El modelo por habitación + comunidad puede activarlos cuando el alquiler tradicional no cierra.</p>
+        <h3 data-i18n="agents.2.title">Propiedades difíciles de colocar</h3>
+        <p data-i18n="agents.2.text">Deptos grandes, vacíos o con rotación lenta. El modelo por habitación + comunidad puede activarlos cuando el alquiler tradicional no cierra.</p>
       </div>
       <div class="agent-card">
         <div class="agent-icon">🔧</div>
-        <h3>Menos reclamos después</h3>
-        <p>Filtro de inquilinos, reglas y mantenimiento coordinado. Menos llamadas tuyas por problemas de convivencia una vez cerrado el deal.</p>
+        <h3 data-i18n="agents.3.title">Menos reclamos después</h3>
+        <p data-i18n="agents.3.text">Filtro de inquilinos, reglas y mantenimiento coordinado. Menos llamadas tuyas por problemas de convivencia una vez cerrado el deal.</p>
       </div>
       <div class="agent-card">
         <div class="agent-icon">📞</div>
-        <h3>Un profesional con quién hablar</h3>
-        <p>Arquitecto y constructor, no una plataforma anónima. Cuando me presentás a tu cliente, presentás a alguien responsable del activo.</p>
+        <h3 data-i18n="agents.4.title">Un profesional con quién hablar</h3>
+        <p data-i18n="agents.4.text">Arquitecto y constructor, no una plataforma anónima. Cuando me presentás a tu cliente, presentás a alguien responsable del activo.</p>
       </div>
     </div>
   </div>
@@ -864,43 +943,43 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">05</div>
       <div>
-        <div class="section-tag">Selectivo, no desesperado</div>
-        <h2>Qué propiedades <em>busco</em></h2>
-        <p class="section-desc">Si tu depto no cierra, te lo digo. Prefiero menos operaciones bien hechas.</p>
+        <div class="section-tag" data-i18n="req.tag">Selectivo, no desesperado</div>
+        <h2 data-i18n-html="req.title">Qué propiedades <em>busco</em></h2>
+        <p class="section-desc" data-i18n="req.desc">Si tu depto no cierra, te lo digo. Prefiero menos operaciones bien hechas.</p>
       </div>
     </div>
     <div class="req-grid">
       <div class="req">
         <span class="req-icon">🛏️</span>
-        <h3>3–4 ambientes o más</h3>
-        <p>Departamentos o PH con potencial real de habitaciones. No monoambientes.</p>
-        <span class="tag">Mínimo 3 ambientes</span>
+        <h3 data-i18n="req.1.title">3–4 ambientes o más</h3>
+        <p data-i18n="req.1.text">Departamentos o PH con potencial real de habitaciones. No monoambientes.</p>
+        <span class="tag" data-i18n="req.1.tag">Mínimo 3 ambientes</span>
       </div>
       <div class="req">
         <span class="req-icon">📍</span>
-        <h3>Buena ubicación</h3>
-        <p>Preferentemente <strong>GBA Norte</strong> y <strong>CABA</strong> con demanda de residentes locales y extranjeros.</p>
-        <span class="tag">GBA Norte · CABA</span>
+        <h3 data-i18n="req.2.title">Buena ubicación</h3>
+        <p data-i18n-html="req.2.text">Preferentemente <strong>GBA Norte</strong> y <strong>CABA</strong> con demanda de residentes locales y extranjeros.</p>
+        <span class="tag" data-i18n="req.2.tag">GBA Norte · CABA</span>
       </div>
       <div class="req">
         <span class="req-icon">🚇</span>
-        <h3>Conectividad</h3>
-        <p>Cerca de transporte, universidades, polos de trabajo remoto o barrios con movimiento expat.</p>
+        <h3 data-i18n="req.3.title">Conectividad</h3>
+        <p data-i18n="req.3.text">Cerca de transporte, universidades, polos de trabajo remoto o barrios con movimiento expat.</p>
       </div>
       <div class="req">
         <span class="req-icon">🪟</span>
-        <h3>Habitaciones dignas</h3>
-        <p>Luz y ventilación. No armo cuartos “sótano”. Si el plano no da, no lo forzo.</p>
+        <h3 data-i18n="req.4.title">Habitaciones dignas</h3>
+        <p data-i18n="req.4.text">Luz y ventilación. No armo cuartos “sótano”. Si el plano no da, no lo forzo.</p>
       </div>
       <div class="req">
         <span class="req-icon">📋</span>
-        <h3>Consorcio viable</h3>
-        <p>Revisamos reglamento. Si el edificio no admite el esquema, no avanzamos.</p>
+        <h3 data-i18n="req.5.title">Consorcio viable</h3>
+        <p data-i18n="req.5.text">Revisamos reglamento. Si el edificio no admite el esquema, no avanzamos.</p>
       </div>
       <div class="req">
         <span class="req-icon">✨</span>
-        <h3>Dueño alineado</h3>
-        <p>Busco propietarios que valoren comunidad y cuidado del activo, no maximizar camas a cualquier costo.</p>
+        <h3 data-i18n="req.6.title">Dueño alineado</h3>
+        <p data-i18n="req.6.text">Busco propietarios que valoren comunidad y cuidado del activo, no maximizar camas a cualquier costo.</p>
       </div>
     </div>
   </div>
@@ -911,34 +990,34 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">06</div>
       <div>
-        <div class="section-tag">Objeciones reales</div>
-        <h2>Preguntas <em>frecuentes</em></h2>
+        <div class="section-tag" data-i18n="faq.tag">Objeciones reales</div>
+        <h2 data-i18n-html="faq.title">Preguntas <em>frecuentes</em></h2>
       </div>
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Se sobreocupa la propiedad?</button>
-        <div class="faq-a"><p>No. Definimos un layout sensato con luz y ventilación real. Preferimos menos residentes bien filtrados a densificar mal. La selección de inquilinos y las reglas de convivencia son parte del servicio — no es un piso de Facebook.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.1.q">¿Se sobreocupa la propiedad?</button>
+        <div class="faq-a"><p data-i18n="faq.1.a">No. Definimos un layout sensato con luz y ventilación real. Preferimos menos residentes bien filtrados a densificar mal. La selección de inquilinos y las reglas de convivencia son parte del servicio — no es un piso de Facebook.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Pagan a tiempo?</button>
-        <div class="faq-a"><p>Filtro a cada inquilino, contratos claros y seguimiento de cobros. No soy mago: si un mes hay atraso, se gestiona con proceso. Por eso el modelo es revenue-share: yo cobro solo cuando se recauda, así priorizo ocupación y cobrabilidad.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.2.q">¿Pagan a tiempo?</button>
+        <div class="faq-a"><p data-i18n="faq.2.a">Filtro a cada inquilino, contratos claros y seguimiento de cobros. No soy mago: si un mes hay atraso, se gestiona con proceso. Por eso el modelo es revenue-share: yo cobro solo cuando se recauda, así priorizo ocupación y cobrabilidad.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Me garantizás una renta fija?</button>
-        <div class="faq-a"><p><strong>No.</strong> No firmo un master lease ni asumo yo el alquiler. No prometo “cero vacancia” ni un monto fijo mensual. Prometo maximizar el ingreso con operación profesional; mi 20% solo aparece si hay recaudación. Incentivos alineados.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.3.q">¿Me garantizás una renta fija?</button>
+        <div class="faq-a"><p data-i18n-html="faq.3.a"><strong>No.</strong> No firmo un master lease ni asumo yo el alquiler. No prometo “cero vacancia” ni un monto fijo mensual. Prometo maximizar el ingreso con operación profesional; mi 20% solo aparece si hay recaudación. Incentivos alineados.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si un residente causa daños?</button>
-        <div class="faq-a"><p>Depósitos de residentes, inventario, reglas y seguimiento. Los daños imputables se cubren según contrato (depósito / responsabilidad del residente). Las estructurales o de sistema se tratan aparte. Como constructor, documento y priorizo reparación correcta.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.4.q">¿Qué pasa si un residente causa daños?</button>
+        <div class="faq-a"><p data-i18n="faq.4.a">Depósitos de residentes, inventario, reglas y seguimiento. Los daños imputables se cubren según contrato (depósito / responsabilidad del residente). Las estructurales o de sistema se tratan aparte. Como constructor, documento y priorizo reparación correcta.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿En qué estado me devolvés la propiedad?</button>
-        <div class="faq-a"><p>Al cerrar el acuerdo de gestión, entrega con inventario y condiciones acordadas: limpia y en estado equivalente al recibido, menos el uso normal y razonable. Queda por escrito desde el día uno.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.5.q">¿En qué estado me devolvés la propiedad?</button>
+        <div class="faq-a"><p data-i18n="faq.5.a">Al cerrar el acuerdo de gestión, entrega con inventario y condiciones acordadas: limpia y en estado equivalente al recibido, menos el uso normal y razonable. Queda por escrito desde el día uno.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Tengo que poner capital o firmarte un alquiler?</button>
-        <div class="faq-a"><p>No. No me firmás un lease a mí. No te cobro un fee fijo de entrada por “estar”. Mi compensación es el 20% de lo que produce la operación. Si hace falta acondicionar, lo vemos: puede ser tuyo, mío en acuerdo, o mixto — siempre transparente.</p></div>
+        <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.6.q">¿Tengo que poner capital o firmarte un alquiler?</button>
+        <div class="faq-a"><p data-i18n="faq.6.a">No. No me firmás un lease a mí. No te cobro un fee fijo de entrada por “estar”. Mi compensación es el 20% de lo que produce la operación. Si hace falta acondicionar, lo vemos: puede ser tuyo, mío en acuerdo, o mixto — siempre transparente.</p></div>
       </div>
     </div>
   </div>
@@ -948,55 +1027,55 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
   <div class="wrap">
     <div class="cta-grid">
       <div class="cta-copy">
-        <div class="eyebrow">Siguiente paso</div>
-        <h2>Agendá tu<br><em>evaluación gratuita</em></h2>
-        <p>Contame dónde está la propiedad y qué tipología es. En 48 hs te digo si tiene sentido el coliving y te armo un escenario de ingresos (con placeholders reales según zona).</p>
-        <div class="micro">Transparencia: cobro solo un % de lo que se recauda (20%), sin costos ocultos, sin renta “garantizada” de marketing.</div>
-        <a class="btn-wa" href="https://wa.me/5491154932199?text=Hola%2C%20quiero%20agendar%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad%20para%20coliving." target="_blank" rel="noopener">WhatsApp directo</a>
+        <div class="eyebrow" data-i18n="cta.eyebrow">Siguiente paso</div>
+        <h2 data-i18n-html="cta.title">Agendá tu<br><em>evaluación gratuita</em></h2>
+        <p data-i18n="cta.desc">Contame dónde está la propiedad y qué tipología es. En 48 hs te digo si tiene sentido el coliving y te armo un escenario de ingresos (con placeholders reales según zona).</p>
+        <div class="micro" data-i18n="cta.micro">Transparencia: cobro solo un % de lo que se recauda (20%), sin costos ocultos, sin renta “garantizada” de marketing.</div>
+        <a class="btn-wa" data-i18n-wa="wa.cta" href="https://wa.me/5491154932199?text=Hola%2C%20quiero%20agendar%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad%20para%20coliving." target="_blank" rel="noopener" data-i18n="cta.btnWa">WhatsApp directo</a>
       </div>
       <div class="form-box">
-        <h3>Datos de tu propiedad</h3>
-        <p class="form-sub">Formulario corto. Los datos me llegan por correo y te respondo en menos de 48 hs.</p>
+        <h3 data-i18n="form.title">Datos de tu propiedad</h3>
+        <p class="form-sub" data-i18n="form.sub">Formulario corto. Los datos me llegan por correo y te respondo en menos de 48 hs.</p>
         <form id="owner-form" onsubmit="handleSubmit(event)" novalidate>
           <div class="form-row">
             <div class="form-group">
-              <label>Nombre *</label>
+              <label data-i18n="form.name">Nombre *</label>
               <input type="text" name="name" required autocomplete="name">
             </div>
             <div class="form-group">
-              <label>Teléfono / WhatsApp *</label>
-              <input type="tel" name="phone" required placeholder="+54 9 11 …" autocomplete="tel">
+              <label data-i18n="form.phone">Teléfono / WhatsApp *</label>
+              <input type="tel" name="phone" required data-i18n-placeholder="form.phonePh" placeholder="+54 9 11 …" autocomplete="tel">
             </div>
           </div>
           <div class="form-group">
-            <label>Ubicación de la propiedad *</label>
-            <input type="text" name="location" required placeholder="Barrio / localidad (ej. Belgrano, Vicente López)">
+            <label data-i18n="form.location">Ubicación de la propiedad *</label>
+            <input type="text" name="location" required data-i18n-placeholder="form.locationPh" placeholder="Barrio / localidad (ej. Belgrano, Vicente López)">
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Tipo *</label>
+              <label data-i18n="form.type">Tipo *</label>
               <select name="type" required>
-                <option value="">Elegir</option>
-                <option>Departamento</option>
-                <option>PH</option>
-                <option>Casa</option>
+                <option value="" data-i18n="form.choose">Elegir</option>
+                <option data-i18n="form.opt.dept">Departamento</option>
+                <option data-i18n="form.opt.ph">PH</option>
+                <option data-i18n="form.opt.house">Casa</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Ambientes</label>
+              <label data-i18n="form.rooms">Ambientes</label>
               <select name="rooms">
-                <option value="">Elegir</option>
-                <option>3 ambientes</option>
-                <option>4 ambientes</option>
-                <option>5 o más</option>
+                <option value="" data-i18n="form.choose">Elegir</option>
+                <option data-i18n="form.opt.r3">3 ambientes</option>
+                <option data-i18n="form.opt.r4">4 ambientes</option>
+                <option data-i18n="form.opt.r5">5 o más</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label>Comentario (opcional)</label>
-            <textarea name="notes" placeholder="Amoblado, disponibilidad, reglamento del edificio…"></textarea>
+            <label data-i18n="form.notes">Comentario (opcional)</label>
+            <textarea name="notes" data-i18n-placeholder="form.notesPh" placeholder="Amoblado, disponibilidad, reglamento del edificio…"></textarea>
           </div>
-          <button type="submit" class="form-submit">Pedir evaluación gratuita</button>
+          <button type="submit" class="form-submit" data-i18n="form.submit">Pedir evaluación gratuita</button>
           <div id="form-feedback" class="form-feedback"></div>
         </form>
       </div>
@@ -1010,22 +1089,23 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="logo-wordmark">
       <span class="logo-word">Conlat</span>
       <div class="logo-diamond"></div>
-      <span class="logo-sub">Gestión · Comunidad</span>
+      <span class="logo-sub" data-i18n="nav.logoSub">Gestión · Comunidad</span>
     </div>
     <span class="logo-rule"></span>
   </a>
-  <p class="footer-line">Solo gano si vos ganás. 20% de lo recaudado.</p>
-  <p class="footer-copy">
+  <p class="footer-line" data-i18n="footer.line">Solo gano si vos ganás. 20% de lo recaudado.</p>
+  <p class="footer-copy" data-i18n-html="footer.copy">
     Conlat · Gestión de coliving · F+A Arquitectos · RFB Construcciones<br>
     &copy; 2026 · Buenos Aires · Revenue-share, no master lease
   </p>
 </footer>
 
-<a class="sticky-wa" href="https://wa.me/5491154932199?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita." target="_blank" rel="noopener">
+<a class="sticky-wa" data-i18n-wa="wa.sticky" href="https://wa.me/5491154932199?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita." target="_blank" rel="noopener">
   <svg width="18" height="18" viewBox="0 0 32 32" fill="white"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.817.737 5.46 2.027 7.754L0 32l8.463-2.001A15.935 15.935 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.284 21.983c-.398-.2-2.355-1.162-2.72-1.295-.366-.133-.632-.2-.898.2-.265.4-1.03 1.295-1.263 1.562-.232.265-.465.3-.863.1-.398-.2-1.681-.62-3.202-1.976-1.183-1.055-1.982-2.358-2.213-2.757-.232-.4-.025-.615.174-.814.179-.178.398-.465.597-.697.2-.232.265-.4.398-.665.133-.265.067-.497-.033-.697-.1-.2-.898-2.166-1.23-2.963-.324-.778-.653-.672-.898-.685-.232-.012-.498-.015-.764-.015-.265 0-.697.1-1.063.498-1.495.598-2.457 2.027-2.457 3.878 0 1.85 1.363 3.638 1.562 3.89.2.252 2.678 4.088 6.49 5.731.907.392 1.615.626 2.167.801.91.29 1.737.249 2.39.15.729-.109 2.355-.962 2.688-1.891.332-.929.332-1.724.232-1.891-.099-.166-.365-.265-.763-.465z"/></svg>
-  <span>WhatsApp</span>
+  <span data-i18n="sticky.wa">WhatsApp</span>
 </a>
 
+<script src="i18n.js"></script>
 <script>
 const ham = document.getElementById('hamburger');
 const menu = document.getElementById('mobile-menu');
@@ -1090,20 +1170,20 @@ async function handleSubmit(e) {
   const name = form.name, phone = form.phone, location = form.location, type = form.type;
   let ok = true;
   [name, phone, location, type].forEach(f => f.classList.remove('field-error'));
-  if (!name.value.trim()) { name.classList.add('field-error'); hint(name, 'Ingresá tu nombre'); ok = false; }
-  if (!phone.value.trim()) { phone.classList.add('field-error'); hint(phone, 'Ingresá tu WhatsApp'); ok = false; }
-  if (!location.value.trim()) { location.classList.add('field-error'); hint(location, 'Indicá la ubicación'); ok = false; }
-  if (!type.value) { type.classList.add('field-error'); hint(type, 'Elegí el tipo'); ok = false; }
+  if (!name.value.trim()) { name.classList.add('field-error'); hint(name, t('form.err.name')); ok = false; }
+  if (!phone.value.trim()) { phone.classList.add('field-error'); hint(phone, t('form.err.phone')); ok = false; }
+  if (!location.value.trim()) { location.classList.add('field-error'); hint(location, t('form.err.location')); ok = false; }
+  if (!type.value) { type.classList.add('field-error'); hint(type, t('form.err.type')); ok = false; }
   if (!ok) return;
 
   const data = new FormData(form);
-  data.append('_subject', 'Nueva consulta Conlat — evaluación de propiedad');
+  data.append('_subject', t('form.subject'));
   data.append('_template', 'table');
   data.append('_captcha', 'false');
 
   btn.disabled = true;
   const prevLabel = btn.textContent;
-  btn.textContent = 'Enviando…';
+  btn.textContent = t('form.sending');
   fb.className = 'form-feedback';
   fb.textContent = '';
 
@@ -1115,25 +1195,19 @@ async function handleSubmit(e) {
     });
     if (!res.ok) throw new Error('send failed');
     fb.className = 'form-feedback success';
-    fb.textContent = 'Listo. Recibí tu consulta en mi correo. Te respondo en menos de 48 hs.';
+    fb.textContent = t('form.success');
     form.reset();
   } catch (err) {
     fb.className = 'form-feedback error';
-    fb.textContent = 'No se pudo enviar. Probá de nuevo o escribime por WhatsApp.';
+    fb.textContent = t('form.error');
   } finally {
     btn.disabled = false;
-    btn.textContent = prevLabel;
+    btn.textContent = t('form.submit');
   }
 }
 
 (function(){
-  const t = document.querySelector('.compare-table');
-  if (t) {
-    const heads = [...t.querySelectorAll('thead th')].map(h => h.textContent.trim());
-    t.querySelectorAll('tbody tr').forEach(tr => {
-      tr.querySelectorAll('td').forEach((td, i) => { if (i > 0) td.setAttribute('data-label', heads[i]); });
-    });
-  }
+  updateCompareLabels();
 })();
 
 (function(){
