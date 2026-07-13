@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Gestión de coliving para propietarios | Maximizá el ingreso de tu inmueble</title>
-<meta name="description" content="Convierto tu departamento en coliving profesional con residentes bien seleccionados. Cobro solo el 20% de lo recaudado: solo gano si vos ganás. Arquitecto y constructor. Evaluación gratuita.">
+<meta name="description" content="Convierto tu departamento en coliving profesional con residentes bien seleccionados. Cobro solo el 25% de lo recaudado: solo gano si vos ganás. Arquitecto y constructor. Evaluación gratuita.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -234,6 +234,42 @@ h2 em { color: var(--gold); font-style: italic; }
   margin-top: 18px; font-size: 13px; color: var(--muted);
   background: var(--cream); padding: 14px 18px; border-left: 3px solid var(--gold);
 }
+.nums-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin: 0 0 28px;
+}
+.num-card {
+  background: var(--cream); border: 1px solid var(--rule); padding: 22px 18px;
+  text-align: center;
+}
+.num-card.hot {
+  background: var(--navy); border-color: var(--navy); color: var(--white);
+}
+.num-card .num-tag {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 8px;
+}
+.num-card.hot .num-tag { color: var(--gold-light); }
+.num-card .num-label {
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px; font-weight: 500;
+}
+.num-card.hot .num-label { color: rgba(255,255,255,0.55); }
+.num-card .num-val {
+  font-family: 'Cormorant Garamond', serif; font-size: 36px;
+  font-weight: 600; color: var(--navy); line-height: 1; margin-bottom: 10px;
+}
+.num-card.hot .num-val { color: var(--gold-light); }
+.num-card .num-detail {
+  font-size: 13px; color: var(--muted); line-height: 1.5;
+}
+.num-card.hot .num-detail { color: rgba(255,255,255,0.7); }
+.nums-callout {
+  margin: -8px 0 32px; padding: 16px 18px;
+  background: rgba(166,124,58,0.08); border-left: 3px solid var(--gold);
+  font-size: 14px; color: var(--navy-mid); line-height: 1.6;
+}
+.nums-callout strong { color: var(--navy); }
 .placeholder {
   display: inline-block; border-bottom: 1.5px dashed var(--gold);
   color: var(--navy); font-weight: 500; padding: 0 2px;
@@ -500,7 +536,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
   .cred-item { border-right: none; border-bottom: 1px solid var(--rule); }
   .section { padding: 56px 24px; }
   .section-header { flex-direction: column; gap: 8px; margin-bottom: 32px; }
-  .benefits-grid, .steps, .req-grid, .agents-grid, .cta-grid, .human-grid {
+  .benefits-grid, .steps, .req-grid, .agents-grid, .cta-grid, .human-grid, .nums-grid {
     grid-template-columns: 1fr;
   }
   .human-photo { max-width: 320px; margin: 0 auto; }
@@ -661,7 +697,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
 </div>
 
 <div class="top-bar" data-i18n-html="topbar">
-  <strong>Cobro solo el 20% de lo recaudado</strong> — sin costo fijo, sin renta garantizada que no puedo cumplir, sin letra chica.
+  <strong>Cobro solo el 25% de lo recaudado</strong> — sin costo fijo, sin renta garantizada que no puedo cumplir, sin letra chica.
 </div>
 
 <section id="hero">
@@ -674,7 +710,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="eyebrow" data-i18n="hero.eyebrow">Para propietarios</div>
     <h1 data-i18n-html="hero.title">Tu propiedad.<br><em>Mi responsabilidad.</em></h1>
     <p class="hero-sub" data-i18n="hero.sub">Maximizá el ingreso de tu inmueble sin mover un dedo. Lo convierto en coliving con residentes bien seleccionados — argentinos y extranjeros — y me ocupo de todo: inquilinos, cobros, mantenimiento y convivencia.</p>
-    <div class="hero-note" data-i18n-html="hero.note">Solo gano si vos ganás. Cobro el <strong>20% de lo recaudado</strong>. Sin fee fijo. Sin que pongas un peso. Sin que me firmes un alquiler.</div>
+    <div class="hero-note" data-i18n-html="hero.note">Solo gano si vos ganás. Cobro el <strong>25% de lo recaudado</strong>. Sin fee fijo. Sin que pongas un peso. Sin que me firmes un alquiler.</div>
     <div class="hero-actions">
       <a href="#cta" class="btn-primary" data-i18n="hero.btnPrimary">Agendá una evaluación gratuita</a>
       <a class="btn-wa" data-i18n-wa="wa.hero" href="https://wa.me/5491154932199?text=Hola%2C%20soy%20propietario%20y%20quiero%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad." target="_blank" rel="noopener">
@@ -705,11 +741,36 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     <div class="section-header">
       <div class="section-num">01</div>
       <div>
-        <div class="section-tag" data-i18n="compare.tag">Comparación clara</div>
-        <h2 data-i18n-html="compare.title">Alquiler tradicional<br>vs <em>gestión de coliving</em></h2>
-        <p class="section-desc" data-i18n="compare.desc">Sin promesas de renta fija. Con números editables según tu propiedad. La idea: sumar más ingreso neto para vos, con alguien que opera el día a día.</p>
+        <div class="section-tag" data-i18n="compare.tag">Números claros</div>
+        <h2 data-i18n-html="compare.title">Tradicional · Temporario<br>vs <em>alquiler por habitación</em></h2>
+        <p class="section-desc" data-i18n="compare.desc">Ejemplo orientativo en USD para un 4 ambientes. Lo importante: cuánto te queda a vos. Conlat cobra 25% y opera todo.</p>
       </div>
     </div>
+
+    <div class="nums-grid">
+      <div class="num-card">
+        <div class="num-tag" data-i18n="nums.tag">Lo que te llevás</div>
+        <div class="num-label" data-i18n="nums.trad.label">Alquiler tradicional</div>
+        <div class="num-val">USD 1.100</div>
+        <div class="num-detail" data-i18n="nums.trad.detail">Depto entero · 1 contrato</div>
+      </div>
+      <div class="num-card">
+        <div class="num-tag" data-i18n="nums.tag">Lo que te llevás</div>
+        <div class="num-label" data-i18n="nums.temp.label">Temporario</div>
+        <div class="num-val">USD 1.350</div>
+        <div class="num-detail" data-i18n="nums.temp.detail">Más rotación · más gestión</div>
+      </div>
+      <div class="num-card hot">
+        <div class="num-tag" data-i18n="nums.tag">Lo que te llevás</div>
+        <div class="num-label" data-i18n="nums.conlat.label">Conlat · 4 habitaciones</div>
+        <div class="num-val">USD 1.800</div>
+        <div class="num-detail" data-i18n="nums.conlat.detail">75% de USD 2.400 · +64% vs tradicional</div>
+      </div>
+    </div>
+    <div class="nums-callout" data-i18n-html="nums.callout">
+      <strong>Dato clave:</strong> con solo <strong>2 habitaciones</strong> ya entra <strong>USD 1.200</strong> — más que el tradicional de USD 1.100. Cuanto más se llena, más sube. Yo administro; vos cobrás el 75%.
+    </div>
+
     <table class="compare-table">
       <thead>
         <tr>
@@ -727,7 +788,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
         <tr>
           <td data-i18n="compare.r2.label">Mi fee</td>
           <td data-i18n="compare.r2.trad">—</td>
-          <td class="highlight" data-i18n="compare.r2.coliv">20% de lo recaudado · solo si hay ingreso</td>
+          <td class="highlight" data-i18n="compare.r2.coliv">25% de lo recaudado · solo si hay ingreso</td>
         </tr>
         <tr>
           <td data-i18n="compare.r3.label">Quién busca y filtra residentes</td>
@@ -794,12 +855,12 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
       <div class="benefit">
         <span class="benefit-icon">📊</span>
         <h3 data-i18n="benefits.6.title">Reporte mensual transparente</h3>
-        <p data-i18n="benefits.6.text">Ocupación, ingresos, mi 20% y tu liquidación. Todo por escrito, todos los meses.</p>
+        <p data-i18n="benefits.6.text">Ocupación, ingresos, mi 25% y tu liquidación. Todo por escrito, todos los meses.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">💸</span>
         <h3 data-i18n="benefits.7.title">Sin costo fijo para vos</h3>
-        <p data-i18n="benefits.7.text">No me pagás un retainer. Si ese mes no se recauda, no cobro fee. Solo el 20% de lo efectivamente producido.</p>
+        <p data-i18n="benefits.7.text">No me pagás un retainer. Si ese mes no se recauda, no cobro fee. Solo el 25% de lo efectivamente producido.</p>
       </div>
       <div class="benefit">
         <span class="benefit-icon">🧾</span>
@@ -844,7 +905,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
       <div class="step">
         <div class="step-n">04</div>
         <h3 data-i18n="how.4.title">Vos cobrás, yo gestiono</h3>
-        <p data-i18n-html="how.4.text">Operación completa + reporte. Cobro mi <strong>20% de lo recaudado</strong>. Sin fijo. Sin costos ocultos.</p>
+        <p data-i18n-html="how.4.text">Operación completa + reporte. Cobro mi <strong>25% de lo recaudado</strong>. Sin fijo. Sin costos ocultos.</p>
       </div>
     </div>
   </div>
@@ -886,12 +947,12 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
         <div class="eyebrow" data-i18n="human.eyebrow">El humano detrás</div>
         <h2 data-i18n-html="human.title">No le estás dejando el depto<br>a una empresa sin cara.<br><em>Me lo estás confiando a mí.</em></h2>
         <p data-i18n-html="human.p1">Soy arquitecto matriculado y constructor. Trabajo con <strong>F+A Arquitectos</strong> y <strong>RFB Construcciones</strong>. Entiendo planos, obra húmeda, instalaciones, consorcios y el desgaste real de un inmueble — no solo “publicar el aviso”.</p>
-        <p data-i18n-html="human.p2">Por eso gestiono coliving distinto: cada propiedad la trato como un activo construido, no como un aviso más. Residentes bien seleccionados, mantenimiento con criterio, y un fee honesto: <strong>solo el 20% de lo que se recauda</strong>.</p>
+        <p data-i18n-html="human.p2">Por eso gestiono coliving distinto: cada propiedad la trato como un activo construido, no como un aviso más. Residentes bien seleccionados, mantenimiento con criterio, y un fee honesto: <strong>solo el 25% de lo que se recauda</strong>.</p>
         <p data-i18n="human.p3">No te garantizo una renta fija que después no puedo sostener. Te prometo esfuerzo alineado: llenar rápido, filtrar bien, reportar claro. Si la propiedad produce, los dos ganamos. Si no, yo tampoco cobro.</p>
         <div class="human-firms">
           <span class="chip">F+A Arquitectos</span>
           <span class="chip">RFB Construcciones</span>
-          <span class="chip">20% revenue-share</span>
+          <span class="chip">25% revenue-share</span>
         </div>
         <div class="sig">
           <strong>Maxi Flores</strong>
@@ -1005,7 +1066,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.3.q">¿Me garantizás una renta fija?</button>
-        <div class="faq-a"><p data-i18n-html="faq.3.a"><strong>No.</strong> No firmo un master lease ni asumo yo el alquiler. No prometo “cero vacancia” ni un monto fijo mensual. Prometo maximizar el ingreso con operación profesional; mi 20% solo aparece si hay recaudación. Incentivos alineados.</p></div>
+        <div class="faq-a"><p data-i18n-html="faq.3.a"><strong>No.</strong> No firmo un master lease ni asumo yo el alquiler. No prometo “cero vacancia” ni un monto fijo mensual. Prometo maximizar el ingreso con operación profesional; mi 25% solo aparece si hay recaudación. Incentivos alineados.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.4.q">¿Qué pasa si un residente causa daños?</button>
@@ -1017,7 +1078,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.6.q">¿Tengo que poner capital o firmarte un alquiler?</button>
-        <div class="faq-a"><p data-i18n="faq.6.a">No. No me firmás un lease a mí. No te cobro un fee fijo de entrada por “estar”. Mi compensación es el 20% de lo que produce la operación. Si hace falta acondicionar, lo vemos: puede ser tuyo, mío en acuerdo, o mixto — siempre transparente.</p></div>
+        <div class="faq-a"><p data-i18n="faq.6.a">No. No me firmás un lease a mí. No te cobro un fee fijo de entrada por “estar”. Mi compensación es el 25% de lo que produce la operación. Si hace falta acondicionar, lo vemos: puede ser tuyo, mío en acuerdo, o mixto — siempre transparente.</p></div>
       </div>
     </div>
   </div>
@@ -1030,7 +1091,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
         <div class="eyebrow" data-i18n="cta.eyebrow">Siguiente paso</div>
         <h2 data-i18n-html="cta.title">Agendá tu<br><em>evaluación gratuita</em></h2>
         <p data-i18n="cta.desc">Contame dónde está la propiedad y qué tipología es. En 48 hs te digo si tiene sentido el coliving y te armo un escenario de ingresos (con placeholders reales según zona).</p>
-        <div class="micro" data-i18n="cta.micro">Transparencia: cobro solo un % de lo que se recauda (20%), sin costos ocultos, sin renta “garantizada” de marketing.</div>
+        <div class="micro" data-i18n="cta.micro">Transparencia: cobro solo un % de lo que se recauda (25%), sin costos ocultos, sin renta “garantizada” de marketing.</div>
         <a class="btn-wa" data-i18n-wa="wa.cta" href="https://wa.me/5491154932199?text=Hola%2C%20quiero%20agendar%20una%20evaluaci%C3%B3n%20gratuita%20de%20mi%20propiedad%20para%20coliving." target="_blank" rel="noopener" data-i18n="cta.btnWa">WhatsApp directo</a>
       </div>
       <div class="form-box">
@@ -1093,7 +1154,7 @@ footer .logo-rule { background: rgba(255,255,255,0.35); }
     </div>
     <span class="logo-rule"></span>
   </a>
-  <p class="footer-line" data-i18n="footer.line">Solo gano si vos ganás. 20% de lo recaudado.</p>
+  <p class="footer-line" data-i18n="footer.line">Solo gano si vos ganás. 25% de lo recaudado.</p>
   <p class="footer-copy" data-i18n-html="footer.copy">
     Conlat · Gestión de coliving · F+A Arquitectos · RFB Construcciones<br>
     &copy; 2026 · Buenos Aires · Revenue-share, no master lease
