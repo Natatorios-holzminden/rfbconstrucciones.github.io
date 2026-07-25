@@ -1,0 +1,1242 @@
+<!DOCTYPE html><html lang="es"><head>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Conlat — Visualización</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --background: oklch(0.98 0.005 90);
+  --foreground: oklch(0.20 0.02 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.20 0.02 260);
+  --primary: oklch(0.55 0.15 165);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.70 0.18 55);
+  --secondary-foreground: oklch(0.15 0.02 55);
+  --muted: oklch(0.95 0.01 90);
+  --muted-foreground: oklch(0.45 0.02 260);
+  --accent: oklch(0.92 0.03 165);
+  --accent-foreground: oklch(0.25 0.08 165);
+  --success: oklch(0.65 0.2 145);
+  --success-foreground: oklch(1 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.90 0.01 90);
+  --input: oklch(0.95 0.01 90);
+  --ring: oklch(0.55 0.15 165);
+  --radius: 0.75rem;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Inter',system-ui,sans-serif;background:#f4f5f7;color:var(--foreground);-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ===== Shell ===== */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.rail{position:sticky;top:0;align-self:start;height:100vh;background:#fff;border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.rail-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
+.rail-brand .logo{width:32px;height:32px;border-radius:8px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800}
+.rail-brand .name{font-weight:800;font-size:17px;letter-spacing:-0.01em}
+.rail-brand .sub{font-size:11px;color:var(--muted-foreground);margin-top:1px}
+.rail-section{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-foreground);padding:14px 10px 6px}
+.rail-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--muted-foreground);cursor:pointer;border:none;background:transparent;text-align:left;width:100%}
+.rail-item:hover{background:var(--muted);color:var(--foreground)}
+.rail-item.active{background:var(--primary);color:#fff}
+.rail-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
+.rail-foot{margin-top:auto;padding:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted-foreground);line-height:1.5}
+
+.stage{padding:28px 32px 64px;max-width:1600px}
+.stage-head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:6px}
+.stage-title{font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.stage-meta{font-size:12.5px;color:var(--muted-foreground);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.stage-desc{color:var(--muted-foreground);font-size:14px;margin-bottom:22px;max-width:720px}
+
+/* Frame wrapper */
+.frame{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03),0 8px 28px rgba(20,40,60,.06)}
+.frame-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fafafb;border-bottom:1px solid var(--border)}
+.frame-bar .dots{display:flex;gap:6px}
+.frame-bar .dots span{width:11px;height:11px;border-radius:50%;background:#e2e4e8}
+.frame-bar .dots span:nth-child(1){background:#ff5f57}
+.frame-bar .dots span:nth-child(2){background:#febc2e}
+.frame-bar .dots span:nth-child(3){background:#28c840}
+.frame-bar .url{flex:1;background:#fff;border:1px solid var(--border);border-radius:7px;padding:4px 10px;font:500 11.5px ui-monospace,monospace;color:var(--muted-foreground)}
+.frame-body{background:var(--background)}
+
+.screen{display:none}
+.screen.active{display:block}
+
+/* ===== Shared tailwind-ish utility classes ===== */
+.container-x{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:calc(var(--radius) - 2px);font-weight:500;font-size:14px;padding:8px 16px;border:1px solid transparent;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.btn:hover{opacity:.9}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:#fff;border-color:var(--border);color:var(--foreground)}
+.btn-ghost{background:transparent;color:var(--foreground)}
+.btn-sm{padding:6px 12px;font-size:13px;height:32px}
+.btn-icon{width:36px;height:36px;padding:0}
+.btn-lg{padding:10px 22px;font-size:15px;height:44px}
+.btn-pill{border-radius:9999px}
+.btn-w{width:100%}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:9999px;padding:2px 9px;font-size:11px;font-weight:600;line-height:1.3}
+.badge-primary{background:var(--primary);color:#fff}
+.badge-secondary{background:var(--secondary);color:var(--secondary-foreground)}
+.badge-success{background:var(--success);color:#fff}
+.badge-soft{background:var(--muted);color:var(--foreground)}
+
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-pad{padding:16px}
+
+/* Inputs */
+.input{height:36px;border:1px solid var(--border);background:#fff;border-radius:8px;padding:0 12px;font:400 14px Inter;width:100%;outline:none}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in oklch, var(--primary) 20%, transparent)}
+.label{font-size:13.5px;font-weight:500;color:var(--foreground);display:block;margin-bottom:6px}
+
+/* Progress */
+.progress{height:6px;background:var(--muted);border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;background:var(--primary);border-radius:999px}
+
+/* ===== HEADER ===== */
+.hdr{position:sticky;top:0;z-index:5;border-bottom:1px solid var(--border);background:rgba(255,255,255,.85);backdrop-filter:blur(8px)}
+.hdr-inner{display:flex;align-items:center;gap:14px;height:64px}
+.logo-sm{width:32px;height:32px;border-radius:8px;background:var(--primary);display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px}
+.brand-name{font-size:19px;font-weight:800;letter-spacing:-0.02em}
+.loc{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--foreground);padding:6px 10px;border-radius:8px;cursor:pointer}
+.loc:hover{background:var(--muted)}
+.search{flex:1;max-width:440px;position:relative}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted-foreground)}
+.search input{padding-left:34px;border-radius:999px;background:var(--muted);border-color:transparent}
+.hdr-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+.cart-btn{position:relative;width:36px;height:36px;border-radius:8px;display:grid;place-items:center;color:var(--foreground);cursor:pointer}
+.cart-btn:hover{background:var(--muted)}
+.cart-btn .count{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--primary);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid #fff}
+
+/* ===== HERO ===== */
+.hero{position:relative;overflow:hidden;padding:56px 0 64px;background:linear-gradient(135deg,color-mix(in oklch, var(--primary) 10%, transparent) 0%, var(--background) 45%, color-mix(in oklch, var(--accent) 30%, transparent) 100%)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;position:relative;z-index:1}
+.live-badge{display:inline-flex;align-items:center;gap:8px;background:var(--secondary);color:var(--secondary-foreground);padding:5px 12px;border-radius:9999px;font-size:13px;font-weight:600}
+.live-badge .pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:54px;line-height:1.08;font-weight:900;letter-spacing:-0.03em;margin:14px 0 0}
+.hero h1 .acc{color:var(--primary);position:relative;display:inline-block}
+.hero h1 .acc svg{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:8px}
+.hero p.lede{margin:18px 0 0;font-size:18px;color:var(--muted-foreground);max-width:480px;line-height:1.55}
+.hero-cta{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+.hero-stats{display:flex;align-items:center;gap:22px;margin-top:36px;flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:10px}
+.stat .ic{width:36px;height:36px;border-radius:50%;background:color-mix(in oklch, var(--primary) 12%, transparent);display:grid;place-items:center;color:var(--primary)}
+.stat-num{font-weight:800;font-size:18px;line-height:1;color:var(--foreground)}
+.stat-lab{font-size:11.5px;color:var(--muted-foreground);margin-top:3px}
+.stat-sep{width:1px;height:28px;background:var(--border)}
+
+/* Floating card */
+.fc{position:relative;justify-self:end;width:320px}
+.fc-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 30px 60px -20px rgba(0,80,80,.25)}
+.fc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fc-head .em{font-size:28px}
+.fc-head .tt{font-weight:700;font-size:13.5px}
+.fc-head .st{font-size:11.5px;color:var(--muted-foreground)}
+.fc-item{display:flex;align-items:center;justify-content:space-between;background:var(--muted);border-radius:12px;padding:8px 10px;margin-bottom:6px}
+.fc-item .l{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.fc-item .r{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:#15803d}
+.fc-new{position:absolute;top:-16px;left:-16px;background:#22c55e;color:#fff;padding:6px 12px;border-radius:14px;font-size:13px;font-weight:700;transform:rotate(-6deg);box-shadow:0 8px 24px rgba(34,197,94,.3)}
+.fc-vecinos{position:absolute;bottom:-10px;left:0;background:#fff;border:1px solid var(--border);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.fc-vecinos .avs{display:flex}
+.fc-vecinos .avs > div{width:20px;height:20px;border-radius:50%;border:2px solid #fff;margin-left:-4px}
+.fc-vecinos .avs > div:first-child{margin-left:0}
+
+/* ===== Category nav ===== */
+.sec{padding:40px 0}
+.sec h2{font-size:28px;font-weight:800;letter-spacing:-0.02em;margin:0}
+.sec p.sub{color:var(--muted-foreground);margin:4px 0 0;font-size:14px}
+.catnav{display:flex;gap:8px;margin:22px 0 6px;overflow-x:auto;padding-bottom:4px}
+.catnav .btn{flex-shrink:0}
+
+/* Product grid */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
+.prod{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .15s, box-shadow .15s;cursor:pointer;display:flex;flex-direction:column}
+.prod:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.07)}
+.prod .img{height:180px;flex-shrink:0;background:linear-gradient(135deg, color-mix(in oklch, var(--accent) 40%, transparent), var(--muted));display:grid;place-items:center;position:relative;overflow:hidden}
+.prod .img img{width:100%;height:100%;object-fit:cover;display:block}
+.prod .em{font-size:64px}
+.prod .tags{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:4px;z-index:1}
+.prod .tags .badge{font-size:10px;padding:2px 7px}
+.prod-body{padding:14px;display:flex;flex-direction:column;flex:1}
+.prod h3{margin:0;font-size:14px;font-weight:600;line-height:1.35;color:var(--foreground);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}
+.prod .price-row{display:flex;align-items:baseline;gap:6px;margin-top:8px}
+.prod .price{font-size:19px;font-weight:800;color:var(--primary)}
+.prod .unit{font-size:13px;color:var(--muted-foreground)}
+.prod .super{margin-top:3px;font-size:12px;color:var(--muted-foreground);min-height:18px}
+.prod .super s{margin-right:4px}
+.prod .super .ok{color:#15803d}
+.prod .grp-stats{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted-foreground);margin:10px 0 6px}
+.prod .mini{display:inline-flex;align-items:center;gap:3px}
+.prod .actions{margin-top:auto;padding-top:12px}
+
+/* ===== Footer ===== */
+.ftr{border-top:1px solid var(--border);background:color-mix(in oklch, var(--muted) 50%, transparent);margin-top:48px}
+.ftr-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr;gap:28px;padding:48px 0 24px}
+.ftr h4{font-size:14px;font-weight:700;margin:0 0 12px}
+.ftr ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.ftr li{font-size:13px;color:var(--muted-foreground);cursor:pointer}
+.ftr li:hover{color:var(--foreground)}
+.ftr p.about{font-size:13px;color:var(--muted-foreground);line-height:1.55;margin:12px 0 0}
+.ftr-btm{border-top:1px solid var(--border);padding:18px 0;display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted-foreground);flex-wrap:wrap;gap:8px}
+
+/* ===== Producto detalle ===== */
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-foreground);padding:16px 0;cursor:pointer}
+.back:hover{color:var(--foreground)}
+.prod-det{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding-bottom:32px}
+.prod-det .hero-img{aspect-ratio:1/1;border-radius:16px;background:linear-gradient(135deg, color-mix(in oklch, var(--accent) 40%, transparent), var(--muted));display:grid;place-items:center;position:relative}
+.prod-det .hero-img .em{font-size:160px}
+.prod-det .hero-img .tags{position:absolute;left:16px;top:16px;display:flex;flex-direction:column;gap:8px}
+.prod-det h1{font-size:36px;font-weight:800;letter-spacing:-0.02em;margin:0}
+.prod-det .desc{font-size:16px;color:var(--muted-foreground);line-height:1.55}
+.prod-det .big-price{display:flex;align-items:baseline;gap:10px}
+.prod-det .big-price .p{font-size:40px;font-weight:800;color:var(--primary)}
+.prod-det .big-price .u{font-size:18px;color:var(--muted-foreground)}
+.sep{height:1px;background:var(--border);margin:4px 0}
+.grp-card{background:color-mix(in oklch, var(--primary) 5%, #fff);border:1px solid color-mix(in oklch, var(--primary) 20%, transparent);border-radius:12px;padding:20px}
+.grp-card h3{display:flex;align-items:center;gap:8px;font-size:18px;margin:0 0 14px;font-weight:700}
+.beneficios{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ben{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;background:color-mix(in oklch, var(--muted) 60%, transparent);border-radius:10px;text-align:center}
+.ben svg{color:var(--primary)}
+.ben span{font-size:13px;font-weight:500}
+
+/* ===== Mis pedidos ===== */
+.pedido{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.pedido .row{display:flex;gap:16px}
+.pedido .thumb{width:96px;height:96px;border-radius:10px;background:var(--muted);display:grid;place-items:center;font-size:42px;flex-shrink:0;overflow:hidden}
+.pedido .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pedido .info{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-width:0}
+.pedido .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.pedido .top h3{margin:0;font-size:15.5px;font-weight:600}
+.pedido .top p{margin:3px 0 0;font-size:13px;color:var(--muted-foreground)}
+.est{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+.est-pendiente{background:#fef9c3;color:#854d0e}
+.est-pagado{background:#dbeafe;color:#1d4ed8}
+.est-entregado{background:color-mix(in oklch, var(--success) 20%, white);color:color-mix(in oklch, var(--success) 70%, black)}
+.est-cancelado{background:#fee2e2;color:#b91c1c}
+.pedido .bot{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.pedido .bot .tot{font-size:18px;font-weight:800;color:var(--primary)}
+
+/* ===== Auth ===== */
+.auth-center{min-height:100%;display:grid;place-items:center;padding:48px 16px}
+.auth-card{width:100%;max-width:420px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.04)}
+.auth-logo{width:48px;height:48px;background:var(--primary);border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:22px;margin:0 auto 14px}
+.auth-title{text-align:center;font-size:22px;font-weight:800;margin:0}
+.auth-desc{text-align:center;font-size:14px;color:var(--muted-foreground);margin:6px 0 22px}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.linklike{color:var(--primary);font-weight:500}
+.linklike:hover{text-decoration:underline}
+
+/* Signup split */
+.signup{display:grid;grid-template-columns:1fr 1fr;min-height:620px}
+.signup-left{background:color-mix(in oklch, var(--primary) 5%, #fff);padding:48px;display:flex;flex-direction:column;justify-content:center}
+.signup-left h1{font-size:30px;font-weight:800;letter-spacing:-0.02em;margin:24px 0 12px;max-width:420px}
+.signup-left p{font-size:16px;color:var(--muted-foreground);line-height:1.55;max-width:420px}
+.signup-left ul{list-style:none;padding:0;margin:28px 0 0;display:flex;flex-direction:column;gap:14px}
+.signup-left li{display:flex;align-items:center;gap:10px;font-size:14.5px}
+.signup-left li .ck{width:22px;height:22px;border-radius:50%;background:color-mix(in oklch, var(--success) 20%, white);display:grid;place-items:center;color:color-mix(in oklch, var(--success) 70%, black)}
+.signup-right{padding:40px;display:flex;align-items:center;justify-content:center}
+
+/* ===== Admin ===== */
+.admin{display:grid;grid-template-columns:240px 1fr;min-height:720px;background:color-mix(in oklch, var(--muted) 40%, white)}
+.admin-side{background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.admin-brand{display:flex;align-items:center;gap:10px;padding:0 22px;height:64px;border-bottom:1px solid var(--border)}
+.admin-nav{padding:16px;flex:1;display:flex;flex-direction:column;gap:2px}
+.admin-nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;font-size:13.5px;font-weight:500;color:var(--muted-foreground);border-radius:8px;cursor:pointer}
+.admin-nav a:hover{background:var(--muted);color:var(--foreground)}
+.admin-nav a.active{background:var(--primary);color:#fff}
+.admin-side .foot{border-top:1px solid var(--border);padding:14px}
+.admin-main{padding:30px}
+.admin-h{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}
+.admin-h h1{font-size:26px;font-weight:800;letter-spacing:-0.02em;margin:0 0 4px}
+.admin-h p{margin:0;font-size:14px;color:var(--muted-foreground)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px}
+.stat-card .tt{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;color:var(--muted-foreground);margin-bottom:8px}
+.stat-card .num{font-size:26px;font-weight:800;letter-spacing:-0.02em}
+.stat-card .sub{font-size:11.5px;color:var(--muted-foreground);margin-top:4px}
+
+.tbl-card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.tbl-head{padding:16px 18px;border-bottom:1px solid var(--border)}
+.tbl-head h2{margin:0;font-size:16px;font-weight:700}
+.tbl-head p{margin:2px 0 0;font-size:12.5px;color:var(--muted-foreground)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl thead{background:color-mix(in oklch, var(--muted) 50%, white)}
+.tbl th{text-align:left;padding:10px 16px;font-weight:600;color:var(--muted-foreground);font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.tbl td{padding:14px 16px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.prod-inline{display:flex;align-items:center;gap:10px}
+.prod-inline .ti{width:36px;height:36px;border-radius:8px;background:var(--muted);display:grid;place-items:center;font-size:18px}
+
+.estado-pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:9999px;font-size:11.5px;font-weight:600}
+.est-act{background:#dcfce7;color:#166534}
+.est-comp{background:#dbeafe;color:#1e40af}
+.est-inact{background:#f3f4f6;color:#4b5563}
+
+.grp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.grp-mini{border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.grp-mini .top{display:flex;justify-content:space-between;align-items:flex-start}
+.grp-mini h3{margin:0;font-size:14px;font-weight:600}
+.grp-mini .u{font-size:12px;color:var(--muted-foreground);margin-top:2px}
+
+/* Small icons inline */
+.i{width:14px;height:14px;display:inline-block;vertical-align:-2px}
+.i-lg{width:18px;height:18px}
+.i-xl{width:22px;height:22px}
+
+/* Hero tabs */
+.htab{border:none;background:transparent;color:var(--muted-foreground);padding:6px 14px;border-radius:9999px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.htab-on{background:#fff;color:var(--foreground);box-shadow:0 1px 2px rgba(0,0,0,.06),0 0 0 1px var(--border)}
+</style>
+</head>
+<body data-cc-id="cc-39" style="cursor: crosshair; background-color: rgba(244, 245, 247, 0.965);">
+
+<div class="shell">
+  <!-- Rail / navigator -->
+  <aside class="rail" data-cc-id="cc-5">
+    <div class="rail-brand">
+      <div class="logo">C</div>
+      <div>
+        <div class="name">Conlat</div>
+        <div class="sub">Design review</div>
+      </div>
+    </div>
+
+    <div class="rail-section">Público</div>
+    <button class="rail-item active" data-screen="home" data-cc-id="cc-1"><span class="dot"></span>Home</button>
+    <button class="rail-item" data-screen="producto" data-cc-id="cc-15"><span class="dot"></span>Producto · detalle</button>
+    <button class="rail-item" data-screen="pedidos" data-cc-id="cc-14"><span class="dot"></span>Mis Pedidos</button>
+
+    <div class="rail-section" data-cc-id="cc-13">Auth</div>
+    <button class="rail-item" data-screen="login"><span class="dot"></span>Login</button>
+    <button class="rail-item" data-screen="signup"><span class="dot"></span>Sign up</button>
+
+    <div class="rail-section">Admin</div>
+    <button class="rail-item" data-screen="admin"><span class="dot"></span>Dashboard</button>
+    <button class="rail-item" data-screen="admin-grupos"><span class="dot"></span>Grupos</button>
+    <button class="rail-item" data-screen="admin-productos"><span class="dot"></span>Productos</button>
+
+    <div class="rail-foot">
+      Reconstrucción fiel de pantallas a partir del código Next.js del proyecto. Colores, tipografía y datos mock extraídos del repo.
+    </div>
+  </aside>
+
+  <!-- Stage -->
+  <main class="stage" data-cc-id="cc-11">
+    <div id="stage-header" data-cc-id="cc-29">
+      <div class="stage-head" data-cc-id="cc-30">
+        <div class="stage-title" id="stTitle">Home</div>
+        <div class="stage-meta" id="stMeta">app/page.tsx</div>
+      </div>
+      <div class="stage-desc" id="stDesc">Landing pública. Header sticky con búsqueda y ubicación, hero con grupo flotante, grilla de productos y footer.</div>
+    </div>
+
+    <!-- ===== HOME ===== -->
+    <section class="screen active" data-screen="home">
+      <div class="frame" data-cc-id="cc-16">
+        <div class="frame-bar" data-cc-id="cc-38"><div class="dots"><span></span><span></span><span></span></div><div class="url" data-cc-id="cc-33">conlat.com.ar/</div></div>
+        <div class="frame-body">
+
+          <!-- Header -->
+          <header class="hdr">
+            <div class="container-x hdr-inner" data-cc-id="cc-34">
+              <div class="logo-sm">C</div>
+              <div class="brand-name">Conlat</div>
+              <div class="loc" data-cc-id="cc-36">
+                <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Palermo
+              </div>
+              <div class="search" data-cc-id="cc-35">
+                <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <input class="input" placeholder="Buscar productos..." data-cc-id="cc-32">
+              </div>
+              <div class="hdr-actions">
+                <div class="cart-btn">
+                  <svg class="i-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                  <div class="count">0</div>
+                </div>
+                <div class="cart-btn">
+                  <svg class="i-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <button class="btn btn-primary btn-sm">Ingresar</button>
+              </div>
+            </div>
+          </header>
+
+          <!-- Hero version toggle -->
+          <div class="container-x" style="padding-top:16px;padding-bottom:0" data-cc-id="cc-31">
+            <div style="display:inline-flex;background:var(--muted);border-radius:9999px;padding:4px;gap:2px;font-size:12.5px;font-weight:600" role="tablist" aria-label="Versión de hero" data-cc-id="cc-37">
+              <button id="heroTabNew" class="htab htab-on" type="button">Mejorado</button>
+              <button id="heroTabOld" class="htab" type="button">Original</button>
+              <span style="display:inline-flex;align-items:center;padding:0 10px;color:var(--muted-foreground);font-weight:500;font-size:11.5px" data-cc-id="cc-2">comparación hero</span>
+            </div>
+          </div>
+
+          <!-- Hero (mejorado) -->
+          <section class="hero" id="heroNew">
+            <div class="container-x hero-grid" data-cc-id="cc-27">
+              <div>
+                <span class="live-badge"><span class="pulse"></span>500+ vecinos activos ahora</span>
+                <h1 data-cc-id="cc-3">Comprá con tus <span class="acc">vecinos<svg viewBox="0 0 200 8" fill="none"><path d="M1 5.5C47 1.5 153 1.5 199 5.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path></svg></span> y ahorrá hasta <span class="acc" style="white-space:nowrap" data-cc-id="cc-4">35%</span></h1>
+                <p class="lede">Grupos de compra vecinales directo del productor. Sin intermediarios, más frescura, mejores precios para todos.</p>
+                <div class="hero-cta">
+                  <button class="btn btn-primary btn-lg btn-pill">Empezar a ahorrar →</button>
+                  <button class="btn btn-outline btn-lg btn-pill">Cómo funciona</button>
+                </div>
+                <div class="hero-stats">
+                  <div class="stat"><div class="ic"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline><polyline points="16 17 22 17 22 11"></polyline></svg></div><div><div class="stat-num">35%</div><div class="stat-lab">Ahorro prom.</div></div></div>
+                  <div class="stat-sep"></div>
+                  <div class="stat"><div class="ic"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><div><div class="stat-num">500+</div><div class="stat-lab">Vecinos</div></div></div>
+                  <div class="stat-sep"></div>
+                  <div class="stat"><div class="ic"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h11v13"></path><path d="M14 9h4l3 3v5a1 1 0 0 1-1 1h-2"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></div><div><div class="stat-num">24hs</div><div class="stat-lab">Entrega</div></div></div>
+                </div>
+              </div>
+
+              <div class="fc">
+                <div class="fc-new">¡Nuevo grupo! 🎉</div>
+                <div class="fc-card">
+                  <div class="fc-head">
+                    <div class="em">🛒</div>
+                    <div>
+                      <div class="tt">Grupo activo en tu zona</div>
+                      <div class="st">Palermo · cierra en 2 días</div>
+                    </div>
+                  </div>
+                  <div class="fc-item"><div class="l"><img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&amp;fit=crop&amp;w=80&amp;q=80" style="width:22px;height:22px;border-radius:6px;object-fit:cover"> Brócoli fresco</div><div class="r">-37% <span style="color:var(--muted-foreground);font-weight:500">· 12</span></div></div>
+                  <div class="fc-item"><div class="l"><img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&amp;fit=crop&amp;w=80&amp;q=80" style="width:22px;height:22px;border-radius:6px;object-fit:cover"> Tomates cherry</div><div class="r">-37% <span style="color:var(--muted-foreground);font-weight:500">· 10</span></div></div>
+                  <div class="fc-item" data-cc-id="cc-28"><div class="l"><img src="https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&amp;fit=crop&amp;w=80&amp;q=80" style="width:22px;height:22px;border-radius:6px;object-fit:cover"> Frutillas</div><div class="r">-31% <span style="color:var(--muted-foreground);font-weight:500">· 8</span></div></div>
+                  <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px;border-radius:10px;height:36px">Unirme al grupo</button>
+                </div>
+                <div class="fc-vecinos">
+                  <span style="font-size:18px">🏘️</span>
+                  <div>
+                    <div style="font-size:11.5px;font-weight:700">Vecinos ahorrando</div>
+                    <div class="avs" style="margin-top:2px">
+                      <div style="background:var(--primary)"></div>
+                      <div style="background:#4ade80"></div>
+                      <div style="background:#fbbf24"></div>
+                      <div style="background:#60a5fa"></div>
+                      <div style="background:#fb7185"></div>
+                      <div style="background:var(--muted);display:grid;place-items:center;font-size:8px;font-weight:700;color:var(--muted-foreground)">+8</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Hero (original / versión previa) -->
+          <section class="hero hero-old" id="heroOld" style="display:none">
+            <div class="container-x" style="position:relative;z-index:1">
+              <div style="max-width:760px;margin:0 auto;text-align:center">
+                <span class="badge badge-secondary" style="padding:4px 12px;font-size:12.5px">Nuevo en tu barrio</span>
+                <h1 style="font-size:56px;line-height:1.08;font-weight:800;letter-spacing:-0.025em;margin:16px 0 0;text-wrap:balance">
+                  Comprando juntos,<br><span style="color:var(--primary)">ahorramos todos</span>
+                </h1>
+                <p style="margin:22px auto 0;max-width:620px;font-size:18px;color:var(--muted-foreground);line-height:1.55;text-wrap:pretty">
+                  Unite a grupos de compra vecinales y ahorrá hasta un 35% en productos frescos directo del productor. Sin intermediarios, más frescura, mejores precios.
+                </p>
+                <div style="margin-top:30px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+                  <button class="btn btn-primary btn-lg">Empezar a ahorrar</button>
+                  <button class="btn btn-outline btn-lg">Cómo funciona</button>
+                </div>
+                <div style="margin:48px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:640px">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <div style="width:48px;height:48px;border-radius:9999px;background:color-mix(in oklch, var(--primary) 12%, transparent);display:grid;place-items:center;color:var(--primary)">
+                      <svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline><polyline points="16 17 22 17 22 11"></polyline></svg>
+                    </div>
+                    <div style="font-size:28px;font-weight:800">35%</div>
+                    <div style="font-size:13px;color:var(--muted-foreground)">Ahorro promedio</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <div style="width:48px;height:48px;border-radius:9999px;background:color-mix(in oklch, var(--primary) 12%, transparent);display:grid;place-items:center;color:var(--primary)">
+                      <svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <div style="font-size:28px;font-weight:800">500+</div>
+                    <div style="font-size:13px;color:var(--muted-foreground)">Vecinos activos</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <div style="width:48px;height:48px;border-radius:9999px;background:color-mix(in oklch, var(--primary) 12%, transparent);display:grid;place-items:center;color:var(--primary)">
+                      <svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h11v13"></path><path d="M14 9h4l3 3v5a1 1 0 0 1-1 1h-2"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+                    </div>
+                    <div style="font-size:28px;font-weight:800">24hs</div>
+                    <div style="font-size:13px;color:var(--muted-foreground)">Entrega promedio</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Grid -->
+          <section class="sec" data-cc-id="cc-26">
+            <div class="container-x" data-cc-id="cc-9">
+              <h2 data-cc-id="cc-25">Productos disponibles</h2>
+              <p class="sub">Encontrá los mejores precios comprando en grupo</p>
+              <div class="catnav">
+                <button class="btn btn-primary btn-sm">▦ Todos</button>
+                <button class="btn btn-outline btn-sm">🍎 Frutas</button>
+                <button class="btn btn-outline btn-sm" data-cc-id="cc-6">🥬 Verduras</button>
+                <button class="btn btn-outline btn-sm">🥔 Hortalizas</button>
+                <button class="btn btn-outline btn-sm">🌿 Orgánicos</button>
+                <button class="btn btn-outline btn-sm" data-cc-id="cc-10">✨ De temporada</button>
+              </div>
+
+              <div class="pgrid" id="pgrid">
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          <span class="badge badge-secondary">Destacado</span>
+          <span class="badge badge-success">↓ 37% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Tomates cherry orgánicos" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block" data-cc-id="cc-12">
+      </div>
+      <div class="prod-body">
+        <h3>Tomates cherry orgánicos</h3>
+        <div class="price-row"><span class="price">$1.200</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$1.900</s><span class="ok" data-cc-id="cc-17">en super</span></div>
+        <div class="actions" data-cc-id="cc-18">
+          
+            <div class="grp-stats" data-cc-id="cc-21"><span class="mini">👥 7/10</span><span class="mini">🕒 2d</span></div>
+            <div class="progress"><span style="width:70%" data-cc-id="cc-19"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px" data-cc-id="cc-20">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          <span class="badge badge-secondary">Destacado</span>
+          <span class="badge badge-success" data-cc-id="cc-8">↓ 37% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Brócoli fresco" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body" data-cc-id="cc-24">
+        <h3>Brócoli fresco</h3>
+        <div class="price-row"><span class="price">$950</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$1.500</s><span class="ok">en super</span></div>
+        <div class="actions" data-cc-id="cc-23">
+          
+            <div class="grp-stats" data-cc-id="cc-22"><span class="mini">👥 8/12</span><span class="mini">🕒 1d</span></div>
+            <div class="progress"><span style="width:67%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          
+          <span class="badge badge-success">↓ 35% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Zanahorias de chacra" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body">
+        <h3>Zanahorias de chacra</h3>
+        <div class="price-row"><span class="price">$680</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$1.050</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini" style="color:transparent">·</span></div>
+            <div class="progress" style="visibility:hidden"><span style="width:0%"></span></div>
+            <button class="btn btn-outline btn-sm btn-w" style="margin-top:10px">Crear grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          
+          <span class="badge badge-success">↓ 36% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Manzanas Granny Smith" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body">
+        <h3>Manzanas Granny Smith</h3>
+        <div class="price-row"><span class="price">$900</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$1.400</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini">👥 15/15</span><span class="mini">🕒 3d</span></div>
+            <div class="progress"><span style="width:100%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          
+          <span class="badge badge-success">↓ 33% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Papa blanca lavada" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block" data-cc-id="cc-7">
+      </div>
+      <div class="prod-body">
+        <h3>Papa blanca lavada</h3>
+        <div class="price-row"><span class="price">$520</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$780</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini">👥 11/20</span><span class="mini">🕒 4d</span></div>
+            <div class="progress"><span style="width:55%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          
+          <span class="badge badge-success">↓ 32% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Banana ecuatoriana" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body">
+        <h3>Banana ecuatoriana</h3>
+        <div class="price-row"><span class="price">$820</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$1.200</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini" style="color:transparent">·</span></div>
+            <div class="progress" style="visibility:hidden"><span style="width:0%"></span></div>
+            <button class="btn btn-outline btn-sm btn-w" style="margin-top:10px">Crear grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          
+          <span class="badge badge-success">↓ 36% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Lechuga mantecosa" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body">
+        <h3>Lechuga mantecosa</h3>
+        <div class="price-row"><span class="price">$450</span><span class="unit">/unidad</span></div>
+        <div class="super"><s>$700</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini">👥 6/10</span><span class="mini">🕒 1d</span></div>
+            <div class="progress"><span style="width:60%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          <span class="badge badge-secondary">Destacado</span>
+          <span class="badge badge-success">↓ 31% menos</span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Frutillas de estación" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div class="prod-body">
+        <h3>Frutillas de estación</h3>
+        <div class="price-row"><span class="price">$1.800</span><span class="unit">/kg</span></div>
+        <div class="super"><s>$2.600</s><span class="ok">en super</span></div>
+        <div class="actions">
+          
+            <div class="grp-stats"><span class="mini">👥 4/8</span><span class="mini">🕒 2d</span></div>
+            <div class="progress"><span style="width:50%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          
+        </div>
+      </div>
+    </div></div>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="ftr">
+            <div class="container-x">
+              <div class="ftr-grid">
+                <div>
+                  <div style="display:flex;align-items:center;gap:8px"><div class="logo-sm">C</div><div class="brand-name">Conlat</div></div>
+                  <p class="about">Comprando juntos, ahorramos todos. La plataforma de compras grupales vecinales de Argentina.</p>
+                </div>
+                <div><h4>Comprar</h4><ul><li>Productos</li><li>Grupos Activos</li><li>Categorías</li><li>Ofertas</li></ul></div>
+                <div><h4>Ayuda</h4><ul><li>Cómo Funciona</li><li>Preguntas Frecuentes</li><li>Contacto</li><li>Términos y Condiciones</li></ul></div>
+                <div><h4>Cuenta</h4><ul><li>Ingresar</li><li>Registrarme</li><li>Mis Pedidos</li><li>Mi Perfil</li></ul></div>
+              </div>
+              <div class="ftr-btm">
+                <span>2026 Conlat. Todos los derechos reservados.</span>
+                <span>Hecho con amor en Argentina</span>
+              </div>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRODUCTO ===== -->
+    <section class="screen" data-screen="producto">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/producto/1</div></div>
+        <div class="frame-body">
+          <header class="hdr">
+            <div class="container-x hdr-inner">
+              <div class="logo-sm">C</div><div class="brand-name">Conlat</div>
+              <div class="loc">📍 Palermo</div>
+              <div class="search"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input class="input" placeholder="Buscar productos..."></div>
+              <div class="hdr-actions"><div class="cart-btn">🛒<div class="count">0</div></div><button class="btn btn-primary btn-sm">Ingresar</button></div>
+            </div>
+          </header>
+          <div class="container-x">
+            <div class="back">← Volver a productos</div>
+            <div class="prod-det">
+              <div class="hero-img" style="overflow:hidden">
+                <div class="tags">
+                  <span class="badge badge-secondary">Destacado</span>
+                  <span class="badge badge-success" style="padding:4px 10px;font-size:13px">↓ Ahorra 37%</span>
+                </div>
+                <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Tomates cherry" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:20px">
+                <h1>Tomates cherry orgánicos</h1>
+                <p class="desc">Tomates cherry frescos de producción orgánica, directos del productor.</p>
+                <div>
+                  <div class="big-price"><span class="p">$1.200</span><span class="u">/kg</span></div>
+                  <div style="color:var(--muted-foreground);font-size:14px;margin-top:6px"><s>$1.900</s> <span style="color:#15803d;font-weight:500;margin-left:6px">en supermercado — ahorrás $700</span></div>
+                </div>
+                <div class="sep"></div>
+                <div class="grp-card">
+                  <h3>👥 Grupo de compra activo</h3>
+                  <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:10px"><span style="color:var(--muted-foreground)">Progreso</span><span style="font-weight:600">7 / 10 kgs</span></div>
+                  <div class="progress" style="height:10px"><span style="width:70%"></span></div>
+                  <div style="display:flex;gap:18px;font-size:13px;color:var(--muted-foreground);margin-top:14px"><span>🕒 Cierra en 2 días</span></div>
+                  <button class="btn btn-primary btn-lg btn-w" style="margin-top:14px">Unirme al grupo</button>
+                </div>
+                <div class="beneficios">
+                  <div class="ben"><svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h11v13"></path><path d="M14 9h4l3 3v5a1 1 0 0 1-1 1h-2"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg><span>Entrega rápida</span></div>
+                  <div class="ben"><svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path></svg><span>Pago seguro</span></div>
+                  <div class="ben"><svg class="i-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>Calidad garantizada</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MIS PEDIDOS ===== -->
+    <section class="screen" data-screen="pedidos">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/mis-pedidos</div></div>
+        <div class="frame-body">
+          <header class="hdr">
+            <div class="container-x hdr-inner">
+              <div class="logo-sm">C</div><div class="brand-name">Conlat</div>
+              <div class="loc">📍 Palermo</div>
+              <div class="search"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input class="input" placeholder="Buscar productos..."></div>
+              <div class="hdr-actions"><div class="cart-btn">🛒<div class="count">2</div></div><button class="btn btn-ghost btn-sm">👤 María</button></div>
+            </div>
+          </header>
+          <div class="container-x" style="padding-top:32px;padding-bottom:40px">
+            <h1 style="font-size:30px;font-weight:800;letter-spacing:-0.02em;margin:0 0 24px">Mis Pedidos</h1>
+
+            <div class="pedido">
+              <div class="row">
+                <div class="thumb"><img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt=""></div>
+                <div class="info">
+                  <div class="top">
+                    <div><h3>Tomates cherry orgánicos</h3><p>3 kgs × $1.200</p></div>
+                    <span class="est est-pendiente">🕒 Pendiente</span>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground);margin-bottom:4px"><span>Progreso del grupo</span><span>7/10 · Cierra en 2 días</span></div>
+                    <div class="progress"><span style="width:70%"></span></div>
+                  </div>
+                  <div class="bot"><span class="tot">$3.600</span><button class="btn btn-ghost btn-sm">Ver producto</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pedido">
+              <div class="row">
+                <div class="thumb"><img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt=""></div>
+                <div class="info">
+                  <div class="top">
+                    <div><h3>Brócoli fresco</h3><p>4 kgs × $950</p></div>
+                    <span class="est est-pagado">📦 Pagado</span>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground);margin-bottom:4px"><span>Progreso del grupo</span><span>8/12 · Cierra en 1 día</span></div>
+                    <div class="progress"><span style="width:66%"></span></div>
+                  </div>
+                  <div class="bot"><span class="tot">$3.800</span><button class="btn btn-ghost btn-sm">Ver producto</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pedido">
+              <div class="row">
+                <div class="thumb"><img src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt=""></div>
+                <div class="info">
+                  <div class="top">
+                    <div><h3>Manzanas Granny Smith × 1kg</h3><p>2 kgs × $900</p></div>
+                    <span class="est est-entregado">✓ Entregado</span>
+                  </div>
+                  <div class="bot" style="margin-top:12px"><span class="tot">$1.800</span><button class="btn btn-ghost btn-sm">Ver producto</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pedido">
+              <div class="row">
+                <div class="thumb"><img src="https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt=""></div>
+                <div class="info">
+                  <div class="top">
+                    <div><h3>Lechuga mantecosa</h3><p>2 unidades × $450</p></div>
+                    <span class="est est-cancelado">✕ Cancelado</span>
+                  </div>
+                  <div class="bot" style="margin-top:12px"><span class="tot">$900</span><button class="btn btn-ghost btn-sm">Ver producto</button></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LOGIN ===== -->
+    <section class="screen" data-screen="login">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/auth/login</div></div>
+        <div class="frame-body">
+          <div class="auth-center">
+            <div style="width:100%;max-width:420px">
+              <div class="back" style="padding:0 0 18px">← Volver al inicio</div>
+              <div class="auth-card">
+                <div class="auth-logo">C</div>
+                <h2 class="auth-title">Bienvenido a Conlat</h2>
+                <p class="auth-desc">Ingresa a tu cuenta para empezar a ahorrar</p>
+
+                <div class="form-row"><label class="label">Email</label><input class="input" placeholder="tu@email.com" value="maria@correo.com"></div>
+                <div class="form-row">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><label class="label" style="margin:0">Contraseña</label><a class="linklike" style="font-size:12.5px">¿Olvidaste tu contraseña?</a></div>
+                  <input class="input" type="password" value="••••••••">
+                </div>
+                <button class="btn btn-primary btn-w" style="height:40px">Ingresar</button>
+                <p style="text-align:center;font-size:13px;color:var(--muted-foreground);margin:20px 0 0">¿No tenés cuenta? <a class="linklike">Registrate gratis</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SIGN UP ===== -->
+    <section class="screen" data-screen="signup">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/auth/sign-up</div></div>
+        <div class="frame-body">
+          <div class="signup">
+            <div class="signup-left">
+              <div style="display:flex;align-items:center;gap:10px"><div class="logo-sm" style="width:40px;height:40px;font-size:20px">C</div><div class="brand-name" style="font-size:22px">Conlat</div></div>
+              <h1>Unite a la comunidad de ahorro vecinal</h1>
+              <p>Miles de vecinos ya están ahorrando comprando juntos. Registrate gratis y empezá a disfrutar los beneficios.</p>
+              <ul>
+                <li><span class="ck">✓</span>Ahorra hasta 35% en tus compras</li>
+                <li><span class="ck">✓</span>Productos frescos del productor</li>
+                <li><span class="ck">✓</span>Entrega en tu barrio</li>
+                <li><span class="ck">✓</span>Sin costo de membresía</li>
+              </ul>
+            </div>
+            <div class="signup-right">
+              <div class="auth-card" style="box-shadow:none;border:1px solid var(--border)">
+                <h2 style="font-size:22px;font-weight:800;margin:0">Crear cuenta</h2>
+                <p style="font-size:13.5px;color:var(--muted-foreground);margin:4px 0 18px">Completá tus datos para empezar a ahorrar</p>
+                <div class="form-grid">
+                  <div class="form-row"><label class="label">Nombre</label><input class="input" value="María"></div>
+                  <div class="form-row"><label class="label">Apellido</label><input class="input" value="Fernández"></div>
+                </div>
+                <div class="form-row"><label class="label">Email</label><input class="input" value="maria@correo.com"></div>
+                <div class="form-grid">
+                  <div class="form-row"><label class="label">Teléfono</label><input class="input" placeholder="11 1234-5678"></div>
+                  <div class="form-row"><label class="label">Barrio</label><input class="input" value="Palermo"></div>
+                </div>
+                <div class="form-row"><label class="label">Contraseña</label><input class="input" type="password" value="••••••••"></div>
+                <button class="btn btn-primary btn-w" style="height:40px;margin-top:6px">Crear cuenta</button>
+                <p style="text-align:center;font-size:11.5px;color:var(--muted-foreground);margin:12px 0 0">Al registrarte, aceptás nuestros <a class="linklike">Términos y Condiciones</a></p>
+                <p style="text-align:center;font-size:13px;color:var(--muted-foreground);margin:16px 0 0">¿Ya tenés cuenta? <a class="linklike">Ingresar</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ADMIN ===== -->
+    <section class="screen" data-screen="admin">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/admin</div></div>
+        <div class="frame-body">
+          <div class="admin">
+            <aside class="admin-side">
+              <div class="admin-brand"><div class="logo-sm">C</div><div style="font-weight:700;font-size:15.5px">Conlat Admin</div></div>
+              <nav class="admin-nav">
+                <a class="active">▦ Dashboard</a>
+                <a>📦 Productos</a>
+                <a>🛒 Grupos de Compra</a>
+                <a>👥 Usuarios</a>
+                <a>📊 Reportes</a>
+                <a>⚙ Configuración</a>
+              </nav>
+              <div class="foot"><button class="btn btn-ghost btn-sm" style="width:100%;justify-content:flex-start">↵ Volver al sitio</button></div>
+            </aside>
+            <div class="admin-main">
+              <div class="admin-h"><div><h1>Dashboard</h1><p>Bienvenido al panel de administración de Conlat</p></div></div>
+
+              <div class="stat-grid">
+                <div class="stat-card"><div class="tt">Productos Activos <span>📦</span></div><div class="num">48</div><div class="sub">productos en catálogo</div></div>
+                <div class="stat-card"><div class="tt">Grupos Activos <span>🕒</span></div><div class="num">12</div><div class="sub">grupos buscando participantes</div></div>
+                <div class="stat-card"><div class="tt">Grupos Completados <span>✓</span></div><div class="num">87</div><div class="sub">compras grupales exitosas</div></div>
+                <div class="stat-card"><div class="tt">Ventas Totales <span>📈</span></div><div class="num">$2.483.500</div><div class="sub">en pedidos procesados</div></div>
+              </div>
+
+              <div class="tbl-card">
+                <div class="tbl-head"><h2>Grupos de Compra Recientes</h2><p>Últimos grupos creados en la plataforma</p></div>
+                <div style="padding:8px 18px 18px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px">
+                    <div><div style="font-weight:600">Tomates cherry orgánicos</div><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:2px">7 / 10 unidades</div></div>
+                    <div style="text-align:right"><span class="estado-pill est-act">activo</span><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:4px">$1.200/u</div></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px">
+                    <div><div style="font-weight:600">Brócoli fresco</div><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:2px">8 / 12 kg</div></div>
+                    <div style="text-align:right"><span class="estado-pill est-act">activo</span><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:4px">$950/kg</div></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px">
+                    <div><div style="font-weight:600">Manzanas Granny Smith</div><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:2px">15 / 15 unidades</div></div>
+                    <div style="text-align:right"><span class="estado-pill est-comp">completado</span><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:4px">$900/u</div></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px">
+                    <div><div style="font-weight:600">Frutillas de estación</div><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:2px">4 / 8 kg</div></div>
+                    <div style="text-align:right"><span class="estado-pill est-act">activo</span><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:4px">$1.800/kg</div></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px">
+                    <div><div style="font-weight:600">Zanahorias de chacra</div><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:2px">11 / 15 kg</div></div>
+                    <div style="text-align:right"><span class="estado-pill est-act">activo</span><div style="font-size:12.5px;color:var(--muted-foreground);margin-top:4px">$680/kg</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ADMIN · GRUPOS ===== -->
+    <section class="screen" data-screen="admin-grupos">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/admin/grupos</div></div>
+        <div class="frame-body">
+          <div class="admin">
+            <aside class="admin-side">
+              <div class="admin-brand"><div class="logo-sm">C</div><div style="font-weight:700;font-size:15.5px">Conlat Admin</div></div>
+              <nav class="admin-nav">
+                <a>▦ Dashboard</a>
+                <a>📦 Productos</a>
+                <a class="active">🛒 Grupos de Compra</a>
+                <a>👥 Usuarios</a>
+                <a>📊 Reportes</a>
+                <a>⚙ Configuración</a>
+              </nav>
+              <div class="foot"><button class="btn btn-ghost btn-sm" style="width:100%;justify-content:flex-start">↵ Volver al sitio</button></div>
+            </aside>
+            <div class="admin-main">
+              <div class="admin-h"><div><h1>Grupos de Compra</h1><p>Gestiona los grupos de compra activos y completados</p></div></div>
+
+              <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="stat-card"><div class="tt">Activos</div><div class="num" style="color:var(--primary)">6</div></div>
+                <div class="stat-card"><div class="tt">Completados</div><div class="num" style="color:#16a34a">87</div></div>
+                <div class="stat-card"><div class="tt">Cancelados</div><div class="num" style="color:var(--muted-foreground)">3</div></div>
+              </div>
+
+              <div class="tbl-card">
+                <div class="tbl-head"><h2>Grupos Activos</h2><p>Grupos buscando participantes actualmente</p></div>
+                <div class="grp-grid">
+                  <div class="grp-mini">
+                    <div class="top"><div><h3>Tomates cherry orgánicos</h3><div class="u">$1.200 / kg</div></div><span class="estado-pill est-act">Activo</span></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>👥 7 / 10</span><span style="font-weight:600">70%</span></div><div class="progress" style="height:8px"><span style="width:70%"></span></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground)"><span>🕒 Cierra en 2 días</span><span>📍 Plaza Italia</span></div>
+                    <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" style="flex:1">Ver detalles</button></div>
+                  </div>
+                  <div class="grp-mini">
+                    <div class="top"><div><h3>Brócoli fresco</h3><div class="u">$950 / kg</div></div><span class="estado-pill est-act">Activo</span></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>👥 8 / 12</span><span style="font-weight:600">66%</span></div><div class="progress" style="height:8px"><span style="width:66%"></span></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground)"><span>🕒 Cierra en 1 día</span><span>📍 Plaza Italia</span></div>
+                    <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" style="flex:1">Ver detalles</button></div>
+                  </div>
+                  <div class="grp-mini">
+                    <div class="top"><div><h3>Manzanas Granny Smith</h3><div class="u">$900 / kg</div></div><span class="estado-pill est-act">Activo</span></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>👥 15 / 15</span><span style="font-weight:600">100%</span></div><div class="progress" style="height:8px"><span style="width:100%"></span></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground)"><span>🕒 Cierra en 3 días</span><span>📍 Plaza Serrano</span></div>
+                    <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" style="flex:1">Ver detalles</button><button class="btn btn-primary btn-sm" style="flex:1">Completar</button></div>
+                  </div>
+                  <div class="grp-mini">
+                    <div class="top"><div><h3>Frutillas de estación</h3><div class="u">$1.800 / kg</div></div><span class="estado-pill est-act">Activo</span></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>👥 4 / 8</span><span style="font-weight:600">50%</span></div><div class="progress" style="height:8px"><span style="width:50%"></span></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-foreground)"><span>🕒 Cierra en 2 días</span><span>📍 Sede Cabildo</span></div>
+                    <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" style="flex:1">Ver detalles</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ADMIN · PRODUCTOS ===== -->
+    <section class="screen" data-screen="admin-productos">
+      <div class="frame">
+        <div class="frame-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url">conlat.com.ar/admin/productos</div></div>
+        <div class="frame-body">
+          <div class="admin">
+            <aside class="admin-side">
+              <div class="admin-brand"><div class="logo-sm">C</div><div style="font-weight:700;font-size:15.5px">Conlat Admin</div></div>
+              <nav class="admin-nav">
+                <a>▦ Dashboard</a>
+                <a class="active">📦 Productos</a>
+                <a>🛒 Grupos de Compra</a>
+                <a>👥 Usuarios</a>
+                <a>📊 Reportes</a>
+                <a>⚙ Configuración</a>
+              </nav>
+              <div class="foot"><button class="btn btn-ghost btn-sm" style="width:100%;justify-content:flex-start">↵ Volver al sitio</button></div>
+            </aside>
+            <div class="admin-main">
+              <div class="admin-h">
+                <div><h1>Productos</h1><p>Administra el catálogo de productos disponibles</p></div>
+                <button class="btn btn-primary">+ Nuevo Producto</button>
+              </div>
+
+              <div class="tbl-card">
+                <div class="tbl-head"><h2>Catálogo de Productos</h2><p>8 productos en total</p></div>
+                <table class="tbl">
+                  <thead><tr><th>Producto</th><th>Categoría</th><th>Precio Grupal</th><th>Precio Super</th><th>Mínimo</th><th>Estado</th><th style="text-align:right">Acciones</th></tr></thead>
+                  <tbody id="admin-rows">
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Tomates cherry orgánicos</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Frutas</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$1.200</span></td>
+    <td><span style="color:var(--muted-foreground)">$1.900</span></td>
+    <td><span style="font-size:13px">10 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Brócoli fresco</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Verduras</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$950</span></td>
+    <td><span style="color:var(--muted-foreground)">$1.500</span></td>
+    <td><span style="font-size:13px">12 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Zanahorias de chacra</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Verduras</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$680</span></td>
+    <td><span style="color:var(--muted-foreground)">$1.050</span></td>
+    <td><span style="font-size:13px">15 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Manzanas Granny Smith</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Frutas</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$900</span></td>
+    <td><span style="color:var(--muted-foreground)">$1.400</span></td>
+    <td><span style="font-size:13px">15 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Papa blanca lavada</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Hortalizas</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$520</span></td>
+    <td><span style="color:var(--muted-foreground)">$780</span></td>
+    <td><span style="font-size:13px">20 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Banana ecuatoriana</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Frutas</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$820</span></td>
+    <td><span style="color:var(--muted-foreground)">$1.200</span></td>
+    <td><span style="font-size:13px">12 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Lechuga mantecosa</div><div style="font-size:11.5px;color:var(--muted-foreground)">unidad</div></div></div></td>
+    <td><span style="font-size:13px">Verduras</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$450</span></td>
+    <td><span style="color:var(--muted-foreground)">$700</span></td>
+    <td><span style="font-size:13px">10 unidad</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div><div style="font-weight:500">Frutillas de estación</div><div style="font-size:11.5px;color:var(--muted-foreground)">kg</div></div></div></td>
+    <td><span style="font-size:13px">Frutas</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">$1.800</span></td>
+    <td><span style="color:var(--muted-foreground)">$2.600</span></td>
+    <td><span style="font-size:13px">8 kg</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+</tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ==== Data from mock-data.ts ==== */
+/* Fotos reales (Unsplash) */
+const PH = (id, w=600) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+const PRODUCTS = [
+  {id:'1', img:PH('photo-1592924357228-91a4daadcfea'), nombre:'Tomates cherry orgánicos', precio:1200, super:1900, unidad:'kg',     destacado:true,  min:10, cat:'frutas',   grp:{act:7,obj:10,dias:2}},
+  {id:'2', img:PH('photo-1459411552884-841db9b3cc2a'), nombre:'Brócoli fresco',             precio:950,  super:1500, unidad:'kg',     destacado:true,  min:12, cat:'verduras', grp:{act:8,obj:12,dias:1}},
+  {id:'3', img:PH('photo-1582284540020-8acbe03f4924'), nombre:'Zanahorias de chacra',       precio:680,  super:1050, unidad:'kg',     destacado:false, min:15, cat:'verduras'},
+  {id:'4', img:PH('photo-1619546813926-a78fa6372cd2'), nombre:'Manzanas Granny Smith',      precio:900,  super:1400, unidad:'kg',     destacado:false, min:15, cat:'frutas',   grp:{act:15,obj:15,dias:3}},
+  {id:'5', img:PH('photo-1567306226416-28f0efdc88ce'), nombre:'Papa blanca lavada',         precio:520,  super:780,  unidad:'kg',     destacado:false, min:20, cat:'hortalizas',grp:{act:11,obj:20,dias:4}},
+  {id:'6', img:PH('photo-1587049352846-4a222e784d38'), nombre:'Banana ecuatoriana',         precio:820,  super:1200, unidad:'kg',     destacado:false, min:12, cat:'frutas'},
+  {id:'7', img:PH('photo-1622205313162-be1d5712a43f'), nombre:'Lechuga mantecosa',          precio:450,  super:700,  unidad:'unidad', destacado:false, min:10, cat:'verduras', grp:{act:6,obj:10,dias:1}},
+  {id:'8', img:PH('photo-1506368249639-73a05d6f6488'), nombre:'Frutillas de estación',      precio:1800, super:2600, unidad:'kg',     destacado:true,  min:8,  cat:'frutas',   grp:{act:4,obj:8, dias:2}},
+];
+const fmtPrice = n => '$' + n.toLocaleString('es-AR');
+const ahorro = (p,s) => s ? Math.round((1 - p/s) * 100) : 0;
+const catName = { frutas:'Frutas', verduras:'Verduras', hortalizas:'Hortalizas' };
+
+/* render product grid */
+const grid = document.getElementById('pgrid');
+grid.innerHTML = PRODUCTS.map(p => {
+  const a = ahorro(p.precio, p.super);
+  const prog = p.grp ? Math.round(p.grp.act / p.grp.obj * 100) : 0;
+  return `
+    <div class="prod">
+      <div class="img">
+        <div class="tags">
+          ${p.destacado ? '<span class="badge badge-secondary">Destacado</span>':''}
+          ${a ? `<span class="badge badge-success">↓ ${a}% menos</span>`:''}
+        </div>
+        <img src="${p.img}" alt="${p.nombre}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block"/>
+      </div>
+      <div class="prod-body">
+        <h3>${p.nombre}</h3>
+        <div class="price-row"><span class="price">${fmtPrice(p.precio)}</span><span class="unit">/${p.unidad}</span></div>
+        <div class="super">${p.super ? `<s>${fmtPrice(p.super)}</s><span class="ok">en super</span>` : '&nbsp;'}</div>
+        <div class="actions">
+          ${p.grp ? `
+            <div class="grp-stats"><span class="mini">👥 ${p.grp.act}/${p.grp.obj}</span><span class="mini">🕒 ${p.grp.dias}d</span></div>
+            <div class="progress"><span style="width:${prog}%"></span></div>
+            <button class="btn btn-primary btn-sm btn-w" style="margin-top:10px">Unirme al grupo</button>
+          ` : `
+            <div class="grp-stats"><span class="mini" style="color:transparent">·</span></div>
+            <div class="progress" style="visibility:hidden"><span style="width:0%"></span></div>
+            <button class="btn btn-outline btn-sm btn-w" style="margin-top:10px">Crear grupo</button>
+          `}
+        </div>
+      </div>
+    </div>`;
+}).join('');
+
+/* admin rows */
+document.getElementById('admin-rows').innerHTML = PRODUCTS.map(p => `
+  <tr>
+    <td><div class="prod-inline"><div class="ti" style="overflow:hidden"><img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"/></div><div><div style="font-weight:500">${p.nombre}</div><div style="font-size:11.5px;color:var(--muted-foreground)">${p.unidad}</div></div></div></td>
+    <td><span style="font-size:13px">${catName[p.cat]}</span></td>
+    <td><span style="font-weight:500;color:var(--primary)">${fmtPrice(p.precio)}</span></td>
+    <td><span style="color:var(--muted-foreground)">${p.super?fmtPrice(p.super):'-'}</span></td>
+    <td><span style="font-size:13px">${p.min} ${p.unidad}</span></td>
+    <td><span class="estado-pill est-act">Activo</span></td>
+    <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn btn-ghost btn-sm btn-icon">✏</button><button class="btn btn-ghost btn-sm btn-icon" style="color:var(--destructive)">🗑</button></div></td>
+  </tr>
+`).join('');
+
+/* Hero toggle */
+const heroNew = document.getElementById('heroNew');
+const heroOld = document.getElementById('heroOld');
+const tabNew  = document.getElementById('heroTabNew');
+const tabOld  = document.getElementById('heroTabOld');
+function setHero(which){
+  const isNew = which === 'new';
+  heroNew.style.display = isNew ? '' : 'none';
+  heroOld.style.display = isNew ? 'none' : '';
+  tabNew.classList.toggle('htab-on', isNew);
+  tabOld.classList.toggle('htab-on', !isNew);
+  localStorage.setItem('conlat-hero', which);
+}
+tabNew.addEventListener('click', ()=>setHero('new'));
+tabOld.addEventListener('click', ()=>setHero('old'));
+setHero(localStorage.getItem('conlat-hero') || 'new');
+
+/* Navigation */
+const META = {
+  'home':         { t:'Home',              f:'app/page.tsx',                  d:'Landing pública. Header sticky con búsqueda y ubicación, hero con grupo flotante, grilla de productos y footer.' },
+  'producto':     { t:'Producto · detalle', f:'app/producto/[id]/page.tsx',    d:'Vista de producto individual con imagen XL, precio comparativo y card de grupo activo.' },
+  'pedidos':      { t:'Mis Pedidos',       f:'app/mis-pedidos/page.tsx',      d:'Listado de pedidos con estado (pendiente/pagado/entregado/cancelado) y progreso del grupo.' },
+  'login':        { t:'Login',              f:'app/auth/login/page.tsx',       d:'Autenticación centrada, card simple con logo y CTA primario.' },
+  'signup':       { t:'Sign up',            f:'app/auth/sign-up/page.tsx',     d:'Registro dividido: panel de beneficios a la izquierda, formulario con datos del vecino a la derecha.' },
+  'admin':        { t:'Admin · Dashboard',  f:'app/admin/page.tsx',            d:'KPIs, sidebar fija con navegación, lista de grupos recientes.' },
+  'admin-grupos': { t:'Admin · Grupos',     f:'app/admin/grupos/page.tsx',     d:'Gestión operativa de grupos: activos, completados, cancelados.' },
+  'admin-productos':{t:'Admin · Productos', f:'app/admin/productos/page.tsx',  d:'Catálogo tabular con acciones de edición y alta de nuevos productos.' },
+};
+document.querySelectorAll('.rail-item').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const s = btn.dataset.screen;
+    document.querySelectorAll('.rail-item').forEach(b=>b.classList.toggle('active',b===btn));
+    document.querySelectorAll('.screen').forEach(sec=>sec.classList.toggle('active',sec.dataset.screen===s));
+    const m = META[s]; if(m){
+      document.getElementById('stTitle').textContent=m.t;
+      document.getElementById('stMeta').textContent=m.f;
+      document.getElementById('stDesc').textContent=m.d;
+    }
+    localStorage.setItem('conlat-vis-screen',s);
+    window.scrollTo({top:0,behavior:'instant'});
+  });
+});
+/* Restore */
+const saved = localStorage.getItem('conlat-vis-screen');
+if(saved){ const b=document.querySelector(`.rail-item[data-screen="${saved}"]`); if(b) b.click(); }
+</script>
+
+
+</body></html>

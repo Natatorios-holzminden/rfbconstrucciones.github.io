@@ -1,0 +1,1438 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Conlat Mapa — Exploración de diseño</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<script type="text/babel">
+
+// iOS.jsx — Simplified iOS 26 (Liquid Glass) device frame
+// Based on the iOS 26 UI Kit + Figma status bar spec. No assets, no deps.
+// Exports: IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard
+
+// ─────────────────────────────────────────────────────────────
+// Status bar
+// ─────────────────────────────────────────────────────────────
+function IOSStatusBar({ dark = false, time = '9:41' }) {
+  const c = dark ? '#fff' : '#000';
+  return (
+    <div style={{
+      display: 'flex', gap: 154, alignItems: 'center', justifyContent: 'center',
+      padding: '21px 24px 19px', boxSizing: 'border-box',
+      position: 'relative', zIndex: 20, width: '100%',
+    }}>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 1.5 }}>
+        <span style={{
+          fontFamily: '-apple-system, "SF Pro", system-ui', fontWeight: 590,
+          fontSize: 17, lineHeight: '22px', color: c,
+        }}>{time}</span>
+      </div>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, paddingTop: 1, paddingRight: 1 }}>
+        <svg width="19" height="12" viewBox="0 0 19 12">
+          <rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill={c}/>
+          <rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill={c}/>
+          <rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill={c}/>
+          <rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill={c}/>
+        </svg>
+        <svg width="17" height="12" viewBox="0 0 17 12">
+          <path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c}/>
+          <path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c}/>
+          <circle cx="8.5" cy="10.5" r="1.5" fill={c}/>
+        </svg>
+        <svg width="27" height="13" viewBox="0 0 27 13">
+          <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.35" fill="none"/>
+          <rect x="2" y="2" width="20" height="9" rx="2" fill={c}/>
+          <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill={c} fillOpacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Liquid glass pill — blur + tint + shine
+// ─────────────────────────────────────────────────────────────
+function IOSGlassPill({ children, dark = false, style = {} }) {
+  return (
+    <div style={{
+      height: 44, minWidth: 44, borderRadius: 9999,
+      position: 'relative', overflow: 'hidden',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: dark
+        ? '0 2px 6px rgba(0,0,0,0.35), 0 6px 16px rgba(0,0,0,0.2)'
+        : '0 1px 3px rgba(0,0,0,0.07), 0 3px 10px rgba(0,0,0,0.06)',
+      ...style,
+    }}>
+      {/* blur + tint */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        background: dark ? 'rgba(120,120,128,0.28)' : 'rgba(255,255,255,0.5)',
+      }} />
+      {/* shine */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        boxShadow: dark
+          ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08)'
+          : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+        border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', padding: '0 4px' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigation bar — glass pills + large title
+// ─────────────────────────────────────────────────────────────
+function IOSNavBar({ title = 'Title', dark = false, trailingIcon = true }) {
+  const muted = dark ? 'rgba(255,255,255,0.6)' : '#404040';
+  const text = dark ? '#fff' : '#000';
+  const pillIcon = (content) => (
+    <IOSGlassPill dark={dark}>
+      <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {content}
+      </div>
+    </IOSGlassPill>
+  );
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: 10,
+      paddingTop: 62, paddingBottom: 10, position: 'relative', zIndex: 5,
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 16px',
+      }}>
+        {/* back chevron */}
+        {pillIcon(
+          <svg width="12" height="20" viewBox="0 0 12 20" fill="none" style={{ marginLeft: -1 }}>
+            <path d="M10 2L2 10l8 8" stroke={muted} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+        {/* trailing ellipsis */}
+        {trailingIcon && pillIcon(
+          <svg width="22" height="6" viewBox="0 0 22 6">
+            <circle cx="3" cy="3" r="2.5" fill={muted}/>
+            <circle cx="11" cy="3" r="2.5" fill={muted}/>
+            <circle cx="19" cy="3" r="2.5" fill={muted}/>
+          </svg>
+        )}
+      </div>
+      {/* large title */}
+      <div style={{
+        padding: '0 16px',
+        fontFamily: '-apple-system, system-ui',
+        fontSize: 34, fontWeight: 700, lineHeight: '41px',
+        color: text, letterSpacing: 0.4,
+      }}>{title}</div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Grouped list (inset card, r:26) + row (52px)
+// ─────────────────────────────────────────────────────────────
+function IOSListRow({ title, detail, icon, chevron = true, isLast = false, dark = false }) {
+  const text = dark ? '#fff' : '#000';
+  const sec = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const ter = dark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+  const sep = dark ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)';
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', minHeight: 52,
+      padding: '0 16px', position: 'relative',
+      fontFamily: '-apple-system, system-ui', fontSize: 17,
+      letterSpacing: -0.43,
+    }}>
+      {icon && (
+        <div style={{
+          width: 30, height: 30, borderRadius: 7, background: icon,
+          marginRight: 12, flexShrink: 0,
+        }} />
+      )}
+      <div style={{ flex: 1, color: text }}>{title}</div>
+      {detail && <span style={{ color: sec, marginRight: 6 }}>{detail}</span>}
+      {chevron && (
+        <svg width="8" height="14" viewBox="0 0 8 14" style={{ flexShrink: 0 }}>
+          <path d="M1 1l6 6-6 6" stroke={ter} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
+      {!isLast && (
+        <div style={{
+          position: 'absolute', bottom: 0, right: 0,
+          left: icon ? 58 : 16, height: 0.5, background: sep,
+        }} />
+      )}
+    </div>
+  );
+}
+
+function IOSList({ header, children, dark = false }) {
+  const hc = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const bg = dark ? '#1C1C1E' : '#fff';
+  return (
+    <div>
+      {header && (
+        <div style={{
+          fontFamily: '-apple-system, system-ui', fontSize: 13,
+          color: hc, textTransform: 'uppercase',
+          padding: '8px 36px 6px', letterSpacing: -0.08,
+        }}>{header}</div>
+      )}
+      <div style={{
+        background: bg, borderRadius: 26,
+        margin: '0 16px', overflow: 'hidden',
+      }}>{children}</div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Device frame
+// ─────────────────────────────────────────────────────────────
+function IOSDevice({
+  children, width = 402, height = 874, dark = false,
+  title, keyboard = false,
+}) {
+  return (
+    <div style={{
+      width, height, borderRadius: 48, overflow: 'hidden',
+      position: 'relative', background: dark ? '#000' : '#F2F2F7',
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+    }}>
+      {/* dynamic island */}
+      <div style={{
+        position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+        width: 126, height: 37, borderRadius: 24, background: '#000', zIndex: 50,
+      }} />
+      {/* status bar (absolute) */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        <IOSStatusBar dark={dark} />
+      </div>
+      {/* nav + content */}
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        {title !== undefined && <IOSNavBar title={title} dark={dark} />}
+        <div style={{ flex: 1, overflow: 'hidden', minHeight: 0, display: 'flex', flexDirection: 'column' }}>{children}</div>
+        {keyboard && <IOSKeyboard dark={dark} />}
+      </div>
+      {/* home indicator — always on top */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 60,
+        height: 34, display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+        paddingBottom: 8, pointerEvents: 'none',
+      }}>
+        <div style={{
+          width: 139, height: 5, borderRadius: 100,
+          background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Keyboard — iOS 26 liquid glass
+// ─────────────────────────────────────────────────────────────
+function IOSKeyboard({ dark = false }) {
+  const glyph = dark ? 'rgba(255,255,255,0.7)' : '#595959';
+  const sugg = dark ? 'rgba(255,255,255,0.6)' : '#333';
+  const keyBg = dark ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.85)';
+
+  // special-key icons
+  const icons = {
+    shift: <svg width="19" height="17" viewBox="0 0 19 17"><path d="M9.5 1L1 9.5h4.5V16h8V9.5H18L9.5 1z" fill={glyph}/></svg>,
+    del: <svg width="23" height="17" viewBox="0 0 23 17"><path d="M7 1h13a2 2 0 012 2v11a2 2 0 01-2 2H7l-6-7.5L7 1z" fill="none" stroke={glyph} strokeWidth="1.6" strokeLinejoin="round"/><path d="M10 5l7 7M17 5l-7 7" stroke={glyph} strokeWidth="1.6" strokeLinecap="round"/></svg>,
+    ret: <svg width="20" height="14" viewBox="0 0 20 14"><path d="M18 1v6H4m0 0l4-4M4 7l4 4" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  };
+
+  const key = (content, { w, flex, ret, fs = 25, k } = {}) => (
+    <div key={k} style={{
+      height: 42, borderRadius: 8.5,
+      flex: flex ? 1 : undefined, width: w, minWidth: 0,
+      background: ret ? '#08f' : keyBg,
+      boxShadow: '0 1px 0 rgba(0,0,0,0.075)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: '-apple-system, "SF Compact", system-ui',
+      fontSize: fs, fontWeight: 458, color: ret ? '#fff' : glyph,
+    }}>{content}</div>
+  );
+
+  const row = (keys, pad = 0) => (
+    <div style={{ display: 'flex', gap: 6.5, justifyContent: 'center', padding: `0 ${pad}px` }}>
+      {keys.map(l => key(l, { flex: true, k: l }))}
+    </div>
+  );
+
+  return (
+    <div style={{
+      position: 'relative', zIndex: 15, borderRadius: 27, overflow: 'hidden',
+      padding: '11px 0 2px',
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      boxShadow: dark
+        ? '0 -2px 20px rgba(0,0,0,0.09)'
+        : '0 -1px 6px rgba(0,0,0,0.018), 0 -3px 20px rgba(0,0,0,0.012)',
+    }}>
+      {/* liquid glass bg — same recipe as nav pills */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 27,
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        background: dark ? 'rgba(120,120,128,0.14)' : 'rgba(255,255,255,0.25)',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 27,
+        boxShadow: dark
+          ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15)'
+          : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+        border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* autocorrect bar */}
+      <div style={{
+        display: 'flex', gap: 20, alignItems: 'center',
+        padding: '8px 22px 13px', width: '100%', boxSizing: 'border-box',
+        position: 'relative',
+      }}>
+        {['"The"', 'the', 'to'].map((w, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <div style={{ width: 1, height: 25, background: '#ccc', opacity: 0.3 }} />}
+            <div style={{
+              flex: 1, textAlign: 'center',
+              fontFamily: '-apple-system, system-ui', fontSize: 17,
+              color: sugg, letterSpacing: -0.43, lineHeight: '22px',
+            }}>{w}</div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* key layout */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', gap: 13,
+        padding: '0 6.5px', width: '100%', boxSizing: 'border-box',
+        position: 'relative',
+      }}>
+        {row(['q','w','e','r','t','y','u','i','o','p'])}
+        {row(['a','s','d','f','g','h','j','k','l'], 20)}
+        <div style={{ display: 'flex', gap: 14.25, alignItems: 'center' }}>
+          {key(icons.shift, { w: 45, k: 'shift' })}
+          <div style={{ display: 'flex', gap: 6.5, flex: 1 }}>
+            {['z','x','c','v','b','n','m'].map(l => key(l, { flex: true, k: l }))}
+          </div>
+          {key(icons.del, { w: 45, k: 'del' })}
+        </div>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {key('ABC', { w: 92.25, fs: 18, k: 'abc' })}
+          {key('', { flex: true, k: 'space' })}
+          {key(icons.ret, { w: 92.25, ret: true, k: 'ret' })}
+        </div>
+      </div>
+
+      {/* bottom spacer (emoji+mic area, icons omitted) */}
+      <div style={{ height: 56, width: '100%', position: 'relative' }} />
+    </div>
+  );
+}
+
+Object.assign(window, {
+  IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard,
+});
+
+</script>
+
+<script type="text/babel">
+
+// DesignCanvas.jsx — Figma-ish design canvas wrapper
+// Warm gray grid bg + Sections + Artboards + PostIt notes.
+// No assets, no deps.
+
+const DC = {
+  bg: '#f0eee9',
+  grid: 'rgba(0,0,0,0.06)',
+  label: 'rgba(60,50,40,0.7)',
+  title: 'rgba(40,30,20,0.85)',
+  subtitle: 'rgba(60,50,40,0.6)',
+  postitBg: '#fef4a8',
+  postitText: '#5a4a2a',
+  font: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+};
+
+// ─────────────────────────────────────────────────────────────
+// Main canvas — transform-based pan/zoom viewport
+//
+// Input mapping (Figma-style):
+//   • trackpad pinch  → zoom   (ctrlKey wheel; Safari gesture* events)
+//   • trackpad scroll → pan    (two-finger)
+//   • mouse wheel     → zoom   (notched; distinguished from trackpad scroll)
+//   • middle-drag / primary-drag-on-bg → pan
+//
+// Transform state lives in a ref and is written straight to the DOM
+// (translate3d + will-change) so wheel ticks don't go through React —
+// keeps pans at 60fps on dense canvases.
+// ─────────────────────────────────────────────────────────────
+function DesignCanvas({ children, minScale = 0.1, maxScale = 8, style = {} }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    const el = worldRef.current;
+    if (el) el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+  }, []);
+
+  React.useEffect(() => {
+    const vp = vpRef.current;
+    if (!vp) return;
+
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx - r.left, py = cy - r.top;
+      const t = tf.current;
+      const next = Math.min(maxScale, Math.max(minScale, t.scale * factor));
+      const k = next / t.scale;
+      // keep the world point under the cursor fixed
+      t.x = px - (px - t.x) * k;
+      t.y = py - (py - t.y) * k;
+      t.scale = next;
+      apply();
+    };
+
+    // Mouse-wheel vs trackpad-scroll heuristic. A physical wheel sends
+    // line-mode deltas (Firefox) or large integer pixel deltas with no X
+    // component (Chrome/Safari, typically multiples of 100/120). Trackpad
+    // two-finger scroll sends small/fractional pixel deltas, often with
+    // non-zero deltaX. ctrlKey is set by the browser for trackpad pinch.
+    const isMouseWheel = (e) =>
+      e.deltaMode !== 0 ||
+      (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (isGesturing) return; // Safari: gesture* owns the pinch — discard concurrent wheels
+      if (e.ctrlKey) {
+        // trackpad pinch (or explicit ctrl+wheel)
+        zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01));
+      } else if (isMouseWheel(e)) {
+        // notched mouse wheel — fixed-ratio step per click
+        zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18));
+      } else {
+        // trackpad two-finger scroll — pan
+        tf.current.x -= e.deltaX;
+        tf.current.y -= e.deltaY;
+        apply();
+      }
+    };
+
+    // Safari sends native gesture* events for trackpad pinch with a smooth
+    // e.scale; preferring these over the ctrl+wheel fallback gives a much
+    // better feel there. No-ops on other browsers. Safari also fires
+    // ctrlKey wheel events during the same pinch — isGesturing makes
+    // onWheel drop those entirely so they neither zoom nor pan.
+    let gsBase = 1;
+    let isGesturing = false;
+    const onGestureStart = (e) => { e.preventDefault(); isGesturing = true; gsBase = tf.current.scale; };
+    const onGestureChange = (e) => {
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, (gsBase * e.scale) / tf.current.scale);
+    };
+    const onGestureEnd = (e) => { e.preventDefault(); isGesturing = false; };
+
+    // Drag-pan: middle button anywhere, or primary button starting on the
+    // canvas background (not inside an artboard).
+    let drag = null;
+    const onPointerDown = (e) => {
+      const onBg = e.target === vp || e.target === worldRef.current;
+      if (!(e.button === 1 || (e.button === 0 && onBg))) return;
+      e.preventDefault();
+      vp.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+      vp.style.cursor = 'grabbing';
+    };
+    const onPointerMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      tf.current.x += e.clientX - drag.lx;
+      tf.current.y += e.clientY - drag.ly;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      apply();
+    };
+    const onPointerUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      vp.releasePointerCapture(e.pointerId);
+      drag = null;
+      vp.style.cursor = '';
+    };
+
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    vp.addEventListener('gesturestart', onGestureStart, { passive: false });
+    vp.addEventListener('gesturechange', onGestureChange, { passive: false });
+    vp.addEventListener('gestureend', onGestureEnd, { passive: false });
+    vp.addEventListener('pointerdown', onPointerDown);
+    vp.addEventListener('pointermove', onPointerMove);
+    vp.addEventListener('pointerup', onPointerUp);
+    vp.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      vp.removeEventListener('wheel', onWheel);
+      vp.removeEventListener('gesturestart', onGestureStart);
+      vp.removeEventListener('gesturechange', onGestureChange);
+      vp.removeEventListener('gestureend', onGestureEnd);
+      vp.removeEventListener('pointerdown', onPointerDown);
+      vp.removeEventListener('pointermove', onPointerMove);
+      vp.removeEventListener('pointerup', onPointerUp);
+      vp.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [apply, minScale, maxScale]);
+
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div
+      ref={vpRef}
+      className="design-canvas"
+      style={{
+        height: '100vh', width: '100vw',
+        background: DC.bg,
+        overflow: 'hidden',
+        overscrollBehavior: 'none',
+        touchAction: 'none',
+        position: 'relative',
+        fontFamily: DC.font,
+        boxSizing: 'border-box',
+        ...style,
+      }}
+    >
+      <div
+        ref={worldRef}
+        style={{
+          position: 'absolute', top: 0, left: 0,
+          transformOrigin: '0 0',
+          willChange: 'transform',
+          width: 'max-content', minWidth: '100%',
+          minHeight: '100%',
+          padding: '60px 0 80px',
+          backgroundImage: gridSvg,
+          backgroundSize: '120px 120px',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Section — title + subtitle + h-stack of artboards (no wrap)
+// ─────────────────────────────────────────────────────────────
+function DCSection({ title, subtitle, children, gap = 48 }) {
+  return (
+    <div style={{ marginBottom: 80, position: 'relative' }}>
+      <div style={{ padding: '0 60px 36px' }}>
+        <div style={{
+          fontSize: 22, fontWeight: 600, color: DC.title,
+          letterSpacing: -0.3, marginBottom: 4,
+        }}>{title}</div>
+        {subtitle && (
+          <div style={{
+            fontSize: 14, fontWeight: 400, color: DC.subtitle,
+          }}>{subtitle}</div>
+        )}
+      </div>
+      {/* h-stack — clips offscreen, never wraps */}
+      <div style={{
+        display: 'flex', gap, padding: '0 60px',
+        alignItems: 'flex-start', width: 'max-content',
+      }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Artboard — labeled card
+// ─────────────────────────────────────────────────────────────
+function DCArtboard({ label, children, width, height, style = {} }) {
+  return (
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      {label && (
+        <div style={{
+          position: 'absolute', bottom: '100%', left: 0,
+          paddingBottom: 8,
+          fontSize: 12, fontWeight: 500, color: DC.label,
+          whiteSpace: 'nowrap',
+        }}>{label}</div>
+      )}
+      <div style={{
+        borderRadius: 2,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06)',
+        overflow: 'hidden',
+        width, height,
+        background: '#fff',
+        ...style,
+      }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Post-it — absolute-positioned sticky note
+// ─────────────────────────────────────────────────────────────
+function DCPostIt({ children, top, left, right, bottom, rotate = -2, width = 180 }) {
+  return (
+    <div style={{
+      position: 'absolute', top, left, right, bottom, width,
+      background: DC.postitBg, padding: '14px 16px',
+      fontFamily: '"Comic Sans MS", "Marker Felt", "Segoe Print", cursive',
+      fontSize: 14, lineHeight: 1.4, color: DC.postitText,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)',
+      transform: `rotate(${rotate}deg)`,
+      zIndex: 5,
+    }}>{children}</div>
+  );
+}
+
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard, DCPostIt });
+
+
+</script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Inter', sans-serif; }
+@keyframes pulse2 { 0%,100%{transform:scale(1);opacity:.6} 60%{transform:scale(2);opacity:0} }
+@keyframes dash2  { to { stroke-dashoffset: -18; } }
+@keyframes float  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+const P = '#0e9c82';
+
+/* ── Shared fake-map SVG background ─────────────────────── */
+function FakeMap({ dark = false }) {
+  const bg  = dark ? '#1a2332' : '#f0ede8';
+  const rd  = dark ? '#2a3a4a' : '#e4e0d8';
+  const bld = dark ? '#243040' : '#ddd9d0';
+  return (
+    <svg width="100%" height="100%" style={{ position:'absolute', inset:0 }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+      <rect width="390" height="380" fill={bg}/>
+      {/* Road grid */}
+      {[0,60,110,170,230,280,340,390].map(x=><line key={x} x1={x} y1="0" x2={x} y2="380" stroke={rd} strokeWidth={x%110===0?3:1.2}/>)}
+      {[0,50,100,155,205,260,315,380].map(y=><line key={y} x1="0" y1={y} x2="390" y2={y} stroke={rd} strokeWidth={y%155===0?3:1.2}/>)}
+      {/* Park blobs */}
+      <ellipse cx="85" cy="120" rx="38" ry="28" fill={dark?'#1e3a2a':'#d4ecd4'} opacity=".7"/>
+      <ellipse cx="300" cy="240" rx="30" ry="22" fill={dark?'#1e3a2a':'#d4ecd4'} opacity=".7"/>
+      {/* Blocks */}
+      {[[30,30,40,30],[80,30,50,40],[160,30,60,30],[240,30,70,35],
+        [30,80,45,30],[130,80,55,25],[220,80,65,30],[310,80,50,30],
+        [30,135,40,35],[100,135,60,30],[200,135,55,30],[290,135,60,30],
+        [30,190,45,30],[120,190,60,35],[220,190,60,30],[310,190,50,25],
+        [30,240,50,30],[110,240,55,30],[210,240,65,30],[305,240,55,35],
+        [30,295,45,30],[120,295,60,30],[220,295,60,25],[315,295,50,30]
+      ].map(([x,y,w,h],i)=><rect key={i} x={x} y={y} width={w} height={h} rx="3" fill={bld} opacity=".6"/>)}
+    </svg>
+  );
+}
+
+/* ── Zone circles + connections SVG overlay ─────────────── */
+function NetworkOverlay({ hubs, mode = 'hub' }) {
+  const PROD_COLORS = { 'Papa':'#f59e0b','Manzana':'#ef4444','Naranja':'#f97316','Zanahoria':'#fb923c','Banana':'#eab308','Cebolla':'#8b5cf6','Tomate':'#dc2626','Lechuga':'#22c55e','Limón':'#84cc16','Pera':'#14b8a6' };
+  return (
+    <svg width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+      {/* Zone circles */}
+      {hubs.map(h=>(
+        <circle key={'z'+h.id} cx={h.x} cy={h.y} r="38" fill={h.color||P} fillOpacity=".08" stroke={h.color||P} strokeWidth="1.2" strokeOpacity=".25" strokeDasharray="5 4"/>
+      ))}
+      {/* Connections */}
+      {hubs.flatMap((a,i)=>hubs.slice(i+1).filter(b=>{ const d=Math.hypot(a.x-b.x,a.y-b.y); return d<120&&(mode==='hub'||a.prod===b.prod); }).map(b=>(
+        <line key={a.id+'-'+b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={mode==='orden'?(PROD_COLORS[a.prod]||P):P} strokeWidth={mode==='orden'?1.8:1.4} strokeOpacity={mode==='orden'?0.6:0.35} strokeDasharray="6 5"
+          style={{ animation:'dash2 1s linear infinite', animationDelay:`${(a.id%4)*0.2}s` }}/>
+      )))}
+    </svg>
+  );
+}
+
+/* ── Pulsing hub markers ─────────────────────────────────── */
+function HubMarkers({ hubs, selected, onSelect, style='hub' }) {
+  const PROD_COLORS = { 'Papa':'#f59e0b','Manzana':'#ef4444','Naranja':'#f97316','Zanahoria':'#fb923c','Banana':'#eab308','Cebolla':'#8b5cf6','Tomate':'#dc2626','Lechuga':'#22c55e','Limón':'#84cc16','Pera':'#14b8a6' };
+  return hubs.map(h => {
+    const color = h.status==='lleno' ? '#ef4444' : (style==='orden' ? (PROD_COLORS[h.prod]||P) : P);
+    const isSelected = selected===h.id;
+    return (
+      <div key={h.id} onClick={()=>onSelect(h.id===selected?null:h.id)} style={{ position:'absolute', left:h.x-16, top:h.y-16, width:32, height:32, cursor:'pointer', zIndex: isSelected?10:5 }}>
+        <div style={{ position:'absolute', inset:0, borderRadius:'50%', background:color, opacity:.35, animation:'pulse2 2s ease-out infinite', animationDelay:`${(h.id%5)*0.3}s` }}/>
+        <div style={{ position:'absolute', inset:4, borderRadius:'50%', background:color, border:`2px solid #fff`, boxShadow:`0 2px 8px rgba(0,0,0,0.22)`, display:'flex', alignItems:'center', justifyContent:'center', transform: isSelected?'scale(1.25)':'scale(1)', transition:'transform .2s' }}>
+          <span style={{ fontSize:8, fontWeight:800, color:'#fff' }}>{style==='orden'?h.initials:`${h.count}p`}</span>
+        </div>
+        {isSelected && <div style={{ position:'absolute', top:-4, left:-4, right:-4, bottom:-4, borderRadius:'50%', border:`2px solid ${color}`, animation:'pulse2 1s ease-out infinite' }}/>}
+      </div>
+    );
+  });
+}
+
+/* ── DATA ──────────────────────────────────────────────────── */
+const HUBS = [
+  { id:1,  x:85,  y:95,  zona:'Palermo',       prod:'Papa · Manzana · Limón',   count:3, members:18, max:30, status:'abierto', color:P },
+  { id:2,  x:180, y:75,  zona:'Recoleta',       prod:'Naranja · Pera',           count:2, members:14, max:20, status:'abierto', color:P },
+  { id:3,  x:60,  y:170, zona:'Belgrano',       prod:'Zanahoria · Banana',       count:2, members:22, max:30, status:'abierto', color:P },
+  { id:4,  x:155, y:160, zona:'Colegiales',     prod:'Manzana · Pera · Limón',   count:3, members:16, max:25, status:'abierto', color:P },
+  { id:5,  x:250, y:100, zona:'Almagro',        prod:'Cebolla · Tomate',         count:2, members:20, max:25, status:'lleno',   color:'#ef4444' },
+  { id:6,  x:110, y:245, zona:'Caballito',      prod:'Papa · Lechuga',           count:2, members:19, max:25, status:'abierto', color:P },
+  { id:7,  x:215, y:215, zona:'Boedo',          prod:'Lechuga · Zanahoria',      count:2, members:13, max:20, status:'abierto', color:P },
+  { id:8,  x:300, y:170, zona:'San Telmo',      prod:'Tomate · Cebolla',         count:2, members:11, max:20, status:'abierto', color:P },
+  { id:9,  x:60,  y:300, zona:'Flores',         prod:'Banana · Papa · Pera',     count:3, members:24, max:30, status:'abierto', color:P },
+  { id:10, x:170, y:300, zona:'Almagro Sur',    prod:'Manzana · Naranja',        count:2, members:15, max:20, status:'abierto', color:P },
+  { id:11, x:280, y:280, zona:'Constitución',   prod:'Naranja · Pera',           count:2, members:7,  max:15, status:'abierto', color:P },
+  { id:12, x:340, y:100, zona:'San Nicolás',    prod:'Cebolla · Limón',          count:2, members:9,  max:15, status:'abierto', color:P },
+];
+
+const ORDERS = [
+  { id:'o1', x:70, y:85, prod:'Papa', lider:'Mariana G.', initials:'MG', members:3, max:10, status:'abierto' },
+  { id:'o2', x:100,y:105,prod:'Manzana', lider:'Carlos R.', initials:'CR', members:7, max:10, status:'abierto' },
+  { id:'o3', x:55, y:160,prod:'Banana', lider:'Ana L.', initials:'AL', members:11, max:12, status:'lleno' },
+  { id:'o4', x:160,y:70, prod:'Naranja', lider:'Valeria T.', initials:'VT', members:6, max:10, status:'abierto' },
+  { id:'o5', x:195,y:90, prod:'Pera', lider:'Jorge A.', initials:'JA', members:8, max:10, status:'abierto' },
+  { id:'o6', x:245,y:110,prod:'Tomate', lider:'Héctor B.', initials:'HB', members:9, max:10, status:'lleno' },
+  { id:'o7', x:140,y:155,prod:'Papa', lider:'Mónica S.', initials:'MS', members:4, max:10, status:'abierto' },
+  { id:'o8', x:170,y:170,prod:'Manzana', lider:'Claudia R.', initials:'CL', members:5, max:10, status:'abierto' },
+  { id:'o9', x:110,y:240,prod:'Lechuga', lider:'Patricia V.', initials:'PV', members:6, max:8, status:'abierto' },
+  { id:'o10',x:290,y:160,prod:'Cebolla', lider:'Ricardo P.', initials:'RP', members:8, max:10, status:'abierto' },
+  { id:'o11',x:220,y:210,prod:'Zanahoria', lider:'Raúl C.', initials:'RC', members:4, max:10, status:'abierto' },
+  { id:'o12',x:55, y:295,prod:'Banana', lider:'Miriam F.', initials:'MF', members:10, max:12, status:'abierto' },
+  { id:'o13',x:335,y:95, prod:'Limón', lider:'Laura N.', initials:'LN', members:3, max:9, status:'abierto' },
+  { id:'o14',x:280,y:275,prod:'Naranja', lider:'Víctor P.', initials:'VP', members:7, max:10, status:'abierto' },
+  { id:'o15',x:170,y:295,prod:'Papa', lider:'Diego N.', initials:'DN', members:9, max:12, status:'abierto' },
+];
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE A — Mapa + Lista (Airbnb style)
+══════════════════════════════════════════════════════════ */
+function VarianteA() {
+  const [sel, setSel] = useState(null);
+  const selHub = HUBS.find(h=>h.id===sel);
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:'#f4f5f7', fontFamily:"'Inter',sans-serif" }}>
+      {/* Header */}
+      <div style={{ flexShrink:0, background:'#fff', padding:'10px 14px', borderBottom:'1px solid #e8eaec', display:'flex', gap:8, alignItems:'center' }}>
+        <div style={{ flex:1, background:'#f0f1f3', borderRadius:999, display:'flex', alignItems:'center', gap:6, padding:'7px 12px' }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style={{ color:'#bbb', fontSize:12.5 }}>Buscar producto o barrio...</span>
+        </div>
+        <div style={{ fontSize:11, fontWeight:600, color:P, whiteSpace:'nowrap' }}>32 hubs</div>
+      </div>
+
+      {/* Map area */}
+      <div style={{ height:240, flexShrink:0, position:'relative', overflow:'hidden' }}>
+        <FakeMap/>
+        <NetworkOverlay hubs={HUBS}/>
+        <div style={{ position:'absolute', inset:0 }}>
+          <HubMarkers hubs={HUBS} selected={sel} onSelect={setSel}/>
+        </div>
+        {/* User dot */}
+        <div style={{ position:'absolute', left:135, top:175, width:12, height:12, borderRadius:'50%', background:'#3b82f6', border:'2px solid #fff', boxShadow:'0 1px 4px rgba(59,130,246,0.5)' }}/>
+      </div>
+
+      {/* Bottom list */}
+      <div style={{ flex:1, overflowY:'auto' }}>
+        <div style={{ padding:'12px 14px 6px', fontWeight:700, fontSize:13, color:'#333' }}>Hubs cerca tuyo</div>
+        {HUBS.map(h=>(
+          <div key={h.id} onClick={()=>setSel(h.id===sel?null:h.id)} style={{ display:'flex', gap:12, padding:'10px 14px', borderBottom:'1px solid #f0f1f3', background: sel===h.id ? '#f0fdf8' : '#fff', cursor:'pointer', transition:'background .15s' }}>
+            <div style={{ width:42, height:42, borderRadius:12, background: sel===h.id ? P : '#e8faf5', display:'grid', placeItems:'center', flexShrink:0, fontSize:18 }}>🛒</div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
+                <div style={{ fontWeight:700, fontSize:13 }}>{h.zona}</div>
+                <div style={{ fontSize:11, color: h.status==='lleno'?'#ef4444':P, fontWeight:600 }}>{h.status==='lleno'?'Lleno':`${h.members}/${h.max}`}</div>
+              </div>
+              <div style={{ fontSize:11.5, color:'#888', marginTop:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{h.prod}</div>
+              <div style={{ height:3, background:'#f0f1f3', borderRadius:999, overflow:'hidden', marginTop:6 }}>
+                <div style={{ height:'100%', width:`${Math.round(h.members/h.max*100)}%`, background: h.status==='lleno'?'#ef4444':P, borderRadius:999 }}/>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE B — Red activa (full map + bottom sheet)
+══════════════════════════════════════════════════════════ */
+function VarianteB() {
+  const [sel, setSel] = useState(null);
+  const selHub = HUBS.find(h=>h.id===sel);
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', fontFamily:"'Inter',sans-serif", position:'relative' }}>
+      {/* Search pill floating */}
+      <div style={{ position:'absolute', top:10, left:12, right:12, zIndex:20 }}>
+        <div style={{ background:'rgba(255,255,255,0.95)', backdropFilter:'blur(8px)', borderRadius:999, padding:'9px 16px', display:'flex', alignItems:'center', gap:8, boxShadow:'0 4px 16px rgba(0,0,0,0.12)', border:'1px solid rgba(0,0,0,0.06)' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style={{ color:'#aaa', fontSize:13, flex:1 }}>Buscar producto o barrio...</span>
+          <span style={{ fontSize:11, fontWeight:700, color:P }}>32</span>
+        </div>
+      </div>
+
+      {/* Full map */}
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <FakeMap/>
+        <NetworkOverlay hubs={HUBS}/>
+        <div style={{ position:'absolute', inset:0 }}>
+          <HubMarkers hubs={HUBS} selected={sel} onSelect={setSel}/>
+        </div>
+        <div style={{ position:'absolute', left:135, top:175, width:12, height:12, borderRadius:'50%', background:'#3b82f6', border:'2px solid #fff', boxShadow:'0 1px 6px rgba(59,130,246,0.6)', zIndex:15 }}/>
+
+        {/* Legend pill */}
+        <div style={{ position:'absolute', bottom: selHub ? 156 : 62, left:12, display:'flex', gap:8, zIndex:20, transition:'bottom .3s' }}>
+          <div style={{ background:'rgba(255,255,255,0.92)', backdropFilter:'blur(6px)', borderRadius:999, padding:'5px 10px', display:'flex', gap:10, fontSize:10.5, border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' }}>
+            <span style={{ display:'flex', alignItems:'center', gap:4 }}><span style={{ width:8, height:8, borderRadius:'50%', background:P, display:'inline-block' }}/>Hub activo</span>
+            <span style={{ display:'flex', alignItems:'center', gap:4 }}><span style={{ width:8, height:8, borderRadius:'50%', background:'#ef4444', display:'inline-block' }}/>Lleno</span>
+            <span style={{ display:'flex', alignItems:'center', gap:4 }}><span style={{ borderTop:`1.5px dashed ${P}`, width:12 }}/>Red</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom sheet */}
+      {selHub && (
+        <div style={{ flexShrink:0, background:'#fff', borderTop:'2px solid #e8eaec', padding:'14px 16px 10px', boxShadow:'0 -8px 24px rgba(0,0,0,0.08)', animation:'slideUp .2s ease', zIndex:25 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
+            <div>
+              <div style={{ fontSize:11, color:'#888' }}>Hub · {selHub.zona}</div>
+              <div style={{ fontWeight:800, fontSize:15 }}>{selHub.prod}</div>
+              <div style={{ fontSize:11, color:P, fontWeight:600, marginTop:2 }}>↓36% promedio · {selHub.members}/{selHub.max} vecinos</div>
+            </div>
+            <button onClick={()=>setSel(null)} style={{ border:'none', background:'#f0f1f3', borderRadius:999, width:26, height:26, cursor:'pointer', fontWeight:700, color:'#888' }}>✕</button>
+          </div>
+          <div style={{ height:5, background:'#f0f1f3', borderRadius:999, overflow:'hidden', marginBottom:10 }}>
+            <div style={{ height:'100%', width:`${Math.round(selHub.members/selHub.max*100)}%`, background: selHub.status==='lleno'?'#ef4444':P, borderRadius:999 }}/>
+          </div>
+          <button style={{ width:'100%', background:P, color:'#fff', border:'none', borderRadius:10, padding:'11px', fontWeight:700, fontSize:14, fontFamily:'inherit', cursor:'pointer' }}>Unirme al hub →</button>
+        </div>
+      )}
+      {!selHub && <div style={{ flexShrink:0, height:50, background:'transparent' }}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE C — Órdenes con líderes (full map, colored network)
+══════════════════════════════════════════════════════════ */
+function VarianteC() {
+  const [sel, setSel] = useState(null);
+  const PROD_COLORS = { 'Papa':'#f59e0b','Manzana':'#ef4444','Naranja':'#f97316','Zanahoria':'#fb923c','Banana':'#eab308','Cebolla':'#8b5cf6','Tomate':'#dc2626','Lechuga':'#22c55e','Limón':'#84cc16','Pera':'#14b8a6' };
+  const selOrder = ORDERS.find(o=>o.id===sel);
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', fontFamily:"'Inter',sans-serif", position:'relative' }}>
+      {/* Search + toggle */}
+      <div style={{ position:'absolute', top:10, left:12, right:12, zIndex:20, display:'flex', gap:8 }}>
+        <div style={{ flex:1, background:'rgba(255,255,255,0.95)', backdropFilter:'blur(8px)', borderRadius:999, padding:'8px 14px', display:'flex', alignItems:'center', gap:7, boxShadow:'0 4px 14px rgba(0,0,0,0.10)', border:'1px solid rgba(0,0,0,0.06)' }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style={{ color:'#aaa', fontSize:12.5, flex:1 }}>Buscar...</span>
+        </div>
+        <div style={{ background:'rgba(255,255,255,0.95)', backdropFilter:'blur(8px)', borderRadius:999, padding:'8px 14px', fontSize:11, fontWeight:700, color:'#ef4444', boxShadow:'0 4px 14px rgba(0,0,0,0.10)', border:'1px solid rgba(0,0,0,0.06)', display:'flex', alignItems:'center' }}>
+          40 órdenes
+        </div>
+      </div>
+
+      {/* Full map */}
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <FakeMap/>
+
+        {/* Connection lines SVG */}
+        <svg width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+          {ORDERS.flatMap((a,i)=>ORDERS.slice(i+1).filter(b=>b.prod===a.prod&&Math.hypot(a.x-b.x,a.y-b.y)<110).map(b=>(
+            <line key={a.id+b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+              stroke={PROD_COLORS[a.prod]||P} strokeWidth="1.8" strokeOpacity=".6" strokeDasharray="5 5"
+              style={{ animation:'dash2 1s linear infinite', animationDelay:`${(a.id.charCodeAt(1)%4)*0.25}s` }}/>
+          )))}
+        </svg>
+
+        {/* Order markers */}
+        {ORDERS.map((o,i)=>{
+          const color = o.status==='lleno' ? '#ef4444' : (PROD_COLORS[o.prod]||P);
+          const isSelected = sel===o.id;
+          return (
+            <div key={o.id} onClick={()=>setSel(o.id===sel?null:o.id)} style={{ position:'absolute', left:o.x-14, top:o.y-34, width:28, height:42, cursor:'pointer', zIndex: isSelected?15:5, display:'flex', flexDirection:'column', alignItems:'center' }}>
+              <div style={{ fontSize:10, lineHeight:1, marginBottom:1 }}>👑</div>
+              <div style={{ position:'relative', width:24, height:24, borderRadius:'50%' }}>
+                <div style={{ position:'absolute', inset:0, borderRadius:'50%', background:color, opacity:.4, animation:'pulse2 2s ease-out infinite', animationDelay:`${(i%6)*0.25}s` }}/>
+                <div style={{ position:'relative', width:'100%', height:'100%', borderRadius:'50%', background:color, border:'2px solid #fff', boxShadow:'0 2px 6px rgba(0,0,0,0.2)', display:'flex', alignItems:'center', justifyContent:'center', transform: isSelected?'scale(1.3)':'scale(1)', transition:'transform .2s' }}>
+                  <span style={{ fontSize:7, fontWeight:800, color:'#fff' }}>{o.initials}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <div style={{ position:'absolute', left:135, top:175, width:10, height:10, borderRadius:'50%', background:'#3b82f6', border:'2px solid #fff', zIndex:15 }}/>
+
+        {/* Product legend */}
+        <div style={{ position:'absolute', bottom: selOrder?150:14, left:0, right:0, display:'flex', justifyContent:'center', zIndex:20, transition:'bottom .3s' }}>
+          <div style={{ background:'rgba(255,255,255,0.94)', backdropFilter:'blur(6px)', borderRadius:12, padding:'7px 12px', display:'flex', gap:8, flexWrap:'wrap', justifyContent:'center', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 2px 8px rgba(0,0,0,0.08)', maxWidth:350 }}>
+            {Object.entries(PROD_COLORS).slice(0,8).map(([prod,color])=>(
+              <span key={prod} style={{ display:'flex', alignItems:'center', gap:3, fontSize:10 }}>
+                <span style={{ width:7, height:7, borderRadius:'50%', background:color, display:'inline-block' }}/>{prod}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom sheet */}
+      {selOrder && (
+        <div style={{ flexShrink:0, background:'#fff', borderTop:'2px solid #e8eaec', padding:'12px 14px 10px', boxShadow:'0 -8px 24px rgba(0,0,0,0.08)', animation:'slideUp .2s ease', zIndex:25 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
+            <div>
+              <div style={{ fontSize:11, color:'#888' }}>👑 Líder: {selOrder.lider}</div>
+              <div style={{ fontWeight:800, fontSize:15 }}>{selOrder.prod}</div>
+              <div style={{ fontSize:11, color:PROD_COLORS[selOrder.prod]||P, fontWeight:600, marginTop:1 }}>{selOrder.members}/{selOrder.max} vecinos</div>
+            </div>
+            <button onClick={()=>setSel(null)} style={{ border:'none', background:'#f0f1f3', borderRadius:999, width:26, height:26, cursor:'pointer', fontWeight:700, color:'#888' }}>✕</button>
+          </div>
+          <div style={{ height:4, background:'#f0f1f3', borderRadius:999, overflow:'hidden', marginBottom:10 }}>
+            <div style={{ height:'100%', width:`${Math.round(selOrder.members/selOrder.max*100)}%`, background: selOrder.status==='lleno'?'#ef4444':(PROD_COLORS[selOrder.prod]||P), borderRadius:999 }}/>
+          </div>
+          <button style={{ width:'100%', background: selOrder.status==='lleno'?'#f0f1f3':P, color: selOrder.status==='lleno'?'#aaa':'#fff', border:'none', borderRadius:10, padding:'10px', fontWeight:700, fontSize:13, fontFamily:'inherit', cursor: selOrder.status==='lleno'?'default':'pointer' }}>
+            {selOrder.status==='lleno' ? 'Cupo completo — avisame' : 'Unirme a la orden →'}
+          </button>
+        </div>
+      )}
+      {!selOrder && <div style={{ flexShrink:0, height:16 }}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE D — Dashboard integrado (stats + map + lista)
+══════════════════════════════════════════════════════════ */
+function VarianteD() {
+  const [sel, setSel] = useState(null);
+  const selHub = HUBS.find(h=>h.id===sel);
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:'#f4f5f7', fontFamily:"'Inter',sans-serif" }}>
+      {/* Header + stats */}
+      <div style={{ flexShrink:0, background:P, padding:'12px 14px 0' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
+          <div style={{ fontWeight:800, fontSize:17, color:'#fff', letterSpacing:'-0.02em' }}>Mapa en vivo</div>
+          <div style={{ background:'rgba(255,255,255,0.2)', borderRadius:999, padding:'4px 10px', fontSize:11, fontWeight:700, color:'#fff' }}>Buenos Aires</div>
+        </div>
+        <div style={{ display:'flex', gap:0, marginBottom:0, background:'rgba(255,255,255,0.12)', borderRadius:'12px 12px 0 0', overflow:'hidden' }}>
+          {[['32','Hubs activos'],['500+','Vecinos'],['40','Órdenes hoy']].map(([n,l],i)=>(
+            <div key={l} style={{ flex:1, padding:'10px 8px', textAlign:'center', borderRight: i<2?'1px solid rgba(255,255,255,0.15)':'none' }}>
+              <div style={{ fontWeight:800, fontSize:18, color:'#fff' }}>{n}</div>
+              <div style={{ fontSize:9.5, color:'rgba(255,255,255,0.75)', marginTop:1 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Map */}
+      <div style={{ height:200, flexShrink:0, position:'relative', overflow:'hidden' }}>
+        <FakeMap/>
+        <NetworkOverlay hubs={HUBS}/>
+        <div style={{ position:'absolute', inset:0 }}>
+          <HubMarkers hubs={HUBS} selected={sel} onSelect={setSel}/>
+        </div>
+        <div style={{ position:'absolute', left:135, top:100, width:10, height:10, borderRadius:'50%', background:'#3b82f6', border:'2px solid #fff', zIndex:15 }}/>
+      </div>
+
+      {/* Filter chips */}
+      <div style={{ flexShrink:0, background:'#fff', padding:'8px 14px', borderBottom:'1px solid #f0f1f3', display:'flex', gap:6, overflowX:'auto' }}>
+        {['Todos','Papa','Manzana','Naranja','Zanahoria','Banana','Lechuga'].map((f,i)=>(
+          <div key={f} style={{ flexShrink:0, background: i===0?P:'#f0f1f3', color: i===0?'#fff':'#555', borderRadius:999, padding:'4px 12px', fontSize:11.5, fontWeight:600 }}>{f}</div>
+        ))}
+      </div>
+
+      {/* Hub list */}
+      <div style={{ flex:1, overflowY:'auto' }}>
+        {HUBS.slice(0,6).map(h=>(
+          <div key={h.id} onClick={()=>setSel(h.id===sel?null:h.id)} style={{ display:'flex', gap:10, padding:'10px 14px', borderBottom:'1px solid #f4f5f7', background: sel===h.id?'#f0fdf8':'#fff', cursor:'pointer', alignItems:'center' }}>
+            <div style={{ width:8, height:8, borderRadius:'50%', background: h.status==='lleno'?'#ef4444':P, flexShrink:0, boxShadow:`0 0 0 3px ${h.status==='lleno'?'#fee2e2':'#d1fae5'}` }}/>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ display:'flex', justifyContent:'space-between' }}>
+                <div style={{ fontWeight:700, fontSize:12.5 }}>{h.zona}</div>
+                <div style={{ fontSize:11, color: h.status==='lleno'?'#ef4444':P, fontWeight:600 }}>{h.status==='lleno'?'Lleno':`${h.members}/${h.max}`}</div>
+              </div>
+              <div style={{ fontSize:11, color:'#aaa', marginTop:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{h.prod}</div>
+            </div>
+            <div style={{ flexShrink:0, fontSize:11, color:'#aaa' }}>→</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Selected bottom sheet */}
+      {selHub && (
+        <div style={{ flexShrink:0, background:'#fff', borderTop:'2px solid #e8eaec', padding:'12px 14px 10px', boxShadow:'0 -8px 20px rgba(0,0,0,0.07)', zIndex:25 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+            <div style={{ fontWeight:700, fontSize:14 }}>Hub {selHub.zona}</div>
+            <button onClick={()=>setSel(null)} style={{ border:'none', background:'#f0f1f3', borderRadius:999, width:24, height:24, cursor:'pointer', fontWeight:700, color:'#888', fontSize:12 }}>✕</button>
+          </div>
+          <button style={{ width:'100%', background:P, color:'#fff', border:'none', borderRadius:10, padding:'10px', fontWeight:700, fontSize:13, fontFamily:'inherit', cursor:'pointer' }}>Unirme →</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE E — Modo oscuro
+══════════════════════════════════════════════════════════ */
+function VarianteE() {
+  const [sel, setSel] = useState(null);
+  const selHub = HUBS.find(h=>h.id===sel);
+  const NEON = { bg:'#0d1117', card:'#161b22', border:'#30363d', text:'#e6edf3', muted:'#8b949e', green:'#3fb950', red:'#f85149', blue:'#58a6ff' };
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:NEON.bg, fontFamily:"'Inter',sans-serif", color:NEON.text }}>
+      {/* Search pill */}
+      <div style={{ position:'absolute', top:10, left:12, right:12, zIndex:20 }}>
+        <div style={{ background:'rgba(22,27,34,0.95)', backdropFilter:'blur(12px)', borderRadius:999, padding:'9px 16px', display:'flex', alignItems:'center', gap:8, boxShadow:`0 0 0 1px ${NEON.border}, 0 4px 20px rgba(0,0,0,0.5)` }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={NEON.muted} strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style={{ color:NEON.muted, fontSize:13, flex:1 }}>Buscar en el mapa...</span>
+          <span style={{ fontSize:11, fontWeight:700, color:NEON.green }}>32 hubs</span>
+        </div>
+      </div>
+
+      {/* Dark map */}
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <FakeMap dark={true}/>
+        {/* Glow connections */}
+        <svg width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+          {HUBS.flatMap((a,i)=>HUBS.slice(i+1).filter(b=>Math.hypot(a.x-b.x,a.y-b.y)<120).map(b=>(
+            <line key={a.id+'-'+b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+              stroke={NEON.green} strokeWidth="1.5" strokeOpacity=".45" strokeDasharray="6 5"
+              style={{ animation:'dash2 1.2s linear infinite', filter:'url(#glow)' }}/>
+          )))}
+          <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        </svg>
+        {/* Zone halos */}
+        <svg width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+          {HUBS.map(h=><circle key={'z'+h.id} cx={h.x} cy={h.y} r="42" fill={NEON.green} fillOpacity=".04" stroke={NEON.green} strokeWidth="1" strokeOpacity=".2"/>)}
+        </svg>
+        {/* Neon markers */}
+        {HUBS.map((h,i)=>{
+          const color = h.status==='lleno' ? NEON.red : NEON.green;
+          const isSelected = sel===h.id;
+          return (
+            <div key={h.id} onClick={()=>setSel(h.id===sel?null:h.id)} style={{ position:'absolute', left:h.x-16, top:h.y-16, width:32, height:32, cursor:'pointer', zIndex: isSelected?10:5 }}>
+              <div style={{ position:'absolute', inset:0, borderRadius:'50%', background:color, opacity:.25, animation:'pulse2 2s ease-out infinite', animationDelay:`${(i%5)*0.3}s` }}/>
+              <div style={{ position:'absolute', inset:5, borderRadius:'50%', background:NEON.card, border:`1.5px solid ${color}`, boxShadow:`0 0 8px ${color}60, inset 0 0 4px ${color}20`, display:'flex', alignItems:'center', justifyContent:'center', transform: isSelected?'scale(1.3)':'scale(1)', transition:'transform .2s' }}>
+                <span style={{ fontSize:8, fontWeight:800, color }}>{h.count}p</span>
+              </div>
+            </div>
+          );
+        })}
+        <div style={{ position:'absolute', left:135, top:175, width:10, height:10, borderRadius:'50%', background:NEON.blue, boxShadow:`0 0 10px ${NEON.blue}`, border:'2px solid #fff', zIndex:15 }}/>
+      </div>
+
+      {/* Bottom sheet */}
+      {selHub ? (
+        <div style={{ flexShrink:0, background:NEON.card, borderTop:`1px solid ${NEON.border}`, padding:'14px 16px 12px', boxShadow:'0 -8px 32px rgba(0,0,0,0.5)' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', marginBottom:8 }}>
+            <div>
+              <div style={{ fontSize:11, color:NEON.muted }}>Hub · {selHub.zona}</div>
+              <div style={{ fontWeight:800, fontSize:15, color:NEON.text }}>{selHub.prod}</div>
+              <div style={{ fontSize:11, color:NEON.green, fontWeight:600, marginTop:1 }}>↓36% · {selHub.members}/{selHub.max}</div>
+            </div>
+            <button onClick={()=>setSel(null)} style={{ border:`1px solid ${NEON.border}`, background:'transparent', borderRadius:8, width:28, height:28, cursor:'pointer', color:NEON.muted, fontWeight:700 }}>✕</button>
+          </div>
+          <button style={{ width:'100%', background:NEON.green, color:'#0d1117', border:'none', borderRadius:10, padding:'11px', fontWeight:800, fontSize:14, fontFamily:'inherit', cursor:'pointer' }}>Unirme al hub →</button>
+        </div>
+      ) : <div style={{ height:16 }}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE F — Clusters por zona (expandibles)
+══════════════════════════════════════════════════════════ */
+function VarianteF() {
+  const [expanded, setExpanded] = useState(null);
+  const CLUSTERS = [
+    { id:'norte', name:'Norte', x:100, y:95,  color:'#6366f1', count:8,  hubs: HUBS.slice(0,4) },
+    { id:'centro',name:'Centro',x:210, y:165, color:'#0e9c82', count:10, hubs: HUBS.slice(4,8) },
+    { id:'sur',   name:'Sur',   x:155, y:285, color:'#f59e0b', count:7,  hubs: HUBS.slice(8,12) },
+    { id:'este',  name:'Este',  x:320, y:130, color:'#ec4899', count:7,  hubs: HUBS.slice(2,5) },
+  ];
+  const exp = CLUSTERS.find(c=>c.id===expanded);
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', fontFamily:"'Inter',sans-serif", position:'relative' }}>
+      <div style={{ position:'absolute', top:10, left:12, right:12, zIndex:20 }}>
+        <div style={{ background:'rgba(255,255,255,0.95)', backdropFilter:'blur(8px)', borderRadius:999, padding:'9px 16px', display:'flex', alignItems:'center', gap:8, boxShadow:'0 4px 14px rgba(0,0,0,0.10)' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style={{ color:'#aaa', fontSize:13, flex:1 }}>Explorar zonas...</span>
+          <span style={{ fontSize:11, fontWeight:700, color:P }}>4 zonas</span>
+        </div>
+      </div>
+
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <FakeMap/>
+        {/* Cluster connections */}
+        <svg width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+          {CLUSTERS.flatMap((a,i)=>CLUSTERS.slice(i+1).map(b=>(
+            <line key={a.id+b.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#cbd5e1" strokeWidth="1.5" strokeOpacity=".5" strokeDasharray="5 4"
+              style={{ animation:'dash2 1.5s linear infinite' }}/>
+          )))}
+        </svg>
+        {/* Cluster blobs */}
+        {CLUSTERS.map(c=>(
+          <svg key={'blob'+c.id} width="100%" height="100%" style={{ position:'absolute', inset:0, pointerEvents:'none' }} viewBox="0 0 390 380" preserveAspectRatio="xMidYMid slice">
+            <circle cx={c.x} cy={c.y} r={expanded===c.id?70:52} fill={c.color} fillOpacity={expanded===c.id?0.14:0.10} style={{ transition:'r .3s, fill-opacity .3s' }}/>
+          </svg>
+        ))}
+        {/* Cluster markers */}
+        {CLUSTERS.map(c=>{
+          const isExp = expanded===c.id;
+          return (
+            <div key={c.id} onClick={()=>setExpanded(isExp?null:c.id)} style={{ position:'absolute', left:c.x-26, top:c.y-26, width:52, height:52, cursor:'pointer', zIndex:10 }}>
+              <div style={{ position:'absolute', inset:0, borderRadius:'50%', background:c.color, opacity:.2, animation:'pulse2 2.5s ease-out infinite' }}/>
+              <div style={{ position:'absolute', inset:6, borderRadius:'50%', background:c.color, border:'2.5px solid #fff', boxShadow:'0 4px 16px rgba(0,0,0,0.18)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', transform: isExp?'scale(1.15)':'scale(1)', transition:'transform .25s' }}>
+                <span style={{ fontWeight:900, fontSize:14, color:'#fff', lineHeight:1 }}>{c.count}</span>
+                <span style={{ fontSize:7.5, color:'rgba(255,255,255,0.85)', fontWeight:600 }}>hubs</span>
+              </div>
+              <div style={{ position:'absolute', bottom:'100%', left:'50%', transform:'translateX(-50%)', marginBottom:4, background:'rgba(0,0,0,0.75)', color:'#fff', borderRadius:6, padding:'2px 8px', fontSize:10, fontWeight:700, whiteSpace:'nowrap', opacity: isExp?1:0, transition:'opacity .2s' }}>{c.name}</div>
+            </div>
+          );
+        })}
+        <div style={{ position:'absolute', left:135, top:175, width:10, height:10, borderRadius:'50%', background:'#3b82f6', border:'2px solid #fff', zIndex:15 }}/>
+      </div>
+
+      {/* Expanded cluster */}
+      {exp && (
+        <div style={{ flexShrink:0, background:'#fff', borderTop:'2px solid #e8eaec', padding:'12px 14px 10px', boxShadow:'0 -6px 20px rgba(0,0,0,0.08)' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', marginBottom:10 }}>
+            <div style={{ fontWeight:800, fontSize:14 }}>Zona {exp.name} · {exp.count} hubs</div>
+            <button onClick={()=>setExpanded(null)} style={{ border:'none', background:'#f0f1f3', borderRadius:999, width:26, height:26, cursor:'pointer', fontWeight:700, color:'#888', fontSize:12 }}>✕</button>
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+            {exp.hubs.slice(0,3).map(h=>(
+              <div key={h.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 10px', background:'#f8fafc', borderRadius:10 }}>
+                <div>
+                  <div style={{ fontWeight:600, fontSize:12.5 }}>{h.zona}</div>
+                  <div style={{ fontSize:11, color:'#888' }}>{h.prod}</div>
+                </div>
+                <div style={{ fontWeight:700, fontSize:12, color: h.status==='lleno'?'#ef4444':P }}>{h.members}/{h.max}</div>
+              </div>
+            ))}
+          </div>
+          <button style={{ width:'100%', background:exp.color, color:'#fff', border:'none', borderRadius:10, padding:'10px', fontWeight:700, fontSize:13, fontFamily:'inherit', cursor:'pointer', marginTop:8 }}>Ver todos en zona {exp.name}</button>
+        </div>
+      )}
+      {!exp && <div style={{ height:16 }}/>}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE G — Mapa mundi · Expansión global
+══════════════════════════════════════════════════════════ */
+function VarianteG() {
+  const [selCity, setSelCity] = useState('bsas');
+  const CITIES = [
+    { id:'bsas',   name:'Buenos Aires', country:'Argentina', lat:220, lng:175, active:true,  hubs:32, users:500,  status:'activo' },
+    { id:'montevideo', name:'Montevideo', country:'Uruguay',  lat:218, lng:158, active:false, hubs:0,  users:0,    status:'pronto' },
+    { id:'santiago',   name:'Santiago',  country:'Chile',    lat:174, lng:202, active:false, hubs:0,  users:0,    status:'pronto' },
+    { id:'lima',       name:'Lima',      country:'Perú',     lat:148, lng:165, active:false, hubs:0,  users:0,    status:'pronto' },
+    { id:'bogota',     name:'Bogotá',    country:'Colombia', lat:155, lng:115, active:false, hubs:0,  users:0,    status:'pronto' },
+    { id:'cdmx',       name:'Ciudad de México',country:'México',lat:112,lng:95, active:false, hubs:0, users:0,   status:'pronto' },
+    { id:'madrid',     name:'Madrid',    country:'España',   lat:295, lng:55,  active:false, hubs:0,  users:0,    status:'futuro' },
+    { id:'barcelona',  name:'Barcelona', country:'España',   lat:303, lng:50,  active:false, hubs:0,  users:0,    status:'futuro' },
+  ];
+  const sel = CITIES.find(c=>c.id===selCity);
+
+  // Simplified world map SVG paths
+  const worldPaths = `
+    M 40 85 Q 55 75 70 82 Q 80 85 85 95 Q 90 105 82 110 Q 70 115 58 108 Q 45 100 40 85 Z
+    M 90 70 Q 120 60 155 65 Q 185 68 210 75 Q 230 80 240 95 Q 248 108 238 118 Q 220 128 195 122 Q 168 116 148 108 Q 125 98 108 88 Q 92 80 90 70 Z
+    M 245 62 Q 260 55 285 58 Q 305 60 318 70 Q 330 80 332 95 Q 334 110 322 118 Q 308 126 290 122 Q 270 118 258 108 Q 244 96 245 80 Q 246 70 245 62 Z
+    M 318 90 Q 340 85 360 92 Q 375 98 380 110 Q 384 122 374 130 Q 360 138 344 132 Q 328 126 320 115 Q 314 104 318 90 Z
+    M 180 130 Q 200 125 218 132 Q 232 138 236 150 Q 240 162 230 168 Q 216 175 200 170 Q 184 165 178 152 Q 174 140 180 130 Z
+    M 130 145 Q 152 140 168 150 Q 180 158 178 170 Q 176 182 162 188 Q 148 192 136 182 Q 124 172 128 158 Q 130 150 130 145 Z
+    M 160 200 Q 175 195 188 205 Q 198 214 196 225 Q 194 236 182 240 Q 168 244 158 234 Q 148 224 152 212 Q 156 204 160 200 Z
+    M 110 180 Q 125 175 138 185 Q 148 194 145 205 Q 142 215 130 218 Q 116 220 108 210 Q 100 200 104 190 Q 107 183 110 180 Z
+    M 340 150 Q 360 145 374 155 Q 386 163 385 174 Q 384 185 372 190 Q 358 195 346 186 Q 334 177 336 164 Q 338 155 340 150 Z
+    M 315 180 Q 330 175 342 184 Q 352 192 350 202 Q 348 212 336 216 Q 322 220 314 210 Q 306 200 310 190 Q 312 183 315 180 Z
+  `;
+
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:'#0a1628', fontFamily:"'Inter',sans-serif" }}>
+      {/* Header */}
+      <div style={{ flexShrink:0, padding:'14px 16px 10px', borderBottom:'1px solid #1e2d45' }}>
+        <div style={{ fontWeight:800, fontSize:17, color:'#fff', letterSpacing:'-0.02em' }}>Conlat Mundial</div>
+        <div style={{ fontSize:12, color:'#4a8ab5', marginTop:2 }}>Expansión global de la red de compras vecinales</div>
+      </div>
+
+      {/* World map */}
+      <div style={{ flex:1, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <svg width="390" height="260" viewBox="0 0 420 280" style={{ position:'absolute' }}>
+          {/* Ocean */}
+          <rect width="420" height="280" fill="#0d2140"/>
+          {/* Grid lines */}
+          {[0,70,140,210,280].map(y=><line key={y} x1="0" y1={y} x2="420" y2={y} stroke="#1a3550" strokeWidth=".5"/>)}
+          {[0,60,120,180,240,300,360,420].map(x=><line key={x} x1={x} y1="0" x2={x} y2="280" stroke="#1a3550" strokeWidth=".5"/>)}
+          {/* Continents simplified */}
+          <path d={worldPaths} fill="#1a3a5c" stroke="#2a5a8c" strokeWidth=".8"/>
+          {/* Connection lines from BA to other cities */}
+          {CITIES.filter(c=>c.id!=='bsas').map(c=>(
+            <line key={c.id} x1={220} y1={175} x2={c.lat} y2={c.lng}
+              stroke={c.status==='pronto'?'#0e9c82':'#f59e0b'} strokeWidth="1" strokeOpacity=".4" strokeDasharray="4 4"
+              style={{ animation:'dash2 2s linear infinite' }}/>
+          ))}
+          {/* City dots */}
+          {CITIES.map(c=>{
+            const isActive = c.active;
+            const isSel = selCity===c.id;
+            const color = isActive ? '#0e9c82' : (c.status==='pronto'?'#38bdf8':'#f59e0b');
+            return (
+              <g key={c.id} onClick={()=>setSelCity(c.id)} style={{ cursor:'pointer' }}>
+                {isSel && <circle cx={c.lat} cy={c.lng} r="14" fill={color} fillOpacity=".15"/>}
+                <circle cx={c.lat} cy={c.lng} r={isActive?8:5} fill={color} opacity=".9"/>
+                {isActive && <circle cx={c.lat} cy={c.lng} r="12" fill="none" stroke={color} strokeWidth="1.5" opacity=".4" style={{ animation:'pulse2 2s ease-out infinite' }}/>}
+                <text x={c.lat+10} y={c.lng-4} fill="rgba(255,255,255,0.85)" fontSize="8" fontWeight="600" fontFamily="Inter,sans-serif">{c.name}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div style={{ flexShrink:0, padding:'8px 16px', display:'flex', gap:14, borderTop:'1px solid #1e2d45', borderBottom:'1px solid #1e2d45' }}>
+        {[['#0e9c82','Activo'],['#38bdf8','Próximamente'],['#f59e0b','Futuro']].map(([c,l])=>(
+          <span key={l} style={{ display:'flex', alignItems:'center', gap:5, fontSize:10.5, color:'#7da8c8' }}>
+            <span style={{ width:8, height:8, borderRadius:'50%', background:c, display:'inline-block' }}/>{l}
+          </span>
+        ))}
+      </div>
+
+      {/* Selected city card */}
+      {sel && (
+        <div style={{ flexShrink:0, padding:'12px 16px', background:'#0d1f35' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+            <div>
+              <div style={{ fontWeight:800, fontSize:15, color:'#fff' }}>{sel.name}</div>
+              <div style={{ fontSize:12, color:'#4a8ab5', marginTop:1 }}>{sel.country}</div>
+            </div>
+            <div style={{ background: sel.active?'#0e9c82':sel.status==='pronto'?'#38bdf8':'#f59e0b', color:'#fff', borderRadius:999, padding:'3px 10px', fontSize:10.5, fontWeight:700 }}>
+              {sel.active ? '● Activo' : sel.status==='pronto' ? 'Próximamente' : '🌍 En planificación'}
+            </div>
+          </div>
+          {sel.active && (
+            <div style={{ display:'flex', gap:0, marginTop:10, background:'rgba(255,255,255,0.05)', borderRadius:10, overflow:'hidden' }}>
+              {[['32','Hubs'],['500+','Vecinos'],['40','Órdenes/día']].map(([n,l],i)=>(
+                <div key={l} style={{ flex:1, padding:'8px', textAlign:'center', borderRight: i<2?'1px solid rgba(255,255,255,0.08)':'none' }}>
+                  <div style={{ fontWeight:800, fontSize:15, color:'#0e9c82' }}>{n}</div>
+                  <div style={{ fontSize:9.5, color:'#4a8ab5', marginTop:1 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          {!sel.active && (
+            <button style={{ width:'100%', marginTop:10, background:'#1e2d45', color:'#7da8c8', border:'1px solid #2a4060', borderRadius:10, padding:'10px', fontWeight:600, fontSize:13, fontFamily:'inherit', cursor:'pointer' }}>
+              Anotarme para el lanzamiento →
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANTE H — Diagrama de barrios (sin mapa)
+══════════════════════════════════════════════════════════ */
+function VarianteH() {
+  const [sel, setSel] = useState(null);
+  const [ticker, setTicker] = useState(0);
+  useEffect(()=>{ const t=setInterval(()=>setTicker(n=>n+1),2000); return()=>clearInterval(t); },[]);
+
+  const nodes = [
+    { id:1,  x:195, y:95,  zona:'Palermo',       prod:'Papa·Manzana', count:18, color:'#6366f1' },
+    { id:2,  x:290, y:115, zona:'Recoleta',       prod:'Naranja·Pera', count:14, color:'#0e9c82' },
+    { id:3,  x:115, y:145, zona:'Belgrano',       prod:'Banana·Zana.', count:22, color:'#f59e0b' },
+    { id:4,  x:220, y:160, zona:'Colegiales',     prod:'Manzana·Limón',count:16, color:'#ec4899' },
+    { id:5,  x:330, y:170, zona:'Almagro',        prod:'Cebolla·Tom.', count:20, color:'#ef4444' },
+    { id:6,  x:155, y:225, zona:'Caballito',      prod:'Papa·Lechuga', count:19, color:'#0e9c82' },
+    { id:7,  x:275, y:230, zona:'Boedo',          prod:'Lechuga·Zana.',count:13, color:'#8b5cf6' },
+    { id:8,  x:70,  y:220, zona:'Flores',         prod:'Banana·Pera',  count:24, color:'#f97316' },
+    { id:9,  x:195, y:290, zona:'Constitución',   prod:'Naranja·Pera', count:11, color:'#14b8a6' },
+    { id:10, x:350, y:270, zona:'San Telmo',      prod:'Tomate·Ceb.',  count:9,  color:'#dc2626' },
+  ];
+  const edges = [[1,2],[1,3],[1,4],[2,5],[3,4],[4,6],[4,7],[5,7],[6,8],[6,9],[7,9],[7,10],[8,6],[9,10]];
+  const selNode = nodes.find(n=>n.id===sel);
+
+  return (
+    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:'#fafafa', fontFamily:"'Inter',sans-serif" }}>
+      {/* Header */}
+      <div style={{ flexShrink:0, padding:'12px 16px', borderBottom:'1px solid #e8eaec', background:'#fff', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <div>
+          <div style={{ fontWeight:800, fontSize:15 }}>Red de barrios</div>
+          <div style={{ fontSize:11, color:'#888', marginTop:1 }}>10 zonas · 32 hubs activos</div>
+        </div>
+        <div style={{ fontSize:11, color:P, fontWeight:600 }}>500+ vecinos</div>
+      </div>
+
+      {/* Network diagram */}
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <svg width="100%" height="100%" viewBox="0 0 420 320" preserveAspectRatio="xMidYMid meet" style={{ position:'absolute', inset:0 }}>
+          {/* Background grid dots */}
+          {Array.from({length:20},(_,i)=>Array.from({length:16},(_,j)=>(
+            <circle key={i+'-'+j} cx={i*22+5} cy={j*22+5} r="1" fill="#e2e8f0"/>
+          )))}
+          {/* Edges */}
+          {edges.map(([a,b])=>{
+            const na=nodes.find(n=>n.id===a), nb=nodes.find(n=>n.id===b);
+            const isActive = ticker%edges.length === edges.findIndex(e=>e[0]===a&&e[1]===b);
+            return (
+              <line key={a+'-'+b} x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+                stroke={isActive?na.color:'#cbd5e1'} strokeWidth={isActive?2:1.2}
+                strokeOpacity={isActive?0.8:0.4} strokeDasharray="5 4"
+                style={{ animation:'dash2 1.5s linear infinite', transition:'stroke .5s, stroke-width .5s' }}/>
+            );
+          })}
+          {/* Nodes */}
+          {nodes.map(n=>{
+            const isSel = sel===n.id;
+            const r = 18 + Math.round(n.count/30*10);
+            return (
+              <g key={n.id} onClick={()=>setSel(n.id===sel?null:n.id)} style={{ cursor:'pointer' }}>
+                <circle cx={n.x} cy={n.y} r={r+6} fill={n.color} fillOpacity=".1"/>
+                <circle cx={n.x} cy={n.y} r={r} fill={n.color} stroke="#fff" strokeWidth="2.5"
+                  style={{ filter: isSel?`drop-shadow(0 0 6px ${n.color})`:'none', transition:'filter .2s' }}/>
+                <text x={n.x} y={n.y-2} textAnchor="middle" fill="#fff" fontSize="9" fontWeight="800" fontFamily="Inter,sans-serif">{n.count}</text>
+                <text x={n.x} y={n.y+8} textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="7" fontFamily="Inter,sans-serif">vecinos</text>
+                <text x={n.x} y={n.y+r+12} textAnchor="middle" fill="#475569" fontSize="8.5" fontWeight="600" fontFamily="Inter,sans-serif">{n.zona}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Selected info */}
+      {selNode ? (
+        <div style={{ flexShrink:0, background:'#fff', borderTop:'2px solid #e8eaec', padding:'12px 16px 10px', boxShadow:'0 -4px 16px rgba(0,0,0,0.06)' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+            <div>
+              <div style={{ fontWeight:800, fontSize:14 }}>{selNode.zona}</div>
+              <div style={{ fontSize:11.5, color:'#888', marginTop:1 }}>{selNode.prod}</div>
+            </div>
+            <button onClick={()=>setSel(null)} style={{ border:'none', background:'#f0f1f3', borderRadius:999, width:26, height:26, cursor:'pointer', fontWeight:700, color:'#888', fontSize:12 }}>✕</button>
+          </div>
+          <button style={{ width:'100%', background:selNode.color, color:'#fff', border:'none', borderRadius:10, padding:'10px', fontWeight:700, fontSize:13, fontFamily:'inherit', cursor:'pointer' }}>
+            Ver hubs en {selNode.zona} →
+          </button>
+        </div>
+      ) : (
+        <div style={{ flexShrink:0, padding:'8px 16px', background:'#fff', borderTop:'1px solid #e8eaec' }}>
+          <div style={{ fontSize:11, color:'#aaa', textAlign:'center' }}>Tocá un barrio para ver sus hubs</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   APP — Design Canvas with 4 iOS variants
+══════════════════════════════════════════════════════════ */
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection
+        title="Conlat · Mapa — Exploración de diseño"
+        subtitle="4 variantes del mapa en vivo. Tocá los marcadores para interactuar. Usá scroll para hacer zoom, arrastrá el fondo para moverse."
+      >
+        <DCArtboard label="A — Mapa + Lista" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteA/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="B — Red activa (full map)" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteB/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="C — Órdenes con líderes" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteC/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="D — Dashboard integrado" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteD/>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        title="Variantes E–H · Nuevas exploraciones"
+        subtitle="Modo oscuro, clusters, mapa mundi y visualización sin mapa."
+      >
+        <DCArtboard label="E — Modo oscuro" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteE/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="F — Clusters por zona" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteF/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="G — Mapa mundi · Expansión" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteG/>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard label="H — Diagrama sin mapa" width={390} height={780}>
+          <div style={{ height:50 }}/>
+          <div style={{ height:730, overflow:'hidden' }}>
+            <VarianteH/>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection title="Notas de diseño — A a D" subtitle="">
+        <DCPostIt top={0} left={0} rotate={-1}><b>A: Mapa + Lista</b><br/>Ideal para usuarios que prefieren explorar en lista. El mapa da contexto espacial.</DCPostIt>
+        <DCPostIt top={0} left={220} rotate={2}><b>B: Red activa</b><br/>Maximiza el mapa. Foco en la red de hubs conectada. Botón emergente al tocar.</DCPostIt>
+        <DCPostIt top={0} left={440} rotate={-1.5}><b>C: Órdenes/Líderes</b><br/>Cada líder visible en el mapa. Las líneas de colores muestran qué productos se conectan.</DCPostIt>
+        <DCPostIt top={0} left={660} rotate={1}><b>D: Dashboard</b><br/>Stats siempre visibles arriba. Bueno para el equipo de Conlat o vista de admin.</DCPostIt>
+      </DCSection>
+      <DCSection title="Notas de diseño — E a H" subtitle="">
+        <DCPostIt top={0} left={0} rotate={2}><b>E: Modo oscuro</b><br/>Marcadores con glow neón. Ideal para uso nocturno. Más dramático y moderno.</DCPostIt>
+        <DCPostIt top={0} left={220} rotate={-1}><b>F: Clusters</b><br/>Agrupa hubs por zona Norte/Centro/Sur/Este. Más simple para nuevos usuarios.</DCPostIt>
+        <DCPostIt top={0} left={440} rotate={1.5}><b>G: Mapa mundi</b><br/>Visión de expansión global. Ideal para pitch a inversores o página de "Próximamente".</DCPostIt>
+        <DCPostIt top={0} left={660} rotate={-2}><b>H: Diagrama</b><br/>Sin mapa de base. Red de barrios como grafo. Muestra la densidad de vecinos por zona.</DCPostIt>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<style>
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+</style>
+</body>
+</html>
