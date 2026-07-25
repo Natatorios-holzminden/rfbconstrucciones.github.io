@@ -1,0 +1,11 @@
+﻿CONLAT — carpeta lista para subir a /vconlat/
+
+Archivos:
+  index.html                     → la app (sin menú preview)
+  comparador-unificado.html      → tabla Coto / mayoristas / Conlat
+  datos-comparacion-unificada.js → datos del comparador
+
+Subí los 3 a: rfbconstrucciones.com.ar/vconlat/
+
+URL pública: https://rfbconstrucciones.com.ar/vconlat/
+Preview con menú: https://rfbconstrucciones.com.ar/vconlat/?dev=1

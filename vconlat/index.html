@@ -568,9 +568,9 @@ function Countdown({ deadline, big, card, inline }) {
     </div>);
 }
 
-// Navegador de pantallas (menú arriba con todos los grupos y submenús) por defecto.
-// Agregá ?app=1 a la URL para el modo app a pantalla completa (sin menú ni marco).
-const APP_MODE = new URLSearchParams(location.search).has('app');
+// Por defecto: solo la app (sin menú ni marco del iPhone).
+// Agregá ?dev=1 a la URL para ver el menú de preview (Entrada / Cliente / Admin).
+const APP_MODE = !new URLSearchParams(location.search).has('dev');
 
 const SCREENS = [
 // 👥 Cliente
