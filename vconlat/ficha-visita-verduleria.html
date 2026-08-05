@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ficha de visita — verdulería</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#f4f6f8; --card:#fff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --ok:#0d9488; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "DM Sans", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 1.3rem 1.1rem 3rem; }
+    h1 { font-size: 1.2rem; margin: 0 0 1rem; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+    label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin: 0.7rem 0 0.25rem; }
+    label:first-child { margin-top: 0; }
+    input, select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 0.55rem 0.65rem; font-size: 0.95rem; font-family: inherit; }
+    .fila2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+    .productos { border-top: 2px dashed var(--line); margin-top: 1rem; padding-top: 0.8rem; }
+    .producto-item { background: #f8fafc; border-radius: 10px; padding: 0.7rem 0.8rem; margin-bottom: 0.6rem; }
+    .btn { width: 100%; padding: 0.8rem; border: 2px dashed var(--line); background: transparent; border-radius: 10px; font-family: inherit; font-weight: 700; color: var(--muted); margin-top: 0.5rem; }
+    .nota { font-size: 0.78rem; color: var(--muted); margin-top: 1.2rem; text-align: center; }
+    @media print { .btn { display: none; } body { background: #fff; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Ficha de visita — [imprimir varias o usar en el celular]</h1>
+
+    <div class="card">
+      <label>Nombre del comercio</label>
+      <input placeholder="Ej: Verdulería Don José" />
+
+      <div class="fila2">
+        <div><label>Dirección</label><input placeholder="Calle y altura" /></div>
+        <div><label>Horario</label><input placeholder="Ej: 8 a 20hs" /></div>
+      </div>
+
+      <div class="fila2">
+        <div><label>Contacto (WhatsApp)</label><input placeholder="11-..." /></div>
+        <div><label>¿Dijo que sí?</label>
+          <select><option>Sí, arranca</option><option>Lo piensa</option><option>No</option></select>
+        </div>
+      </div>
+
+      <label>Hora habitual de "lo que sobra"</label>
+      <input placeholder="Ej: cierre a las 20hs, verduras del día anterior a la mañana" />
+
+      <div class="productos">
+        <label style="margin-top:0">Productos que ofreció hoy (repetir por cada uno)</label>
+
+        <div class="producto-item">
+          <div class="fila2">
+            <div><label style="margin-top:0">Producto</label><input placeholder="Ej: Tomate" /></div>
+            <div><label style="margin-top:0">Cantidad</label><input placeholder="Ej: 5kg" /></div>
+          </div>
+          <label>Precio que necesita recuperar</label>
+          <input placeholder="$" />
+        </div>
+
+        <div class="producto-item">
+          <div class="fila2">
+            <div><label style="margin-top:0">Producto</label><input placeholder="Ej: Manzana" /></div>
+            <div><label style="margin-top:0">Cantidad</label><input placeholder="Ej: 3kg" /></div>
+          </div>
+          <label>Precio que necesita recuperar</label>
+          <input placeholder="$" />
+        </div>
+
+        <button class="btn">+ Agregar otro producto</button>
+      </div>
+
+      <label>Notas de la visita</label>
+      <textarea rows="3" placeholder="Cualquier detalle: dudas que tuvo, mejor horario para volver, etc."></textarea>
+    </div>
+
+    <p class="nota">Sacale foto a esta ficha completa o imprimila para llevar varias copias a la recorrida.</p>
+  </div>
+</body>
+</html>

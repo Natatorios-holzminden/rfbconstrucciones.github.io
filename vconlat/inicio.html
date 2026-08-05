@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Conlat — Vista Mobile</title>
+<title>HUBADOR — Marketplace</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
@@ -494,7 +494,7 @@ Object.assign(window, {
 
 const { useState } = React;
 
-// 💰 Markup de Conlat sobre el valor de compra (costo) del producto
+// 💰 Markup de HUBADOR sobre el valor de compra (costo) del producto
 const MARKUP = 0.30;
 const markupOf = (cost) => Math.round(cost * MARKUP);
 
@@ -568,9 +568,36 @@ function Countdown({ deadline, big, card, inline }) {
     </div>);
 }
 
-// Por defecto: solo la app (sin menú ni marco del iPhone).
-// Agregá ?dev=1 a la URL para ver el menú de preview (Entrada / Cliente / Admin).
-const APP_MODE = !new URLSearchParams(location.search).has('dev');
+// Solo la app a pantalla completa (sin menú ni marco iPhone).
+// Preview con menú: agregá ?dev=1
+// Compatibilidad con versión vieja subida: ?app=1 también fuerza modo app.
+const _qs = new URLSearchParams(location.search);
+const DEV_MODE = _qs.has('dev'); // menú + iPhone preview
+const FORCE_MOBILE = _qs.has('mobile'); // forzar UI mobile en desktop
+const FORCE_WEB = _qs.has('web'); // forzar UI web
+const APP_MODE = !DEV_MODE; // modo público (sin menú dev)
+function isDesktopWidth() {
+  return window.matchMedia('(min-width: 900px)').matches;
+}
+function useIsDesktop() {
+  const [desk, setDesk] = React.useState(() => {
+    if (FORCE_MOBILE) return false;
+    if (FORCE_WEB) return true;
+    return isDesktopWidth();
+  });
+  React.useEffect(() => {
+    if (FORCE_MOBILE || FORCE_WEB) return;
+    const mq = window.matchMedia('(min-width: 900px)');
+    const fn = () => setDesk(mq.matches);
+    mq.addEventListener?.('change', fn);
+    mq.addListener?.(fn);
+    return () => { mq.removeEventListener?.('change', fn); mq.removeListener?.(fn); };
+  }, []);
+  return desk;
+}
+if (APP_MODE) {
+  try { document.documentElement.classList.add('app-mode'); } catch (e) {}
+}
 
 const SCREENS = [
 // 👥 Cliente
@@ -610,9 +637,9 @@ function MobileHome() {
     <div style={{ fontFamily: "'Inter', sans-serif", background: '#f4f5f7', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', fontSize: 14, WebkitFontSmoothing: 'antialiased' }}>
       {/* Header — fijo dentro del flex, nunca se mueve */}
       <header style={{ flexShrink: 0, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', borderBottom: '1px solid #e8eaec', padding: '0 16px', height: 56, display: 'flex', alignItems: 'center', gap: 10, zIndex: 5 }}>
-        <div style={{ width: 28, height: 28, borderRadius: 7, background: primary, display: 'grid', placeItems: 'center', color: '#fff', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>C</div>
+        <div style={{ width: 28, height: 28, borderRadius: 7, background: primary, display: 'grid', placeItems: 'center', color: '#fff', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>H</div>
         <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0, maxWidth: 130, minWidth: 0 }}>
-          <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em', lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user ? `Hola, ${user.nombre}` : 'Conlat'}</span>
+          <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em', lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user ? `Hola, ${user.nombre}` : 'HUBADOR'}</span>
           {user && <span style={{ fontSize: 10.5, color: '#888', lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>📍 {user.barrio || 'Palermo'}</span>}
         </div>
         <div style={{ flex: 1, background: '#f0f1f3', borderRadius: 999, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 12px', marginLeft: 6 }}>
@@ -634,83 +661,67 @@ function MobileHome() {
           <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', animation: 'pulse 1.6s infinite', display: 'inline-block' }}></span>
           500+ vecinos activos ahora
         </div>
-        <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '12px 0 0', textWrap: 'balance' }}>
-          Comprá con tus <span style={{ color: primary }}>vecinos</span> y ahorrá hasta <span style={{ color: primary }}>35%</span>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.15, margin: '10px 0 0', textWrap: 'balance' }}>
+          Comprá con tus <span style={{ color: primary }}>vecinos</span> · hasta <span style={{ color: primary }}>35%</span> off
         </h1>
-        <p style={{ margin: '12px 0 0', fontSize: 14, color: '#666', lineHeight: 1.5 }}>
-          Grupos de compra vecinales directo del productor.
+        <p style={{ margin: '8px 0 0', fontSize: 13, color: '#666', lineHeight: 1.4 }}>
+          Marketplace de ofertas grupales · directo del productor.
         </p>
-        <div style={{ display: 'flex', gap: 8, marginTop: 18, flexDirection: 'column' }}>
-          <button onClick={() => navigate('productos')} style={{ background: primary, color: '#fff', border: 'none', borderRadius: 999, padding: '12px 20px', fontWeight: 600, fontSize: 15, fontFamily: 'inherit', cursor: 'pointer' }}>Empezar a ahorrar →</button>
-        </div>
-        {/* Stats */}
-        <div style={{ display: 'flex', gap: 0, marginTop: 20, background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e8eaec' }}>
-          {[['35%', 'Ahorro prom.'], ['500+', 'Vecinos'], ['24hs', 'Entrega']].map(([n, l], i) =>
-            <div key={i} style={{ flex: 1, padding: '12px 8px', textAlign: 'center', borderRight: i < 2 ? '1px solid #e8eaec' : 'none' }}>
-              <div style={{ fontWeight: 800, fontSize: 18, color: primary }}>{n}</div>
-              <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{l}</div>
-            </div>
-            )}
-        </div>
       </div>
 
-      {/* Sé líder — propuesta de comisión */}
-      <div style={{ margin: '20px 16px 0', background: '#fff', border: '1px solid #e8eaec', borderRadius: 16, padding: '16px', position: 'relative', overflow: 'hidden' }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'oklch(0.96 0.03 165)', color: primary, borderRadius: 999, padding: '4px 10px', fontSize: 11, fontWeight: 700, letterSpacing: '0.02em' }}>
-            <span style={{ fontSize: 13 }}>👑</span> Sé líder de grupo
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#888', fontWeight: 500 }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 1.6s infinite' }} />
-            3 lugares en {user?.barrio || 'Palermo'}
-          </div>
+      <div style={{ padding: '20px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
+          <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.02em' }}>Ofertas del marketplace</div>
+          <button onClick={() => navigate('productos')} style={{ background: 'none', border: 'none', color: primary, fontWeight: 700, fontSize: 12.5, fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>Ver todas →</button>
         </div>
-
-        {/* Hook — comisión */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: '#888', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Ganás por organizar</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, lineHeight: 1, marginBottom: 8 }}>
-            <div style={{ fontSize: 32, fontWeight: 900, color: primary, letterSpacing: '-0.03em' }}>10%</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#333' }}>de comisión por pedido</div>
-          </div>
-          <div style={{ fontSize: 12.5, color: '#666', lineHeight: 1.45 }}>
-            Sobre cada compra de los vecinos de tu grupo. Se acredita cuando el pedido se entrega, vía Mercado Pago.
-          </div>
+        <div style={{ color: '#888', fontSize: 13, marginBottom: 14 }}>Uníte a un grupo y ahorrá</div>
+        {/* Category pills */}
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 14 }}>
+          {['▦ Todos', '🍎 Frutas', '🥬 Verduras', '🥔 Hortalizas', '🌿 Orgánicos'].map((c, i) =>
+            <button key={c} style={{ flexShrink: 0, background: i === 0 ? primary : '#fff', color: i === 0 ? '#fff' : '#555', border: `1px solid ${i === 0 ? primary : '#e2e4e8'}`, borderRadius: 999, padding: '6px 14px', fontSize: 12.5, fontWeight: 500, fontFamily: 'inherit', cursor: 'pointer' }}>{c}</button>
+            )}
         </div>
-
-        {/* 3-step flow */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 14 }}>
+        {/* Product list */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
-            { n: 1, icon: '📦', label: 'Recibís', sub: 'el pedido' },
-            { n: 2, icon: '⚖️', label: 'Dividís', sub: 'entre vecinos' },
-            { n: 3, icon: '🚚', label: 'Entregás', sub: 'y cobrás' }].
-            map((s) =>
-            <div key={s.n} style={{ background: '#f7f8fa', border: '1px solid #ececef', borderRadius: 10, padding: '10px 6px 8px', textAlign: 'center', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: -7, left: '50%', transform: 'translateX(-50%)', width: 18, height: 18, borderRadius: '50%', background: primary, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 10, fontWeight: 800, border: '2px solid #fff' }}>{s.n}</div>
-              <div style={{ fontSize: 22, marginTop: 4, marginBottom: 4 }}>{s.icon}</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#222' }}>{s.label}</div>
-              <div style={{ fontSize: 10.5, color: '#888', marginTop: 1 }}>{s.sub}</div>
+            { name: 'Papa', price: '$1.364', unit: '/kg', old: '$2.099', disc: 35, prog: 80, members: '9/12', time: '1d', deadlineHrs: 35, img: 'img/papa.jpg?v=20260730b' },
+            { name: 'Manzana roja', price: '$2.599', unit: '/kg', old: '$3.999', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 44, img: 'img/manzana.jpg?v=20260730b' },
+            { name: 'Naranja', price: '$649', unit: '/kg', old: '$999', disc: 35, prog: 70, members: '7/10', time: '2d', deadlineHrs: 32, img: 'img/naranja.jpg?v=20260730b' },
+            { name: 'Tomate', price: '$2.274', unit: '/kg', old: '$3.499', disc: 35, prog: 50, members: '5/10', time: '3d', deadlineHrs: 48, img: 'img/tomate.jpg?v=20260730b' },
+            { name: 'Cebolla', price: '$1.105', unit: '/kg', old: '$1.700', disc: 35, prog: 40, members: '4/10', time: '4d', deadlineHrs: 47, img: 'img/cebolla-ok-20260730c.jpg' },
+            { name: 'Limón', price: '$584', unit: '/kg', old: '$899', disc: 35, prog: 55, members: '5/9', time: '3d', deadlineHrs: 39, img: 'img/limon.jpg?v=20260730b' },
+            { name: 'Banana', price: '$1.755', unit: '/kg', old: '$2.700', disc: 35, prog: 90, members: '10/12', time: '1d', deadlineHrs: 33, img: 'img/banana.jpg?v=20260730b' },
+            { name: 'Lechuga', price: '$2.730', unit: '/u', old: '$4.200', disc: 35, prog: 65, members: '7/10', time: '2d', deadlineHrs: 41, img: 'img/lechuga.jpg?v=20260730b' }].
+            map((p) =>
+            <div key={p.name} onClick={() => openProduct(p)} style={{ background: '#fff', border: '1px solid #e8eaec', borderRadius: 14, overflow: 'hidden', display: 'flex', gap: 0, cursor: 'pointer', transition: 'transform 0.12s ease, box-shadow 0.12s ease' }} onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.985)'} onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+              <div style={{ width: 100, height: 100, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                <div style={{ position: 'absolute', top: 6, left: 6, background: 'oklch(0.65 0.2 145)', color: '#fff', borderRadius: 999, padding: '2px 6px', fontSize: 10, fontWeight: 700 }}>↓ {p.disc}%</div>
+              </div>
+              <div style={{ flex: 1, padding: '12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3 }}>{p.name}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontWeight: 800, fontSize: 17, color: primary }}>{p.price}</span>
+                  <span style={{ fontSize: 12, color: '#888' }}>{p.unit}</span>
+                  <span style={{ fontSize: 13.5, color: '#9aa0a6', textDecoration: 'line-through', marginLeft: 3 }}>{p.old}</span>
+                  <span style={{ marginLeft: 'auto', position: 'relative', top: -4 }}><Countdown deadline={getDeadline(p.name, p.deadlineHrs)} inline /></span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 11, color: '#888' }}>
+                  {(() => {const kt = 50,kf = Math.round(kt * p.prog / 100),miss = kt - kf,almost = miss <= 6;return <>
+                    <span style={{ color: almost ? 'oklch(0.62 0.18 35)' : '#666', fontWeight: almost ? 700 : 500 }}>{almost ? `⚡ Faltan ${miss} kg` : `Faltan ${miss} kg`}</span>
+                    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{kf}/{kt} kg</span>
+                  </>;})()}
+                </div>
+                <div style={{ height: 4, background: '#f0f1f3', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${p.prog}%`, background: p.prog >= 88 ? 'oklch(0.62 0.18 35)' : primary, borderRadius: 999 }} />
+                </div>
+                <button onClick={(e) => {e.stopPropagation();openProduct(p);}} style={{ background: primary, color: '#fff', border: 'none', borderRadius: 8, padding: '7px', fontWeight: 600, fontSize: 12, fontFamily: 'inherit', cursor: 'pointer', marginTop: 2 }}>Unirme</button>
+              </div>
             </div>
             )}
-        </div>
 
-        {/* CTA */}
-        <button style={{ width: '100%', background: primary, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 700, fontSize: 14, fontFamily: 'inherit', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-          Convertirme en líder
-          <span style={{ fontSize: 14 }}>→</span>
-        </button>
-
-        {/* fineprint */}
-        <div style={{ textAlign: 'center', fontSize: 10.5, color: '#999', marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-          <span>Sin costo</span>
-          <span style={{ opacity: 0.5 }}>·</span>
-          <span>Cobrás por Mercado Pago</span>
-          <span style={{ opacity: 0.5 }}>·</span>
-          <span>Soporte 24/7</span>
         </div>
       </div>
-
       {/* Mini mapa preview */}
       {(() => {
           const navigate = React.useContext(NavContext);
@@ -873,61 +884,81 @@ function MobileHome() {
 
             {/* Attribution faux */}
             <div style={{ position: 'absolute', bottom: 4, left: 8, fontSize: 8, color: 'rgba(0,0,0,0.35)', fontFamily: 'Inter,sans-serif' }}>
-              © CartoDB · Conlat
+              © CartoDB · HUBADOR
             </div>
           </div>);
 
         })()}
-      <div style={{ padding: '20px 16px' }}>
-        <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.02em', marginBottom: 4 }}>Productos disponibles</div>
-        <div style={{ color: '#888', fontSize: 13, marginBottom: 14 }}>Comprando en grupo</div>
-        {/* Category pills */}
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 14 }}>
-          {['▦ Todos', '🍎 Frutas', '🥬 Verduras', '🥔 Hortalizas', '🌿 Orgánicos'].map((c, i) =>
-            <button key={c} style={{ flexShrink: 0, background: i === 0 ? primary : '#fff', color: i === 0 ? '#fff' : '#555', border: `1px solid ${i === 0 ? primary : '#e2e4e8'}`, borderRadius: 999, padding: '6px 14px', fontSize: 12.5, fontWeight: 500, fontFamily: 'inherit', cursor: 'pointer' }}>{c}</button>
-            )}
-        </div>
-        {/* Product list */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {[
-            { name: 'Papa', price: '$1.300', unit: '/kg', old: '$1.999', disc: 35, prog: 80, members: '9/12', time: '1d', deadlineHrs: 35, img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Manzana roja', price: '$1.950', unit: '/kg', old: '$2.999', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 44, img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Naranja', price: '$1.620', unit: '/kg', old: '$2.499', disc: 35, prog: 70, members: '7/10', time: '2d', deadlineHrs: 32, img: 'https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Tomate', price: '$2.210', unit: '/kg', old: '$3.399', disc: 35, prog: 50, members: '5/10', time: '3d', deadlineHrs: 48, img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Cebolla', price: '$850', unit: '/kg', old: '$1.300', disc: 35, prog: 40, members: '4/10', time: '4d', deadlineHrs: 47, img: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Limón', price: '$1.330', unit: '/kg', old: '$2.039', disc: 35, prog: 55, members: '5/9', time: '3d', deadlineHrs: 39, img: 'https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Banana', price: '$1.840', unit: '/kg', old: '$2.832', disc: 35, prog: 90, members: '10/12', time: '1d', deadlineHrs: 33, img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=300&q=80' },
-            { name: 'Lechuga', price: '$1.930', unit: '/u', old: '$2.974', disc: 35, prog: 65, members: '7/10', time: '2d', deadlineHrs: 41, img: 'https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=300&q=80' }].
-            map((p) =>
-            <div key={p.name} onClick={() => openProduct(p)} style={{ background: '#fff', border: '1px solid #e8eaec', borderRadius: 14, overflow: 'hidden', display: 'flex', gap: 0, cursor: 'pointer', transition: 'transform 0.12s ease, box-shadow 0.12s ease' }} onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.985)'} onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-              <div style={{ width: 100, height: 100, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                <div style={{ position: 'absolute', top: 6, left: 6, background: 'oklch(0.65 0.2 145)', color: '#fff', borderRadius: 999, padding: '2px 6px', fontSize: 10, fontWeight: 700 }}>↓ {p.disc}%</div>
-              </div>
-              <div style={{ flex: 1, padding: '12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3 }}>{p.name}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ fontWeight: 800, fontSize: 17, color: primary }}>{p.price}</span>
-                  <span style={{ fontSize: 12, color: '#888' }}>{p.unit}</span>
-                  <span style={{ fontSize: 13.5, color: '#9aa0a6', textDecoration: 'line-through', marginLeft: 3 }}>{p.old}</span>
-                  <span style={{ marginLeft: 'auto', position: 'relative', top: -4 }}><Countdown deadline={getDeadline(p.name, p.deadlineHrs)} inline /></span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 11, color: '#888' }}>
-                  {(() => {const kt = 50,kf = Math.round(kt * p.prog / 100),miss = kt - kf,almost = miss <= 6;return <>
-                    <span style={{ color: almost ? 'oklch(0.62 0.18 35)' : '#666', fontWeight: almost ? 700 : 500 }}>{almost ? `⚡ Faltan ${miss} kg` : `Faltan ${miss} kg`}</span>
-                    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{kf}/{kt} kg</span>
-                  </>;})()}
-                </div>
-                <div style={{ height: 4, background: '#f0f1f3', borderRadius: 999, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${p.prog}%`, background: p.prog >= 88 ? 'oklch(0.62 0.18 35)' : primary, borderRadius: 999 }} />
-                </div>
-                <button onClick={(e) => {e.stopPropagation();openProduct(p);}} style={{ background: primary, color: '#fff', border: 'none', borderRadius: 8, padding: '7px', fontWeight: 600, fontSize: 12, fontFamily: 'inherit', cursor: 'pointer', marginTop: 2 }}>Unirme</button>
-              </div>
+      {/* CTA + stats (abajo, después del marketplace) */}
+      <div style={{ margin: '16px 16px 0', background: 'linear-gradient(135deg, oklch(0.95 0.03 165) 0%, #fff 70%)', border: '1px solid #e8eaec', borderRadius: 16, padding: '16px' }}>
+        <button onClick={() => navigate('productos')} style={{ width: '100%', background: primary, color: '#fff', border: 'none', borderRadius: 999, padding: '12px 20px', fontWeight: 600, fontSize: 15, fontFamily: 'inherit', cursor: 'pointer' }}>Empezar a ahorrar →</button>
+        <div style={{ display: 'flex', gap: 0, marginTop: 14, background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e8eaec' }}>
+          {[['35%', 'Ahorro prom.'], ['500+', 'Vecinos'], ['24hs', 'Entrega']].map(([n, l], i) =>
+            <div key={i} style={{ flex: 1, padding: '12px 8px', textAlign: 'center', borderRight: i < 2 ? '1px solid #e8eaec' : 'none' }}>
+              <div style={{ fontWeight: 800, fontSize: 18, color: primary }}>{n}</div>
+              <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{l}</div>
             </div>
-            )}
-
+          )}
         </div>
       </div>
+
+      {/* Sé líder — propuesta de comisión */}
+      <div style={{ margin: '14px 16px 20px', background: '#fff', border: '1px solid #e8eaec', borderRadius: 16, padding: '16px', position: 'relative', overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'oklch(0.96 0.03 165)', color: primary, borderRadius: 999, padding: '4px 10px', fontSize: 11, fontWeight: 700, letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: 13 }}>👑</span> Sé líder de grupo
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#888', fontWeight: 500 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 1.6s infinite' }} />
+            3 lugares en {user?.barrio || 'Palermo'}
+          </div>
+        </div>
+
+        {/* Hook — comisión */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: '#888', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Ganás por organizar</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, lineHeight: 1, marginBottom: 8 }}>
+            <div style={{ fontSize: 32, fontWeight: 900, color: primary, letterSpacing: '-0.03em' }}>10%</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#333' }}>de comisión por pedido</div>
+          </div>
+          <div style={{ fontSize: 12.5, color: '#666', lineHeight: 1.45 }}>
+            Sobre cada compra de los vecinos de tu grupo. Se acredita cuando el pedido se entrega, vía Mercado Pago.
+          </div>
+        </div>
+
+        {/* 3-step flow */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 14 }}>
+          {[
+            { n: 1, icon: '📦', label: 'Recibís', sub: 'el pedido' },
+            { n: 2, icon: '⚖️', label: 'Dividís', sub: 'entre vecinos' },
+            { n: 3, icon: '🚚', label: 'Entregás', sub: 'y cobrás' }].
+            map((s) =>
+            <div key={s.n} style={{ background: '#f7f8fa', border: '1px solid #ececef', borderRadius: 10, padding: '10px 6px 8px', textAlign: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: -7, left: '50%', transform: 'translateX(-50%)', width: 18, height: 18, borderRadius: '50%', background: primary, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 10, fontWeight: 800, border: '2px solid #fff' }}>{s.n}</div>
+              <div style={{ fontSize: 22, marginTop: 4, marginBottom: 4 }}>{s.icon}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#222' }}>{s.label}</div>
+              <div style={{ fontSize: 10.5, color: '#888', marginTop: 1 }}>{s.sub}</div>
+            </div>
+            )}
+        </div>
+
+        {/* CTA */}
+        <button style={{ width: '100%', background: primary, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 700, fontSize: 14, fontFamily: 'inherit', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          Convertirme en líder
+          <span style={{ fontSize: 14 }}>→</span>
+        </button>
+
+        {/* fineprint */}
+        <div style={{ textAlign: 'center', fontSize: 10.5, color: '#999', marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+          <span>Sin costo</span>
+          <span style={{ opacity: 0.5 }}>·</span>
+          <span>Cobrás por Mercado Pago</span>
+          <span style={{ opacity: 0.5 }}>·</span>
+          <span>Soporte 24/7</span>
+        </div>
+      </div>
+
       </div>{/* end scrollable body */}
     </div>);
 
@@ -942,16 +973,16 @@ function MobileProductos() {
   const [sort, setSort] = React.useState('relevancia');
 
   const allProducts = [
-  { name: 'Papa', cat: 'verduras', price: '$1.300', unit: '/kg', old: '$1.999', disc: 35, prog: 80, members: '9/12', time: '1d', deadlineHrs: 35, img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Tomate', cat: 'verduras', price: '$2.210', unit: '/kg', old: '$3.399', disc: 35, prog: 50, members: '5/10', time: '3d', deadlineHrs: 48, img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Zapallo anco', cat: 'verduras', price: '$1.100', unit: '/kg', old: '$1.699', disc: 35, prog: 45, members: '5/12', time: '3d', deadlineHrs: 45, img: 'https://images.unsplash.com/photo-1570586437263-ab629fccc818?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Cebolla', cat: 'verduras', price: '$850', unit: '/kg', old: '$1.300', disc: 35, prog: 65, members: '6/10', time: '2d', deadlineHrs: 40, img: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Lechuga mantecosa', cat: 'verduras', price: '$1.930', unit: '/u', old: '$2.974', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 41, img: 'https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Batata', cat: 'verduras', price: '$1.100', unit: '/kg', old: '$1.699', disc: 35, prog: 50, members: '6/12', time: '2d', deadlineHrs: 43, img: 'https://images.unsplash.com/photo-1570723735746-c9bd51bd7c40?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Banana', cat: 'frutas', price: '$1.840', unit: '/kg', old: '$2.832', disc: 35, prog: 75, members: '7/10', time: '1d', deadlineHrs: 33, img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Limón', cat: 'frutas', price: '$1.330', unit: '/kg', old: '$2.039', disc: 35, prog: 55, members: '5/9', time: '3d', deadlineHrs: 37, img: 'https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Manzana roja', cat: 'frutas', price: '$1.950', unit: '/kg', old: '$2.999', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 44, img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Naranja', cat: 'frutas', price: '$1.620', unit: '/kg', old: '$2.499', disc: 35, prog: 70, members: '7/10', time: '2d', deadlineHrs: 32, img: 'https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=300&q=80' }];
+  { name: 'Papa', cat: 'verduras', price: '$1.364', unit: '/kg', old: '$2.099', disc: 35, prog: 80, members: '9/12', time: '1d', deadlineHrs: 35, img: 'img/papa.jpg?v=20260730b' },
+  { name: 'Tomate', cat: 'verduras', price: '$2.274', unit: '/kg', old: '$3.499', disc: 35, prog: 50, members: '5/10', time: '3d', deadlineHrs: 48, img: 'img/tomate.jpg?v=20260730b' },
+  { name: 'Zapallo anco', cat: 'verduras', price: '$1.169', unit: '/kg', old: '$1.799', disc: 35, prog: 45, members: '5/12', time: '3d', deadlineHrs: 45, img: 'img/zapallo-ok-20260730c.jpg' },
+  { name: 'Cebolla', cat: 'verduras', price: '$1.105', unit: '/kg', old: '$1.700', disc: 35, prog: 65, members: '6/10', time: '2d', deadlineHrs: 40, img: 'img/cebolla-ok-20260730c.jpg' },
+  { name: 'Lechuga mantecosa', cat: 'verduras', price: '$2.730', unit: '/u', old: '$4.200', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 41, img: 'img/lechuga.jpg?v=20260730b' },
+  { name: 'Batata', cat: 'verduras', price: '$1.104', unit: '/kg', old: '$1.699', disc: 35, prog: 50, members: '6/12', time: '2d', deadlineHrs: 43, img: 'img/batata.jpg?v=20260730b' },
+  { name: 'Banana', cat: 'frutas', price: '$1.755', unit: '/kg', old: '$2.700', disc: 35, prog: 75, members: '7/10', time: '1d', deadlineHrs: 33, img: 'img/banana.jpg?v=20260730b' },
+  { name: 'Limón', cat: 'frutas', price: '$584', unit: '/kg', old: '$899', disc: 35, prog: 55, members: '5/9', time: '3d', deadlineHrs: 37, img: 'img/limon.jpg?v=20260730b' },
+  { name: 'Manzana roja', cat: 'frutas', price: '$2.599', unit: '/kg', old: '$3.999', disc: 35, prog: 60, members: '6/10', time: '2d', deadlineHrs: 44, img: 'img/manzana.jpg?v=20260730b' },
+  { name: 'Naranja', cat: 'frutas', price: '$649', unit: '/kg', old: '$999', disc: 35, prog: 70, members: '7/10', time: '2d', deadlineHrs: 32, img: 'img/naranja.jpg?v=20260730b' }];
 
 
   const categories = [
@@ -1080,7 +1111,7 @@ function MobileProducto() {
   const { selected, showToast, addToCart, user } = React.useContext(SelectionContext);
   const [qty, setQty] = React.useState(2);
   // Datos del producto seleccionado o fallback a Tomate
-  const prod = selected || { name: 'Tomate', price: '$2.210', unit: '/kg', old: '$3.399', disc: 35, prog: 70, members: '7/10', time: '2d', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80' };
+  const prod = selected || { name: 'Tomate', price: '$2.274', unit: '/kg', old: '$3.499', disc: 35, prog: 70, members: '7/10', time: '2d', img: 'img/tomate.jpg?v=20260730b' };
   const [m, total] = (prod.members || '7/10').split('/').map((n) => parseInt(n, 10));
   const priceNum = parseInt((prod.price || '$0').replace(/[^\d]/g, ''), 10) || 0;
   const costTotal = priceNum * qty;
@@ -1151,7 +1182,7 @@ function MobileProducto() {
         {/* Desglose con markup */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontSize: 12.5, color: '#666', background: '#fff', border: '1px solid #e8eaec', borderRadius: 12, padding: '11px 14px', marginBottom: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Valor de compra</span><span>${costTotal.toLocaleString('es-AR')}</span></div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Servicio Conlat (30%)</span><span>+${markupTotal.toLocaleString('es-AR')}</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Servicio HUBADOR (30%)</span><span>+${markupTotal.toLocaleString('es-AR')}</span></div>
           <div style={{ height: 1, background: '#eee', margin: '2px 0' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, color: '#222', fontSize: 14 }}><span>Total a pagar</span><span style={{ color: primary }}>${totalPrice.toLocaleString('es-AR')}</span></div>
         </div>
@@ -1170,10 +1201,10 @@ function MasOfertas({ excludeName, barrio = 'Palermo' }) {
   const { setSelected, showToast, addToCart, user } = React.useContext(SelectionContext);
 
   const baseOffers = React.useMemo(() => [
-  { id: 'mo-papa', name: 'Papa', price: 1300, old: 1999, filled: 40, total: 54, deadlineHrs: 35, img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=200&q=80' },
-  { id: 'mo-cebo', name: 'Cebolla', price: 850, old: 1300, filled: 27, total: 45, deadlineHrs: 40, img: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=200&q=80' },
-  { id: 'mo-nar', name: 'Naranja', price: 1620, old: 2499, filled: 49, total: 54, deadlineHrs: 32, img: 'https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=200&q=80' },
-  { id: 'mo-bata', name: 'Batata', price: 1100, old: 1699, filled: 28, total: 36, deadlineHrs: 43, img: 'https://images.unsplash.com/photo-1570723735746-c9bd51bd7c40?auto=format&fit=crop&w=200&q=80' }].
+  { id: 'mo-papa', name: 'Papa', price: 1364, old: 2099, filled: 40, total: 54, deadlineHrs: 35, img: 'img/papa.jpg?v=20260730b' },
+  { id: 'mo-cebo', name: 'Cebolla', price: 1105, old: 1700, filled: 27, total: 45, deadlineHrs: 40, img: 'img/cebolla-ok-20260730c.jpg' },
+  { id: 'mo-nar', name: 'Naranja', price: 649, old: 999, filled: 49, total: 54, deadlineHrs: 32, img: 'img/naranja.jpg?v=20260730b' },
+  { id: 'mo-bata', name: 'Batata', price: 1104, old: 1699, filled: 28, total: 36, deadlineHrs: 43, img: 'img/batata.jpg?v=20260730b' }].
   filter((o) => o.name !== excludeName), [excludeName]);
 
   const [offers, setOffers] = React.useState(baseOffers);
@@ -1285,9 +1316,9 @@ function MobilePedidos() {
   const navigate = React.useContext(NavContext);
   const { setSelectedOrder, user } = React.useContext(SelectionContext);
   const pedidos = [
-  { name: 'Tomate', qty: '2 kg', total: '$4.420', status: 'entregado', date: '15 abr', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Banana', qty: '1 kg', total: '$1.840', status: 'pagado', date: '17 abr', img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=120&q=80' },
-  { name: 'Zapallo anco', qty: '3 kg', total: '$3.300', status: 'pendiente', date: '18 abr', img: 'https://images.unsplash.com/photo-1570586437263-ab629fccc818?auto=format&fit=crop&w=120&q=80' }];
+  { name: 'Tomate', qty: '2 kg', total: '$4.548', status: 'entregado', date: '15 abr', img: 'img/tomate.jpg?v=20260730b' },
+  { name: 'Banana', qty: '1 kg', total: '$1.755', status: 'pagado', date: '17 abr', img: 'img/banana.jpg?v=20260730b' },
+  { name: 'Zapallo anco', qty: '3 kg', total: '$3.507', status: 'pendiente', date: '18 abr', img: 'img/zapallo-ok-20260730c.jpg' }];
 
   const statusStyle = { entregado: { bg: '#dcfce7', color: '#166534', label: '✓ Entregado' }, pagado: { bg: '#dbeafe', color: '#1d4ed8', label: '💳 Pagado' }, pendiente: { bg: '#fef9c3', color: '#854d0e', label: '🕒 Pendiente' } };
 
@@ -1342,7 +1373,7 @@ function MobileLogin() {
       <div style={{ width: '100%', maxWidth: 360, background: '#fff', border: '1px solid #e8eaec', borderRadius: 18, padding: 28, boxShadow: '0 6px 24px rgba(0,0,0,.06)' }}>
         <div style={{ width: 48, height: 48, background: primary, borderRadius: 12, display: 'grid', placeItems: 'center', color: '#fff', fontWeight: 800, fontSize: 22, margin: '0 auto 16px' }}>C</div>
         <div style={{ textAlign: 'center', fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Bienvenido</div>
-        <div style={{ textAlign: 'center', fontSize: 13.5, color: '#888', marginBottom: 24 }}>Ingresá a tu cuenta de Conlat</div>
+        <div style={{ textAlign: 'center', fontSize: 13.5, color: '#888', marginBottom: 24 }}>Ingresá a tu cuenta de HUBADOR</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div>
             <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 6 }}>Email</label>
@@ -1411,7 +1442,7 @@ function MobileSignup() {
         {step === 1 ?
         <>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em', margin: '0 0 6px' }}>Tus datos</h1>
-            <p style={{ fontSize: 13.5, color: '#888', margin: '0 0 22px' }}>Vamos a crear tu cuenta de Conlat para que puedas sumarte a grupos de compra cerca tuyo.</p>
+            <p style={{ fontSize: 13.5, color: '#888', margin: '0 0 22px' }}>Vamos a crear tu cuenta de HUBADOR para que puedas sumarte a grupos de compra cerca tuyo.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
@@ -1471,12 +1502,12 @@ function MobileSignup() {
 
               <div style={{ background: 'oklch(0.97 0.02 165)', border: '1px solid oklch(0.88 0.06 165)', borderRadius: 12, padding: 14, marginTop: 6 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>📍 ¿Por qué pedimos tu barrio?</div>
-                <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>Conlat funciona uniendo vecinos del mismo barrio en una compra grupal. Tu ubicación nunca se comparte con otros usuarios sin tu permiso.</div>
+                <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>HUBADOR funciona uniendo vecinos del mismo barrio en una compra grupal. Tu ubicación nunca se comparte con otros usuarios sin tu permiso.</div>
               </div>
 
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, color: '#555', cursor: 'pointer', marginTop: 6 }}>
                 <input type="checkbox" checked={form.acepto} onChange={(e) => upd('acepto', e.target.checked)} style={{ marginTop: 2, accentColor: primary, width: 16, height: 16, flexShrink: 0 }} />
-                <span>Acepto los <span style={{ color: primary, fontWeight: 600 }}>Términos</span> y la <span style={{ color: primary, fontWeight: 600 }}>Política de privacidad</span> de Conlat.</span>
+                <span>Acepto los <span style={{ color: primary, fontWeight: 600 }}>Términos</span> y la <span style={{ color: primary, fontWeight: 600 }}>Política de privacidad</span> de HUBADOR.</span>
               </label>
             </div>
 
@@ -1539,8 +1570,8 @@ function MobileAdmin() {
         </div>
         <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10 }}>Pedidos recientes</div>
         {[
-        { id: '#1042', name: 'María G.', product: 'Tomate', amount: '$4.420', status: 'Pagado' },
-        { id: '#1041', name: 'Carlos R.', product: 'Banana', amount: '$1.840', status: 'Entregado' },
+        { id: '#1042', name: 'María G.', product: 'Tomate', amount: '$4.548', status: 'Pagado' },
+        { id: '#1041', name: 'Carlos R.', product: 'Banana', amount: '$1.755', status: 'Entregado' },
         { id: '#1040', name: 'Laura M.', product: 'Naranja', amount: '$3.240', status: 'Pendiente' }].
         map((p) =>
         <div key={p.id} style={{ background: '#fff', border: '1px solid #e8eaec', borderRadius: 10, padding: '12px 14px', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1616,16 +1647,16 @@ function MobileAdminProductos() {
   const primary = 'oklch(0.55 0.15 165)';
   const [search, setSearch] = React.useState('');
   const productos = [
-  { id: 'P-21', name: 'Tomate', price: '$2.210/kg', stock: 120, groups: 3, img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-20', name: 'Manzana roja', price: '$1.950/kg', stock: 95, groups: 1, img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-19', name: 'Lechuga', price: '$1.930/u', stock: 70, groups: 2, img: 'https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-18', name: 'Banana', price: '$1.840/kg', stock: 160, groups: 2, img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-17', name: 'Naranja', price: '$1.620/kg', stock: 185, groups: 2, img: 'https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-16', name: 'Limón', price: '$1.330/kg', stock: 90, groups: 1, img: 'https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-15', name: 'Papa', price: '$1.300/kg', stock: 210, groups: 3, img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-14', name: 'Zapallo anco', price: '$1.100/kg', stock: 130, groups: 1, img: 'https://images.unsplash.com/photo-1570586437263-ab629fccc818?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-13', name: 'Batata', price: '$1.100/kg', stock: 145, groups: 1, img: 'https://images.unsplash.com/photo-1570723735746-c9bd51bd7c40?auto=format&fit=crop&w=120&q=80' },
-  { id: 'P-12', name: 'Cebolla', price: '$850/kg', stock: 175, groups: 2, img: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=120&q=80' }];
+  { id: 'P-21', name: 'Tomate', price: '$2.274/kg', stock: 120, groups: 3, img: 'img/tomate.jpg?v=20260730b' },
+  { id: 'P-20', name: 'Manzana roja', price: '$2.599/kg', stock: 95, groups: 1, img: 'img/manzana.jpg?v=20260730b' },
+  { id: 'P-19', name: 'Lechuga', price: '$2.730/u', stock: 70, groups: 2, img: 'img/lechuga.jpg?v=20260730b' },
+  { id: 'P-18', name: 'Banana', price: '$1.755/kg', stock: 160, groups: 2, img: 'img/banana.jpg?v=20260730b' },
+  { id: 'P-17', name: 'Naranja', price: '$649/kg', stock: 185, groups: 2, img: 'img/naranja.jpg?v=20260730b' },
+  { id: 'P-16', name: 'Limón', price: '$584/kg', stock: 90, groups: 1, img: 'img/limon.jpg?v=20260730b' },
+  { id: 'P-15', name: 'Papa', price: '$1.364/kg', stock: 210, groups: 3, img: 'img/papa.jpg?v=20260730b' },
+  { id: 'P-14', name: 'Zapallo anco', price: '$1.169/kg', stock: 130, groups: 1, img: 'img/zapallo-ok-20260730c.jpg' },
+  { id: 'P-13', name: 'Batata', price: '$1.104/kg', stock: 145, groups: 1, img: 'img/batata.jpg?v=20260730b' },
+  { id: 'P-12', name: 'Cebolla', price: '$1.105/kg', stock: 175, groups: 2, img: 'img/cebolla-ok-20260730c.jpg' }];
 
   const filtered = productos.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
   return (
@@ -1671,7 +1702,7 @@ function MobileGrupoDetalle() {
   const [qty, setQty] = React.useState(STEP);
   const navigate = React.useContext(NavContext);
   const { selectedGroup, showToast, addToCart, user } = React.useContext(SelectionContext);
-  const g = selectedGroup || { product: 'Papa', location: 'Palermo', members: '9/12', progress: 75, closes: '2d', deadlineHrs: 35, price: '$1.300', old: '$1.999', unit: '/kg', disc: 35, img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80' };
+  const g = selectedGroup || { product: 'Papa', location: 'Palermo', members: '9/12', progress: 75, closes: '2d', deadlineHrs: 35, price: '$1.364', old: '$2.099', unit: '/kg', disc: 35, img: 'img/papa.jpg?v=20260730b' };
   const [m, total] = (g.members || '9/12').split('/').map((n) => parseInt(n, 10));
   const priceNum = parseInt((g.price || '$0').replace(/[^\d]/g, ''), 10) || 0;
   const oldNum = parseInt((g.old || '$0').replace(/[^\d]/g, ''), 10) || 0;
@@ -1725,7 +1756,7 @@ function MobileGrupoDetalle() {
           {/* Desglose con markup */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontSize: 13, color: '#666', background: '#fff', border: '1px solid #e8eaec', borderRadius: 12, padding: '11px 14px', marginBottom: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Valor de compra</span><span>${totalPrice.toLocaleString('es-AR')}</span></div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Servicio Conlat (30%)</span><span>+${markupTotal.toLocaleString('es-AR')}</span></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Servicio HUBADOR (30%)</span><span>+${markupTotal.toLocaleString('es-AR')}</span></div>
             <div style={{ height: 1, background: '#eee', margin: '2px 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, color: '#222', fontSize: 15 }}><span>Total a pagar</span><span style={{ color: primary }}>${grandTotal.toLocaleString('es-AR')}</span></div>
           </div>
@@ -2467,7 +2498,7 @@ function MobileComparador() {
           </button>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>Comparador de precios</div>
-            <div style={{ fontSize: 10.5, color: '#888', marginTop: 2 }}>Coto · Mayoristas · Conlat</div>
+            <div style={{ fontSize: 10.5, color: '#888', marginTop: 2 }}>Coto · Mayoristas · HUBADOR</div>
           </div>
         </div>
         <button onClick={openFull} style={{ flexShrink: 0, background: primary, color: '#fff', border: 'none', borderRadius: 8, padding: '7px 10px', fontSize: 11, fontWeight: 700, fontFamily: 'inherit', cursor: 'pointer' }}>Tabla →</button>
@@ -2480,7 +2511,7 @@ function MobileComparador() {
             { c: '#4f46e5', t: 'Quilmes' },
             { c: '#7c3aed', t: 'Nueva Luna' },
             { c: '#2563eb', t: 'MC' },
-            { c: '#0d9488', t: 'Conlat' },
+            { c: '#0d9488', t: 'HUBADOR' },
           ].map((x) => (
             <span key={x.t} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10.5, fontWeight: 600, color: '#555', background: '#f4f5f7', borderRadius: 999, padding: '3px 8px' }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: x.c }} />
@@ -2489,7 +2520,7 @@ function MobileComparador() {
           ))}
         </div>
         <p style={{ margin: '8px 0 0', fontSize: 11.5, color: '#888', lineHeight: 1.35 }}>
-          Compará precio mayorista vs góndola y el precio Conlat (−30% vs Coto).
+          Compará precio mayorista vs góndola y el precio HUBADOR (−30% vs Coto).
         </p>
       </div>
 
@@ -2503,6 +2534,590 @@ function MobileComparador() {
     </div>
   );
 }
+
+
+// ─── WEB (escritorio): sitio aparte, no toca el mobile ─────────
+function WebHome() {
+  const primary = 'oklch(0.55 0.15 165)';
+  const navigate = React.useContext(NavContext);
+  const { user, cart, setSelected, setSelectedGroup } = React.useContext(SelectionContext);
+  const [search, setSearch] = React.useState('');
+  const [cat, setCat] = React.useState('todos');
+  const [sort, setSort] = React.useState('relevancia');
+
+  const allProducts = [
+    { name: 'Papa', cat: 'verduras', price: '$1.364', unit: '/kg', old: '$2.099', disc: 35, prog: 80, members: '9/12', deadlineHrs: 35, img: 'img/papa.jpg?v=20260730b' },
+    { name: 'Tomate', cat: 'verduras', price: '$2.274', unit: '/kg', old: '$3.499', disc: 35, prog: 50, members: '5/10', deadlineHrs: 48, img: 'img/tomate.jpg?v=20260730b' },
+    { name: 'Zapallo anco', cat: 'verduras', price: '$1.169', unit: '/kg', old: '$1.799', disc: 35, prog: 45, members: '5/12', deadlineHrs: 45, img: 'img/zapallo-ok-20260730c.jpg' },
+    { name: 'Cebolla', cat: 'verduras', price: '$1.105', unit: '/kg', old: '$1.700', disc: 35, prog: 65, members: '6/10', deadlineHrs: 40, img: 'img/cebolla-ok-20260730c.jpg' },
+    { name: 'Lechuga mantecosa', cat: 'verduras', price: '$2.730', unit: '/u', old: '$4.200', disc: 35, prog: 60, members: '6/10', deadlineHrs: 41, img: 'img/lechuga.jpg?v=20260730b' },
+    { name: 'Batata', cat: 'verduras', price: '$1.104', unit: '/kg', old: '$1.699', disc: 35, prog: 50, members: '6/12', deadlineHrs: 43, img: 'img/batata.jpg?v=20260730b' },
+    { name: 'Banana', cat: 'frutas', price: '$1.755', unit: '/kg', old: '$2.700', disc: 35, prog: 75, members: '7/10', deadlineHrs: 33, img: 'img/banana.jpg?v=20260730b' },
+    { name: 'Limón', cat: 'frutas', price: '$584', unit: '/kg', old: '$899', disc: 35, prog: 55, members: '5/9', deadlineHrs: 37, img: 'img/limon.jpg?v=20260730b' },
+    { name: 'Manzana roja', cat: 'frutas', price: '$2.599', unit: '/kg', old: '$3.999', disc: 35, prog: 60, members: '6/10', deadlineHrs: 44, img: 'img/manzana.jpg?v=20260730b' },
+    { name: 'Naranja', cat: 'frutas', price: '$649', unit: '/kg', old: '$999', disc: 35, prog: 70, members: '7/10', deadlineHrs: 32, img: 'img/naranja.jpg?v=20260730b' },
+  ];
+
+  const categories = [
+    { id: 'todos', label: 'Todos', emoji: '🌿' },
+    { id: 'verduras', label: 'Verduras', emoji: '🥦' },
+    { id: 'frutas', label: 'Frutas', emoji: '🍎' },
+  ];
+
+  let filtered = allProducts.filter((p) =>
+    (cat === 'todos' || p.cat === cat) &&
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+  if (sort === 'precio-asc') filtered.sort((a, b) => parseInt(a.price.replace(/[^\d]/g, '')) - parseInt(b.price.replace(/[^\d]/g, '')));
+  if (sort === 'precio-desc') filtered.sort((a, b) => parseInt(b.price.replace(/[^\d]/g, '')) - parseInt(a.price.replace(/[^\d]/g, '')));
+  if (sort === 'descuento') filtered.sort((a, b) => b.disc - a.disc);
+  if (sort === 'cierre') filtered.sort((a, b) => (a.deadlineHrs || 99) - (b.deadlineHrs || 99));
+
+  const openProduct = (p) => {
+    setSelected(p);
+    setSelectedGroup({
+      product: p.name, location: user?.barrio || 'Palermo', members: p.members, progress: p.prog,
+      closes: p.time, deadlineHrs: p.deadlineHrs, price: p.price, old: p.old, unit: p.unit, disc: p.disc, img: p.img, status: 'abierto'
+    });
+    navigate('grupo-detalle');
+  };
+
+  return (
+    <div className="web-page web-page-market">
+      <header className="web-nav">
+        <div className="web-nav-inner">
+          <div className="web-brand" onClick={() => navigate('home')} style={{ cursor: 'pointer' }}>
+            <div className="web-logo">H</div>
+            <div>
+              <div className="web-brand-name">HUBADOR</div>
+              <div className="web-brand-sub">📍 {user?.barrio || 'Palermo'} · {allProducts.length} disponibles</div>
+            </div>
+          </div>
+          <div className="web-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar productos..." />
+            {search && <button onClick={() => setSearch('')} className="web-search-clear">×</button>}
+          </div>
+          <nav className="web-links">
+            <button type="button" onClick={() => navigate('home')}>Inicio</button>
+            <button type="button" onClick={() => navigate('productos')}>Productos</button>
+            <button type="button" onClick={() => navigate('mis-grupos')}>Mis grupos</button>
+            <button type="button" onClick={() => navigate('comparador')}>Precios</button>
+            <button type="button" onClick={() => navigate('mapa')}>Mapa</button>
+            <button type="button" onClick={() => navigate('perfil')}>Perfil</button>
+          </nav>
+          <div className="web-nav-actions">
+            {user
+              ? <button className="web-btn-ghost" type="button" onClick={() => navigate('perfil')}>👤 {user.nombre}</button>
+              : <button className="web-btn-ghost" onClick={() => navigate('login')}>Ingresar</button>}
+            <button className="web-cart" onClick={() => navigate('mis-grupos')} aria-label="Mis grupos">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></svg>
+              <span>{cart.length}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero — copy original + foto de mercado (sin producto duplicado) */}
+      <section className="web-hero">
+        <div className="web-hero-inner">
+          <div className="web-hero-copy">
+            <div className="web-pill"><span className="web-dot" />500+ vecinos activos ahora</div>
+            <h1>Comprá con tus <em>vecinos</em> y ahorrá hasta <em>35%</em></h1>
+            <p>Marketplace de frutas y verduras en compra grupal. Precio de productor, entrega en tu barrio.</p>
+            <div className="web-hero-cta">
+              <button className="web-btn" onClick={() => document.getElementById('web-ofertas')?.scrollIntoView({ behavior: 'smooth' })}>Ver ofertas →</button>
+              <button className="web-btn-ghost" onClick={() => navigate('signup')}>Crear cuenta</button>
+            </div>
+            <div className="web-stats">
+              <div><strong>35%</strong><span>Ahorro prom.</span></div>
+              <div><strong>500+</strong><span>Vecinos</span></div>
+              <div><strong>24hs</strong><span>Entrega</span></div>
+            </div>
+          </div>
+          <div className="web-hero-art" aria-hidden="true">
+            <div className="web-hero-photo">
+              <img
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="web-toolbar">
+        <div className="web-cats">
+          {categories.map((c) => (
+            <button key={c.id} className={cat === c.id ? 'activo' : ''} onClick={() => setCat(c.id)}>
+              <span>{c.emoji}</span>{c.label}
+            </button>
+          ))}
+        </div>
+        <div className="web-sort-row">
+          <span>{filtered.length} {filtered.length === 1 ? 'producto' : 'productos'}</span>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="relevancia">Más relevantes</option>
+            <option value="precio-asc">Menor precio</option>
+            <option value="precio-desc">Mayor precio</option>
+            <option value="descuento">Más descuento</option>
+            <option value="cierre">Cierran antes</option>
+          </select>
+        </div>
+      </div>
+
+      <section className="web-section web-section-tight" id="web-ofertas">
+        {filtered.length === 0 ? (
+          <div className="web-empty">
+            <div>🔍</div>
+            <b>No encontramos productos</b>
+            <span>Probá con otra búsqueda o categoría.</span>
+          </div>
+        ) : (
+          <div className="web-grid web-grid-products">
+            {filtered.map((p) => {
+              const kt = 50, kf = Math.round(kt * p.prog / 100), miss = kt - kf, almost = miss <= 6;
+              return (
+                <article key={p.name} className="web-prod-card" onClick={() => openProduct(p)}>
+                  <div className="web-prod-img">
+                    <img src={p.img} alt={p.name} />
+                    <span className="web-badge">↓ {p.disc}%</span>
+                  </div>
+                  <div className="web-prod-body">
+                    <h3>{p.name}</h3>
+                    <div className="web-prod-prices">
+                      <div className="web-price-now">
+                        <strong>{p.price}</strong>
+                        <span>{p.unit}</span>
+                      </div>
+                      {p.old && (
+                        <div className="web-price-coto">
+                          <s>{p.old}</s>
+                          <em>Coto</em>
+                        </div>
+                      )}
+                    </div>
+                    <div className="web-countdown-wrap">
+                      <Countdown deadline={getDeadline(p.name, p.deadlineHrs)} card />
+                    </div>
+                    <div className="web-progress"><i style={{ width: p.prog + '%', background: p.prog >= 88 ? 'oklch(0.62 0.18 35)' : primary }} /></div>
+                    <div className="web-prod-meta">
+                      <span style={{ color: almost ? 'oklch(0.62 0.18 35)' : '#666', fontWeight: almost ? 700 : 500 }}>
+                        {almost ? `⚡ Faltan ${miss}kg` : `Faltan ${miss}kg`}
+                      </span>
+                      <span>{kf}/{kt}kg</span>
+                    </div>
+                    <button className="web-btn web-btn-sm" onClick={(e) => { e.stopPropagation(); openProduct(p); }}>Unirme al grupo</button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <section className="web-section web-leader">
+        <div className="web-leader-card">
+          <div>
+            <div className="web-pill web-pill-dark">👑 Sé líder de grupo</div>
+            <h2>Ganás por organizar: <em>10%</em> de comisión</h2>
+            <p>Sobre cada compra de los vecinos de tu grupo. Se acredita al entregar, vía Mercado Pago.</p>
+            <button className="web-btn" onClick={() => navigate('signup')}>Convertirme en líder →</button>
+          </div>
+        </div>
+      </section>
+
+      <footer className="web-footer">
+        <div>HUBADOR · compra grupal vecinal</div>
+        <div className="web-footer-links">
+          <button onClick={() => navigate('comparador')}>Comparador de precios</button>
+          <button onClick={() => navigate('mapa')}>Mapa en vivo</button>
+          <a href="?mobile=1">Ver versión mobile</a>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+
+// ─── WEB SHELL + pantallas escritorio (mobile intacto) ─────────
+function WebShell({ children, title, wide }) {
+  const navigate = React.useContext(NavContext);
+  const { user, cart } = React.useContext(SelectionContext);
+  const links = [
+    { id: 'home', label: 'Inicio' },
+    { id: 'productos', label: 'Productos' },
+    { id: 'mis-grupos', label: 'Mis grupos' },
+    { id: 'comparador', label: 'Precios' },
+    { id: 'mapa', label: 'Mapa' },
+    { id: 'perfil', label: 'Perfil' },
+  ];
+  return (
+    <div className="web-page">
+      <header className="web-nav">
+        <div className="web-nav-inner">
+          <div className="web-brand" onClick={() => navigate('home')} style={{ cursor: 'pointer' }}>
+            <div className="web-logo">H</div>
+            <div>
+              <div className="web-brand-name">HUBADOR</div>
+              <div className="web-brand-sub">{title || (user ? ('Hola, ' + user.nombre) : 'Compra grupal')}</div>
+            </div>
+          </div>
+          <nav className="web-links">
+            {links.map((l) => (
+              <button key={l.id} type="button" onClick={() => navigate(l.id)}>{l.label}</button>
+            ))}
+          </nav>
+          <div className="web-nav-actions">
+            {user
+              ? <button className="web-btn-ghost" type="button" onClick={() => navigate('perfil')}>👤 {user.nombre}</button>
+              : <button className="web-btn-ghost" type="button" onClick={() => navigate('login')}>Ingresar</button>}
+            <button className="web-cart" type="button" onClick={() => navigate('mis-grupos')} aria-label="Mis grupos">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></svg>
+              <span>{cart.length}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <main className={wide ? 'web-main web-main-wide' : 'web-main'}>{children}</main>
+      <footer className="web-footer">
+        <div>HUBADOR · compra grupal vecinal</div>
+        <div className="web-footer-links">
+          <button type="button" onClick={() => navigate('comparador')}>Comparador</button>
+          <button type="button" onClick={() => navigate('mapa')}>Mapa</button>
+          <a href="?mobile=1">Ver versión mobile</a>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function WebAuthCard({ title, children }) {
+  return (
+    <WebShell title={title}>
+      <div className="web-auth-wrap">
+        <div className="web-auth-card">{children}</div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebLogin() {
+  const navigate = React.useContext(NavContext);
+  const { login, showToast } = React.useContext(SelectionContext);
+  const [email, setEmail] = React.useState('');
+  const [pass, setPass] = React.useState('');
+  const submit = (e) => {
+    e.preventDefault();
+    login({ nombre: email.split('@')[0] || 'Vecino', email: email || 'hola@hubador.app', barrio: 'Palermo' });
+    showToast('Sesión iniciada');
+    navigate('home');
+  };
+  return (
+    <WebAuthCard title="Ingresar">
+      <h1>Ingresá a HUBADOR</h1>
+      <p>Comprá en grupo con tus vecinos.</p>
+      <form onSubmit={submit} className="web-form">
+        <label>Email<input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" /></label>
+        <label>Contraseña<input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="••••••••" /></label>
+        <button className="web-btn" type="submit">Entrar</button>
+      </form>
+      <p className="web-auth-switch">¿No tenés cuenta? <button type="button" onClick={() => navigate('signup')}>Registrate</button></p>
+    </WebAuthCard>
+  );
+}
+
+function WebSignup() {
+  const navigate = React.useContext(NavContext);
+  const { login, showToast } = React.useContext(SelectionContext);
+  const [nombre, setNombre] = React.useState('');
+  const [barrio, setBarrio] = React.useState('Palermo');
+  const [email, setEmail] = React.useState('');
+  const submit = (e) => {
+    e.preventDefault();
+    login({ nombre: nombre || 'Vecino', email: email || 'hola@hubador.app', barrio: barrio || 'Palermo' });
+    showToast('Cuenta creada');
+    navigate('home');
+  };
+  return (
+    <WebAuthCard title="Crear cuenta">
+      <h1>Creá tu cuenta</h1>
+      <p>Empezá a sumarte a grupos de tu barrio.</p>
+      <form onSubmit={submit} className="web-form">
+        <label>Nombre<input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="María" /></label>
+        <label>Barrio<input value={barrio} onChange={(e) => setBarrio(e.target.value)} placeholder="Palermo" /></label>
+        <label>Email<input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" /></label>
+        <button className="web-btn" type="submit">Crear cuenta</button>
+      </form>
+      <p className="web-auth-switch">¿Ya tenés cuenta? <button type="button" onClick={() => navigate('login')}>Ingresar</button></p>
+    </WebAuthCard>
+  );
+}
+
+function WebProductos() {
+  return <WebHome />;
+}
+function WebGrupoDetalle() {
+  const primary = 'oklch(0.55 0.15 165)';
+  const STEP = 4;
+  const [qty, setQty] = React.useState(STEP);
+  const navigate = React.useContext(NavContext);
+  const { selectedGroup, showToast, addToCart, user } = React.useContext(SelectionContext);
+  const g = selectedGroup || { product: 'Papa', location: 'Palermo', members: '9/12', progress: 75, closes: '2d', deadlineHrs: 35, price: '$1.364', old: '$2.099', unit: '/kg', disc: 35, img: 'img/papa.jpg?v=20260730b' };
+  const priceNum = parseInt((g.price || '$0').replace(/[^\d]/g, ''), 10) || 0;
+  const totalPrice = priceNum * qty;
+  const markupTotal = typeof markupOf === 'function' ? markupOf(totalPrice) : Math.round(totalPrice * 0.3);
+  const grandTotal = totalPrice + markupTotal;
+  const join = () => {
+    if (!user) { showToast('Iniciá sesión para sumarte al grupo'); setTimeout(() => navigate('login'), 700); return; }
+    addToCart({ name: g.product, price: g.price, unit: g.unit || '/kg', img: g.img, members: g.members, progress: g.progress, location: g.location }, qty);
+    showToast('Pedido enviado: ' + qty + ' de ' + g.product);
+    setTimeout(() => navigate('grupo-participantes'), 800);
+  };
+  const totalKg = g.totalKg || 50;
+  const pct = g.progress != null ? g.progress : 75;
+  const filledKg = Math.round(pct / 100 * totalKg);
+  const missingKg = Math.max(0, totalKg - filledKg);
+  return (
+    <WebShell title="Detalle del grupo" wide>
+      <div className="web-detail">
+        <button type="button" className="web-back" onClick={() => navigate('home')}>← Volver</button>
+        <div className="web-detail-grid">
+          <div className="web-detail-media">
+            <img src={g.img} alt={g.product} />
+            {g.disc != null && <span className="web-badge">↓ {g.disc}%</span>}
+          </div>
+          <div className="web-detail-body">
+            <div className="web-muted">Compra en conjunto · 📍 {g.location || 'CABA'}</div>
+            <h1>{g.product}</h1>
+            <div className="web-detail-prices">
+              <div><s>{g.old}{g.unit}</s><em>Coto</em></div>
+              <div><strong>{g.price}{g.unit}</strong><span>en grupo</span></div>
+            </div>
+            {g.deadlineHrs != null && typeof Countdown !== 'undefined' && <div className="web-countdown-wrap"><Countdown deadline={getDeadline(g.product, g.deadlineHrs)} card /></div>}
+            <div className="web-progress"><i style={{ width: pct + '%', background: primary }} /></div>
+            <div className="web-muted">Faltan {missingKg} kg · {filledKg}/{totalKg} kg</div>
+            <div className="web-qty">
+              <span>Cantidad ({g.unit === '/u' ? 'u' : 'kg'})</span>
+              <div>
+                <button type="button" onClick={() => setQty((q) => Math.max(STEP, q - STEP))}>−</button>
+                <b>{qty}</b>
+                <button type="button" onClick={() => setQty((q) => q + STEP)}>+</button>
+              </div>
+            </div>
+            <div className="web-breakdown">
+              <div><span>Valor de compra</span><span>{'$' + totalPrice.toLocaleString('es-AR')}</span></div>
+              <div><span>Servicio HUBADOR (30%)</span><span>{'+$' + markupTotal.toLocaleString('es-AR')}</span></div>
+              <div className="web-breakdown-total"><span>Total a pagar</span><strong>{'$' + grandTotal.toLocaleString('es-AR')}</strong></div>
+            </div>
+            <button type="button" className="web-btn" onClick={join}>Unirme al grupo</button>
+          </div>
+        </div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebMisGrupos() {
+  const navigate = React.useContext(NavContext);
+  const { user, cart, removeFromCart } = React.useContext(SelectionContext);
+  return (
+    <WebShell title="Mis grupos">
+      <div className="web-panel">
+        <h1>Mis grupos</h1>
+        {!user ? (
+          <div className="web-empty-panel">
+            <p>Ingresá para ver tus grupos en formación.</p>
+            <button type="button" className="web-btn" onClick={() => navigate('login')}>Ingresar</button>
+          </div>
+        ) : cart.length === 0 ? (
+          <div className="web-empty-panel">
+            <p>Todavía no te sumaste a ningún grupo.</p>
+            <button type="button" className="web-btn" onClick={() => navigate('home')}>Explorar productos</button>
+          </div>
+        ) : (
+          <div className="web-list">
+            {cart.map((g) => (
+              <article key={g.id} className="web-list-item">
+                <img src={g.img} alt={g.name} />
+                <div>
+                  <h3>{g.name}</h3>
+                  <p>{g.qty} {g.unit === '/u' ? 'u' : 'kg'} · {g.price} · {g.location}</p>
+                </div>
+                <button type="button" className="web-btn-ghost" onClick={() => removeFromCart(g.id)}>Quitar</button>
+              </article>
+            ))}
+          </div>
+        )}
+        <button type="button" className="web-linkish" onClick={() => navigate('historial')}>Ver historial →</button>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebPerfil() {
+  const navigate = React.useContext(NavContext);
+  const { user, logout, cart } = React.useContext(SelectionContext);
+  return (
+    <WebShell title="Perfil">
+      <div className="web-panel web-panel-narrow">
+        <h1>Perfil</h1>
+        {!user ? (
+          <div className="web-empty-panel">
+            <p>No hay sesión activa.</p>
+            <button type="button" className="web-btn" onClick={() => navigate('login')}>Ingresar</button>
+          </div>
+        ) : (
+          <>
+            <div className="web-profile-card">
+              <div className="web-avatar">{(user.nombre || 'V').slice(0,1).toUpperCase()}</div>
+              <div>
+                <h2>{user.nombre}</h2>
+                <p>{user.email}</p>
+                <p>📍 {user.barrio}</p>
+                <p>{cart.length} pedido(s) en formación</p>
+              </div>
+            </div>
+            <div className="web-list-links">
+              <button type="button" onClick={() => navigate('mis-grupos')}>Mis grupos</button>
+              <button type="button" onClick={() => navigate('historial')}>Historial</button>
+              <button type="button" onClick={() => navigate('comparador')}>Comparador de precios</button>
+            </div>
+            <button type="button" className="web-btn-danger" onClick={() => { logout(); navigate('login'); }}>Cerrar sesión</button>
+          </>
+        )}
+      </div>
+    </WebShell>
+  );
+}
+
+function WebHistorial() {
+  const navigate = React.useContext(NavContext);
+  const pedidos = [
+    { name: 'Tomate', qty: '2 kg', total: '$4.548', status: 'entregado', date: '15 abr', img: 'img/tomate.jpg?v=20260730b' },
+    { name: 'Banana', qty: '1 kg', total: '$1.755', status: 'pagado', date: '17 abr', img: 'img/banana.jpg?v=20260730b' },
+    { name: 'Zapallo anco', qty: '3 kg', total: '$3.507', status: 'pendiente', date: '18 abr', img: 'img/zapallo-ok-20260730c.jpg' },
+  ];
+  return (
+    <WebShell title="Historial">
+      <div className="web-panel">
+        <h1>Historial de pedidos</h1>
+        <div className="web-list">
+          {pedidos.map((p) => (
+            <article key={p.name + p.date} className="web-list-item" onClick={() => navigate('seguimiento')} style={{ cursor: 'pointer' }}>
+              <img src={p.img} alt={p.name} />
+              <div>
+                <h3>{p.name}</h3>
+                <p>{p.qty} · {p.total} · {p.date}</p>
+              </div>
+              <span className="web-status">{p.status}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebSeguimiento() {
+  return (
+    <WebShell title="Seguimiento" wide>
+      <div className="web-panel">
+        <h1>Seguimiento del pedido</h1>
+        <div className="web-port web-port-tall"><MobileSeguimiento /></div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebGrupoParticipantes() {
+  return (
+    <WebShell title="Grupo en vivo" wide>
+      <div className="web-panel">
+        <h1>Grupo en vivo</h1>
+        <div className="web-port web-port-tall"><MobileGrupoParticipantes /></div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebComparador() {
+  return (
+    <WebShell title="Comparador de precios" wide>
+      <div className="web-panel web-panel-flush">
+        <div className="web-comp-head">
+          <h1>Comparador de precios</h1>
+          <a className="web-btn-ghost" href="comparador-unificado.html" target="_blank" rel="noreferrer">Abrir en pestaña →</a>
+        </div>
+        <iframe className="web-iframe" title="Comparador" src="comparador-unificado.html" />
+      </div>
+    </WebShell>
+  );
+}
+
+function WebMapa() {
+  return (
+    <WebShell title="Mapa en vivo" wide>
+      <div className="web-panel web-panel-flush">
+        <h1 style={{ padding: '8px 4px 12px' }}>Mapa de grupos</h1>
+        <div className="web-port web-port-map"><MobileMapa /></div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebAdmin() {
+  const navigate = React.useContext(NavContext);
+  return (
+    <WebShell title="Admin" wide>
+      <div className="web-panel">
+        <h1>Dashboard admin</h1>
+        <div className="web-admin-grid">
+          <button type="button" className="web-admin-tile" onClick={() => navigate('admin-grupos')}>Grupos</button>
+          <button type="button" className="web-admin-tile" onClick={() => navigate('admin-productos')}>Productos</button>
+          <button type="button" className="web-admin-tile" onClick={() => navigate('mapa')}>Mapa</button>
+        </div>
+        <div className="web-port web-port-tall"><MobileAdmin /></div>
+      </div>
+    </WebShell>
+  );
+}
+
+function WebAdminGrupos() {
+  return (
+    <WebShell title="Admin grupos" wide>
+      <div className="web-panel"><h1>Grupos</h1><div className="web-port web-port-tall"><MobileAdminGrupos /></div></div>
+    </WebShell>
+  );
+}
+
+function WebAdminProductos() {
+  return (
+    <WebShell title="Admin productos" wide>
+      <div className="web-panel"><h1>Productos</h1><div className="web-port web-port-tall"><MobileAdminProductos /></div></div>
+    </WebShell>
+  );
+}
+
+const WEB_SCREEN_COMPONENTS = {
+  home: WebHome,
+  productos: WebProductos,
+  producto: WebGrupoDetalle,
+  pedidos: WebHistorial,
+  historial: WebHistorial,
+  'mis-grupos': WebMisGrupos,
+  comparador: WebComparador,
+  perfil: WebPerfil,
+  login: WebLogin,
+  signup: WebSignup,
+  admin: WebAdmin,
+  'admin-grupos': WebAdminGrupos,
+  'admin-productos': WebAdminProductos,
+  'grupo-detalle': WebGrupoDetalle,
+  'grupo-participantes': WebGrupoParticipantes,
+  seguimiento: WebSeguimiento,
+  mapa: WebMapa,
+};
 
 const SCREEN_COMPONENTS = {
   home: MobileHome,
@@ -2530,11 +3145,9 @@ function App() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [toast, setToast] = useState(null);
-  // Sesión de usuario
   const [user, setUser] = useState(() => {try {return JSON.parse(localStorage.getItem('conlatUser') || 'null');} catch (e) {return null;}});
   const login = (u) => {setUser(u);localStorage.setItem('conlatUser', JSON.stringify(u));};
   const logout = () => {setUser(null);localStorage.removeItem('conlatUser');localStorage.removeItem('conlatCart');setCart([]);};
-  // Carrito de pedidos en formación
   const [cart, setCart] = useState(() => {try {return JSON.parse(localStorage.getItem('conlatCart') || '[]');} catch (e) {return [];}});
   const persistCart = (next) => {setCart(next);localStorage.setItem('conlatCart', JSON.stringify(next));};
   const addToCart = (product, qty) => {
@@ -2577,13 +3190,34 @@ function App() {
       <span style={{ flex: 1 }}>{toast}</span>
     </div>;
 
-  // ── Modo app: pantalla completa, sin menú ni marco (agregá ?dev=1 a la URL para el navegador de pantallas) ──
+  const isDesktop = useIsDesktop();
+
+  // ── Público: WEB completa en escritorio · MOBILE intacto en celular ──
   if (APP_MODE) {
+    if (isDesktop) {
+      const WebComp = WEB_SCREEN_COMPONENTS[active] || WebHome;
+      return (
+        <NavContext.Provider value={setScreen}>
+          <SelectionContext.Provider value={{ selected, setSelected, selectedOrder, setSelectedOrder, selectedGroup, setSelectedGroup, showToast, user, login, logout, cart, addToCart, removeFromCart }}>
+            <div className="web-root">
+              <WebComp />
+              {toast && (
+                <div className="web-toast">
+                  <span>✓</span>{toast}
+                </div>
+              )}
+            </div>
+          </SelectionContext.Provider>
+        </NavContext.Provider>
+      );
+    }
     return (
-      <div className="app-fullscreen">
-        <div style={{ flex: 1, minHeight: 0, boxSizing: 'border-box', paddingTop: 'env(safe-area-inset-top, 0px)', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-          {appInner}
-          {toastEl}
+      <div className="app-shell app-shell-mobile">
+        <div className="app-fullscreen">
+          <div style={{ flex: 1, minHeight: 0, boxSizing: 'border-box', paddingTop: 'env(safe-area-inset-top, 0px)', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            {appInner}
+            {toastEl}
+          </div>
         </div>
       </div>);
   }
@@ -2592,13 +3226,11 @@ function App() {
     <div className="stage">
       <div className="top-bar">
         <div>
-          <div className="brand">Conlat <span>Mobile</span></div>
+          <div className="brand">HUBADOR <span>Mobile</span></div>
           <div className="sub">Vista previa en iPhone 15 Pro {user && <span style={{ marginLeft: 8, color: 'oklch(0.75 0.15 165)' }}>· 👤 {user.nombre} ({cart.length} en formación)</span>}</div>
         </div>
         {user && <button onClick={logout} style={{ marginLeft: 'auto', background: 'transparent', border: '1px solid #555', color: '#aaa', borderRadius: 6, padding: '6px 10px', fontSize: 11, fontFamily: 'inherit', cursor: 'pointer' }}>Cerrar sesión</button>}
       </div>
-
-      {/* Screen selector — agrupado por contexto */}
       <div className="screen-nav-groups">
         {[
         { key: 'auth', title: '🔐 Entrada', color: '#888' },
@@ -2617,8 +3249,6 @@ function App() {
           </div>
         )}
       </div>
-
-      {/* Device */}
       <div className="devices-row">
         <div className="device-wrap">
           <div className="device-label">{screen?.label}</div>
@@ -2631,11 +3261,11 @@ function App() {
         </div>
       </div>
     </div>);
-
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+
 <style>
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 @keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
@@ -2643,16 +3273,361 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 @keyframes dash { to { stroke-dashoffset: -18; } }
 @keyframes mpRing { 0%{transform:scale(0.55);opacity:0.55} 80%{transform:scale(1.6);opacity:0} 100%{transform:scale(1.6);opacity:0} }
 
-/* Modo app: pantalla completa, como una app nativa */
-body:has(.app-fullscreen){background:#0c0d12;}
-.app-fullscreen{
-  position:fixed; inset:0; margin:0 auto; max-width:480px;
-  display:flex; flex-direction:column; background:#fff; overflow:hidden;
-  box-shadow:0 0 60px rgba(0,0,0,.35);
+/* —— MOBILE app (celular): pantalla completa, sin cambios de flujo —— */
+html.app-mode, html.app-mode body { margin: 0; min-height: 100%; }
+.app-shell-mobile {
+  position: fixed; inset: 0; background: #fff;
+  display: flex; flex-direction: column;
 }
-@media (max-width:480px){
-  .app-fullscreen{ max-width:100%; box-shadow:none; }
+.app-shell-mobile .app-fullscreen {
+  flex: 1; min-height: 0; width: 100%; max-width: none; height: 100%;
+  display: flex; flex-direction: column; background: #f4f5f7; overflow: hidden;
 }
+/* En desktop, si entrás a una pantalla mobile (detalle, login…), mostrá el phone frame */
+.app-shell-desk-mobile {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: #0f1412;
+}
+.app-shell-desk-mobile .app-fullscreen {
+  width: 390px; height: min(844px, calc(100vh - 48px));
+  border-radius: 28px; overflow: hidden; background: #f4f5f7;
+  box-shadow: 0 25px 80px rgba(0,0,0,.45);
+  display: flex; flex-direction: column;
+}
+
+/* —— WEB escritorio —— */
+.web-page {
+  min-height: 100vh; background: #f7f8f5; color: #14201c;
+  font-family: Inter, system-ui, sans-serif;
+}
+.web-nav {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e6e8e3;
+}
+.web-nav-inner {
+  max-width: 1160px; margin: 0 auto; padding: 14px 28px;
+  display: flex; align-items: center; gap: 24px;
+}
+.web-brand { display: flex; align-items: center; gap: 10px; }
+.web-logo {
+  width: 36px; height: 36px; border-radius: 10px; background: oklch(0.55 0.15 165);
+  color: #fff; font-weight: 900; display: grid; place-items: center;
+}
+.web-brand-name { font-weight: 900; letter-spacing: -0.03em; font-size: 18px; line-height: 1; }
+.web-brand-sub { font-size: 11px; color: #6b736e; margin-top: 2px; }
+.web-links { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+.web-links button, .web-footer-links button, .web-footer-links a {
+  background: none; border: none; font: inherit; color: #3d4742; cursor: pointer;
+  padding: 8px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; text-decoration: none;
+}
+.web-links button:hover { background: #eef2ef; color: #0f766e; }
+.web-nav-actions { display: flex; align-items: center; gap: 10px; }
+.web-user { font-size: 13px; color: #55605b; font-weight: 600; }
+.web-btn {
+  background: oklch(0.55 0.15 165); color: #fff; border: none; border-radius: 999px;
+  padding: 11px 18px; font-weight: 700; font-size: 14px; font-family: inherit; cursor: pointer;
+}
+.web-btn-sm { width: 100%; padding: 9px 12px; font-size: 13px; margin-top: 8px; }
+.web-btn-ghost {
+  background: #fff; color: #14201c; border: 1px solid #d7ddd8; border-radius: 999px;
+  padding: 10px 16px; font-weight: 650; font-size: 13.5px; font-family: inherit; cursor: pointer;
+}
+.web-hero {
+  background:
+    radial-gradient(900px 420px at 10% 0%, rgba(13,148,136,.18), transparent 55%),
+    linear-gradient(180deg, #eef7f3 0%, #f7f8f5 70%);
+  border-bottom: 1px solid #e6e8e3;
+}
+.web-hero-inner {
+  max-width: 1160px; margin: 0 auto; padding: 56px 28px 48px;
+  display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center;
+}
+.web-pill {
+  display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; width: fit-content;
+  background: #fff7ed; color: #9a3412; border-radius: 999px;
+  padding: 6px 12px; font-size: 12.5px; font-weight: 700; margin-bottom: 16px;
+}
+.web-hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
+.web-hero-photo {
+  border-radius: 20px; overflow: hidden; border: 1px solid #e6e8e3;
+  box-shadow: 0 20px 50px rgba(20,32,28,.08); aspect-ratio: 4/3; background: #ddd;
+}
+.web-hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.web-pill-dark { background: #ecfdf5; color: #0f766e; }
+.web-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 1.6s infinite; }
+.web-hero h1 {
+  font-size: clamp(32px, 4vw, 46px); line-height: 1.08; letter-spacing: -0.035em;
+  font-weight: 900; margin: 0 0 14px; max-width: 16ch;
+}
+.web-hero h1 em { font-style: normal; color: oklch(0.48 0.12 165); }
+.web-hero p { font-size: 17px; color: #4b564f; line-height: 1.5; max-width: 42ch; margin: 0 0 22px; }
+.web-hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.web-stats { display: flex; gap: 28px; }
+.web-stats strong { display: block; font-size: 26px; font-weight: 900; color: oklch(0.48 0.12 165); }
+.web-stats span { font-size: 12px; color: #6b736e; font-weight: 600; }
+.web-hero-card {
+  background: #fff; border: 1px solid #e6e8e3; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(20,32,28,.08); display: grid; grid-template-columns: 1.1fr 1fr;
+}
+.web-hero-card img { width: 100%; height: 100%; object-fit: cover; min-height: 220px; }
+.web-hero-card > div { padding: 22px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.web-hero-card-title { font-weight: 800; font-size: 18px; }
+.web-hero-card-price { font-size: 28px; font-weight: 900; color: oklch(0.48 0.12 165); }
+.web-hero-card-price span { font-size: 14px; color: #6b736e; font-weight: 600; }
+.web-hero-card-price s { font-size: 15px; color: #9aa39c; margin-left: 6px; }
+.web-hero-card-meta { font-size: 13px; color: #6b736e; }
+.web-section { max-width: 1160px; margin: 0 auto; padding: 48px 28px; }
+.web-section-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 22px; }
+.web-section-head h2 { margin: 0; font-size: 28px; letter-spacing: -0.03em; font-weight: 900; }
+.web-section-head p { margin: 6px 0 0; color: #6b736e; }
+.web-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.web-card {
+  background: #fff; border: 1px solid #e6e8e3; border-radius: 16px; overflow: hidden;
+  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
+  display: flex; flex-direction: column;
+}
+.web-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(20,32,28,.08); }
+.web-card-img { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+.web-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.web-badge {
+  position: absolute; top: 10px; left: 10px; background: #16a34a; color: #fff;
+  border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 800;
+}
+.web-card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.web-card-body h3 { margin: 0; font-size: 15px; font-weight: 750; }
+.web-card-prices { display: flex; align-items: baseline; gap: 5px; }
+.web-card-prices strong { font-size: 20px; color: oklch(0.48 0.12 165); font-weight: 900; }
+.web-card-prices span { font-size: 12px; color: #6b736e; }
+.web-card-prices s { font-size: 13px; color: #a0a8a3; margin-left: 4px; }
+.web-progress { height: 5px; background: #eef1ee; border-radius: 999px; overflow: hidden; }
+.web-progress i { display: block; height: 100%; background: oklch(0.55 0.15 165); border-radius: 999px; }
+.web-card-meta { font-size: 12px; color: #6b736e; }
+.web-leader { padding-top: 8px; padding-bottom: 56px; }
+.web-leader-card {
+  background: linear-gradient(135deg, #07241d 0%, #0f3a2f 55%, #15533f 100%);
+  color: #fff; border-radius: 24px; padding: 36px 40px;
+}
+.web-leader-card h2 { margin: 12px 0 10px; font-size: 32px; letter-spacing: -0.03em; max-width: 18ch; }
+.web-leader-card h2 em { font-style: normal; color: #fde047; }
+.web-leader-card p { color: rgba(255,255,255,.72); max-width: 52ch; margin: 0 0 22px; line-height: 1.5; }
+.web-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 180px)); gap: 12px; margin-bottom: 22px; }
+.web-steps > div {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px; padding: 14px; position: relative;
+}
+.web-steps span {
+  position: absolute; top: -8px; left: 12px; width: 20px; height: 20px; border-radius: 50%;
+  background: #fde047; color: #1a0f00; font-size: 11px; font-weight: 900;
+  display: grid; place-items: center;
+}
+.web-steps b { display: block; margin-top: 6px; font-size: 14px; }
+.web-steps small { color: rgba(255,255,255,.55); font-size: 12px; }
+.web-footer {
+  border-top: 1px solid #e6e8e3; background: #fff;
+  max-width: 1160px; margin: 0 auto; padding: 22px 28px 40px;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  color: #6b736e; font-size: 13px; font-weight: 600;
+}
+.web-footer-links { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.web-page-market { background: #f4f5f7; }
+.web-search {
+  flex: 1; max-width: 420px; display: flex; align-items: center; gap: 8px;
+  background: #f0f1f3; border-radius: 999px; padding: 10px 14px;
+}
+.web-search input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font: inherit; font-size: 14px;
+}
+.web-search-clear { border: none; background: none; cursor: pointer; color: #888; font-size: 18px; line-height: 1; }
+.web-cart {
+  position: relative; width: 40px; height: 40px; border: none; background: #fff;
+  border-radius: 10px; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid #e8eaec;
+}
+.web-cart span {
+  position: absolute; top: 4px; right: 4px; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; background: oklch(0.55 0.15 165); color: #fff;
+  font-size: 10px; font-weight: 800; display: grid; place-items: center;
+}
+.web-banner {
+  position: relative; max-width: 1160px; margin: 18px auto 0; padding: 0 28px;
+  height: 220px; border-radius: 20px; overflow: hidden;
+}
+.web-banner img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.72); }
+.web-banner-copy {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 28px; color: #fff;
+}
+.web-banner-copy h1 { margin: 8px 0 6px; font-size: 36px; letter-spacing: -0.03em; font-weight: 900; }
+.web-banner-copy p { margin: 0; font-size: 16px; opacity: 0.92; }
+.web-banner-copy strong { color: #bbf7d0; }
+.web-toolbar { max-width: 1160px; margin: 0 auto; padding: 18px 28px 0; }
+.web-cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.web-cats button {
+  border: none; border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 13px;
+  font-weight: 600; cursor: pointer; background: #fff; color: #555; display: inline-flex; gap: 6px; align-items: center;
+  border: 1px solid #e8eaec;
+}
+.web-cats button.activo { background: oklch(0.55 0.15 165); color: #fff; border-color: transparent; }
+.web-sort-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: #888; font-weight: 600; margin-bottom: 4px;
+}
+.web-sort-row select {
+  border: 1px solid #e2e4e8; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; background: #fff;
+}
+.web-section-tight { padding-top: 14px; }
+.web-grid-products { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.web-prod-card {
+  background: #fff; border: 1px solid #e8eaec; border-radius: 14px; overflow: hidden;
+  cursor: pointer; display: flex; flex-direction: column;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.web-prod-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+.web-prod-img { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+.web-prod-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.web-prod-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.web-prod-body h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.web-prod-prices { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.web-price-now { display: flex; align-items: baseline; gap: 4px; }
+.web-price-now strong { font-size: 18px; color: oklch(0.48 0.12 165); font-weight: 900; }
+.web-price-now span { font-size: 12px; color: #888; }
+.web-price-coto { display: flex; flex-direction: column; line-height: 1; }
+.web-price-coto s { font-size: 14px; color: #e0524a; font-weight: 600; text-decoration-color: #e0524a; }
+.web-price-coto em { font-style: normal; font-size: 10px; color: #e0524a; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-top: 2px; }
+.web-countdown-wrap { margin: 2px 0; }
+.web-prod-meta { display: flex; justify-content: space-between; font-size: 11.5px; color: #888; }
+.web-empty { text-align: center; padding: 48px 20px; color: #888; display: grid; gap: 6px; justify-items: center; }
+.web-empty div { font-size: 36px; }
+@media (max-width: 1100px) { .web-grid-products { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .web-grid-products { grid-template-columns: repeat(2, 1fr); }
+  .web-banner { height: 180px; margin-top: 12px; padding: 0 16px; }
+  .web-toolbar, .web-section { padding-left: 16px; padding-right: 16px; }
+}
+
+@media (max-width: 1100px) {
+  .web-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .web-hero-inner { grid-template-columns: 1fr; }
+  .web-grid { grid-template-columns: repeat(2, 1fr); }
+  .web-links { display: none; }
+}
+
+/* —— WEB full site —— */
+.web-root { min-height: 100vh; position: relative; }
+.web-links { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+.web-links button {
+  background: none; border: none; font: inherit; font-size: 13.5px; font-weight: 600;
+  color: #445; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+}
+.web-links button:hover { background: #eef6f3; color: oklch(0.45 0.12 165); }
+.web-main { max-width: 1160px; margin: 0 auto; padding: 24px 28px 48px; }
+.web-main-wide { max-width: 1280px; }
+.web-auth-wrap { min-height: 70vh; display: grid; place-items: center; padding: 24px; }
+.web-auth-card {
+  width: min(420px, 100%); background: #fff; border: 1px solid #e6e8e3; border-radius: 18px;
+  padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+.web-auth-card h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -0.03em; }
+.web-auth-card > p { margin: 0 0 18px; color: #667; }
+.web-form { display: grid; gap: 12px; }
+.web-form label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; color: #444; }
+.web-form input {
+  border: 1px solid #dce0dc; border-radius: 10px; padding: 12px 12px; font: inherit; font-size: 14px;
+}
+.web-auth-switch { margin-top: 16px; font-size: 13.5px; color: #666; }
+.web-auth-switch button { background: none; border: none; color: oklch(0.48 0.12 165); font: inherit; font-weight: 700; cursor: pointer; }
+.web-panel h1 { margin: 0 0 16px; font-size: 28px; letter-spacing: -0.03em; }
+.web-panel-narrow { max-width: 640px; }
+.web-panel-flush { padding: 0; }
+.web-empty-panel { background: #fff; border: 1px solid #e6e8e3; border-radius: 14px; padding: 28px; display: grid; gap: 12px; justify-items: start; }
+.web-list { display: grid; gap: 10px; }
+.web-list-item {
+  display: flex; gap: 14px; align-items: center; background: #fff; border: 1px solid #e6e8e3;
+  border-radius: 14px; padding: 12px 14px;
+}
+.web-list-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; }
+.web-list-item h3 { margin: 0 0 4px; font-size: 16px; }
+.web-list-item p { margin: 0; color: #667; font-size: 13px; }
+.web-list-item > div { flex: 1; }
+.web-status { font-size: 12px; font-weight: 700; text-transform: uppercase; color: oklch(0.48 0.12 165); }
+.web-linkish { background: none; border: none; color: oklch(0.48 0.12 165); font: inherit; font-weight: 700; cursor: pointer; margin-top: 16px; padding: 0; }
+.web-profile-card {
+  display: flex; gap: 16px; align-items: center; background: #fff; border: 1px solid #e6e8e3;
+  border-radius: 16px; padding: 18px; margin-bottom: 14px;
+}
+.web-avatar {
+  width: 64px; height: 64px; border-radius: 50%; background: oklch(0.55 0.15 165); color: #fff;
+  display: grid; place-items: center; font-size: 28px; font-weight: 800;
+}
+.web-profile-card h2 { margin: 0 0 4px; }
+.web-profile-card p { margin: 0; color: #667; font-size: 13.5px; }
+.web-list-links { display: grid; gap: 8px; margin: 12px 0 18px; }
+.web-list-links button {
+  text-align: left; background: #fff; border: 1px solid #e6e8e3; border-radius: 12px;
+  padding: 14px 16px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.web-btn-danger {
+  width: 100%; background: #fff; color: #dc2626; border: 1px solid #fee2e2; border-radius: 10px;
+  padding: 12px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.web-detail .web-back { background: none; border: none; font: inherit; font-weight: 700; color: #445; cursor: pointer; margin-bottom: 14px; }
+.web-detail-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 28px; align-items: start; }
+.web-detail-media { position: relative; border-radius: 18px; overflow: hidden; background: #e8eaec; aspect-ratio: 4/3; }
+.web-detail-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.web-detail-body h1 { margin: 6px 0 14px; font-size: 34px; letter-spacing: -0.03em; }
+.web-muted { color: #667; font-size: 13.5px; }
+.web-detail-prices { display: flex; gap: 18px; align-items: flex-end; margin: 10px 0 14px; }
+.web-detail-prices s { color: #e0524a; font-size: 18px; }
+.web-detail-prices em { display: block; font-style: normal; font-size: 11px; color: #e0524a; font-weight: 800; }
+.web-detail-prices strong { font-size: 32px; color: oklch(0.48 0.12 165); }
+.web-detail-prices span { margin-left: 6px; color: #888; }
+.web-qty { display: flex; justify-content: space-between; align-items: center; background: #f4f5f7; border-radius: 12px; padding: 12px 14px; margin: 14px 0; }
+.web-qty > div { display: flex; align-items: center; gap: 12px; }
+.web-qty button { width: 34px; height: 34px; border-radius: 999px; border: 1px solid #ccc; background: #fff; font-size: 18px; cursor: pointer; }
+.web-qty button:last-child { background: oklch(0.55 0.15 165); color: #fff; border: none; }
+.web-breakdown { background: #fff; border: 1px solid #e8eaec; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; display: grid; gap: 6px; font-size: 13.5px; color: #555; }
+.web-breakdown > div { display: flex; justify-content: space-between; }
+.web-breakdown-total { font-size: 16px; color: #222; padding-top: 6px; border-top: 1px solid #eee; margin-top: 2px; }
+.web-iframe { width: 100%; height: calc(100vh - 220px); min-height: 640px; border: 1px solid #e6e8e3; border-radius: 14px; background: #fff; }
+.web-comp-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.web-comp-head h1 { margin: 0; }
+.web-port { background: #fff; border: 1px solid #e6e8e3; border-radius: 16px; overflow: hidden; }
+.web-port-tall { min-height: 640px; height: calc(100vh - 240px); }
+.web-port-map { min-height: 680px; height: calc(100vh - 220px); }
+.web-port-map > div, .web-port-tall > div { height: 100% !important; }
+.web-admin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.web-admin-tile {
+  background: #fff; border: 1px solid #e6e8e3; border-radius: 12px; padding: 16px; font: inherit;
+  font-weight: 700; cursor: pointer; text-align: left;
+}
+.web-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+  background: rgba(20,20,20,.94); color: #fff; border-radius: 12px; padding: 13px 16px;
+  font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 10px; z-index: 80;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+.web-toast span {
+  width: 22px; height: 22px; border-radius: 50%; background: oklch(0.65 0.2 145);
+  display: grid; place-items: center; font-weight: 800;
+}
+.web-progress { height: 8px; background: #e8eaec; border-radius: 999px; overflow: hidden; margin: 10px 0 6px; }
+.web-progress i { display: block; height: 100%; border-radius: 999px; }
+.web-badge {
+  position: absolute; top: 14px; left: 14px; background: oklch(0.65 0.2 145); color: #fff;
+  border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700;
+}
+@media (max-width: 900px) {
+  .web-detail-grid { grid-template-columns: 1fr; }
+  .web-admin-grid { grid-template-columns: 1fr; }
+}
+
 </style>
 </body>
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Propuesta para tu verdulería</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#f4f6f8; --card:#fff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --ok:#0d9488; --bad:#dc2626; --coto:#ea580c; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "DM Sans", system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; }
+    .wrap { max-width: 480px; margin: 0 auto; padding: 0 0 3rem; }
+
+    .hero { background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff; padding: 2rem 1.3rem 1.6rem; border-radius: 0 0 24px 24px; text-align: center; }
+    .hero .logo { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; opacity: 0.85; margin-bottom: 0.6rem; }
+    .hero h1 { font-size: 1.4rem; margin: 0 0 0.5rem; line-height: 1.3; }
+    .hero p { margin: 0; opacity: 0.9; font-size: 0.92rem; }
+
+    section { padding: 1.4rem 1.3rem 0; }
+    h2 { font-size: 1.05rem; margin: 0 0 0.9rem; }
+
+    .paso3 { display: flex; flex-direction: column; gap: 0.7rem; }
+    .paso3 .item { display: flex; gap: 0.9rem; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.85rem 1rem; }
+    .paso3 .emoji { font-size: 1.6rem; flex-shrink: 0; }
+    .paso3 .txt b { display: block; font-size: 0.92rem; }
+    .paso3 .txt span { font-size: 0.84rem; color: var(--muted); }
+
+    .ejemplo { background: var(--card); border: 2px solid var(--ok); border-radius: 16px; padding: 1.1rem 1.2rem; }
+    .ejemplo .linea { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; font-size: 0.92rem; }
+    .ejemplo .linea.total { border-top: 2px dashed var(--line); margin-top: 0.3rem; padding-top: 0.7rem; font-weight: 800; font-size: 1.05rem; }
+    .ejemplo .tag-vos { color: var(--ok); font-weight: 800; }
+    .ejemplo .sinvos { text-align: center; background: #fef2f2; color: var(--bad); border-radius: 10px; padding: 0.6rem; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+
+    .pedimos { background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px; padding: 1.1rem 1.2rem; }
+    .pedimos ul { margin: 0.6rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; }
+    .pedimos li { margin-bottom: 0.4rem; }
+    .pedimos .no { color: var(--bad); font-weight: 700; }
+
+    .cta { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: 1rem 1.3rem; margin-top: 1.5rem; }
+    .cta button { width: 100%; background: var(--ok); color: #fff; border: none; border-radius: 12px; padding: 1rem; font-size: 1rem; font-weight: 800; font-family: inherit; }
+    .cta p { text-align: center; font-size: 0.78rem; color: var(--muted); margin: 0.5rem 0 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="logo">HUBADOR</div>
+      <h1>Lo que hoy se te pudre, hoy se puede convertir en plata</h1>
+      <p>Sin costo para arrancar. Sin contrato. Sin cargar nada en ningún sistema complicado.</p>
+    </div>
+
+    <section>
+      <h2>Así de simple</h2>
+      <div class="paso3">
+        <div class="item">
+          <span class="emoji">📸</span>
+          <div class="txt"><b>1. Me decís qué te sobra hoy</b><span>Una foto y un precio por WhatsApp alcanza.</span></div>
+        </div>
+        <div class="item">
+          <span class="emoji">💻</span>
+          <div class="txt"><b>2. Yo lo publico y le pongo precio final</b><span>Vos me decís cuánto necesitás recuperar, yo armo el precio para el cliente.</span></div>
+        </div>
+        <div class="item">
+          <span class="emoji">🤝</span>
+          <div class="txt"><b>3. El cliente paga online y retira en tu local</b><span>Vos no hacés nada más — ni entregas, ni cobrás en el momento.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Un ejemplo con números reales</h2>
+      <div class="ejemplo">
+        <div class="sinvos">Sin esto, ese cajón que no vendiste hoy = $0</div>
+        <div class="linea"><span>Vos decís que necesitás recuperar</span><strong>$1.500</strong></div>
+        <div class="linea"><span class="tag-vos">Precio final al cliente</span><strong>$1.900</strong></div>
+        <div class="linea total"><span>Vos cobrás siempre</span><span style="color:var(--ok)">$1.500</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Lo único que te pido</h2>
+      <div class="pedimos">
+        <p style="margin:0;font-size:0.9rem">Dejame cargar <strong>3-4 productos</strong> con el precio que necesitás recuperar hoy. Nada más.</p>
+        <ul>
+          <li><span class="no">No</span> firmás nada.</li>
+          <li><span class="no">No</span> pagás nada para arrancar.</li>
+          <li><span class="no">No</span> te comprometés a nada — si no te sirve, lo bajamos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="cta">
+      <button>Sí, mandame el WhatsApp para arrancar</button>
+      <p>Esta semana ya te mando quién te escribe.</p>
+    </div>
+  </div>
+</body>
+</html>
