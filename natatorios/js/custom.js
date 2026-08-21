@@ -141,8 +141,7 @@ $(window).on('load', function () {
 		var gasReq = jQuery.ajax({
 			url: 'https://script.google.com/macros/s/AKfycbxSnT-yp2tGBZ85NohMjuZHs6TzJI-ag6PLFhn1BanUUyXN3dv2VQAlasJ4ZFesoo_u/exec',
 			method: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify(formData)
+			data: formData
 		});
 
 		// Sistema 2: Web3Forms → manda email (backup independiente)
