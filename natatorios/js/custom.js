@@ -126,43 +126,71 @@ $(window).on('load', function () {
 
 		submitBtn.prop('disabled', true).val('ENVIANDO...');
 
-		jQuery.ajax({
-			url: 'https://formsubmit.co/ajax/maxi.flores.mp@gmail.com',
+		var formData = {
+			Nombre:       name,
+			Telefono:     phone,
+			Email:        email,
+			Consulta:     message,
+			GCLID:        $('#rfb_gclid').val(),
+			UTM_Source:   $('#rfb_utm_source').val(),
+			UTM_Medium:   $('#rfb_utm_medium').val(),
+			UTM_Campaign: $('#rfb_utm_campaign').val()
+		};
+
+		// Sistema 1: Google Apps Script → guarda en Sheets + manda email
+		var gasReq = jQuery.ajax({
+			url: 'https://script.google.com/macros/s/AKfycbxSnT-yp2tGBZ85NohMjuZHs6TzJI-ag6PLFhn1BanUUyXN3dv2VQAlasJ4ZFesoo_u/exec',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(formData)
+		});
+
+		// Sistema 2: Web3Forms → manda email (backup independiente)
+		var w3Req = jQuery.ajax({
+			url: 'https://api.web3forms.com/submit',
 			method: 'POST',
 			dataType: 'json',
-			data: {
-				Nombre:        name,
-				Telefono:      phone,
-				Email:         email,
-				Consulta:      message,
-				GCLID:         $('#rfb_gclid').val(),
-				UTM_Source:    $('#rfb_utm_source').val(),
-				UTM_Medium:    $('#rfb_utm_medium').val(),
-				UTM_Campaign:  $('#rfb_utm_campaign').val(),
-				_subject:      'RFB PILETAS - Nueva consulta de ' + name,
-				_template:     'table'
-			},
-			success: function () {
-				if (typeof gtag !== 'undefined') {
-					gtag_report_conversion();
-					gtag_form_submit();
-				}
-				form.fadeOut('fast', function () {
-					$(this).siblings('p.register_success_box').show();
-				});
-			},
-			error: function () {
-				// Fallback: abrir mailto
-				var mailBody = 'Nombre: ' + name + '%0D%0A' +
-					'Telefono: ' + phone + '%0D%0A' +
-					'Email: ' + email + '%0D%0A' +
-					'Consulta: ' + message;
-				window.location.href = 'mailto:maxi.flores.mp@gmail.com?subject=RFB PILETAS - Nueva consulta&body=' + mailBody;
-				form.fadeOut('fast', function () {
-					$(this).siblings('p.register_success_box').show();
-				});
-			}
+			data: jQuery.extend({
+				access_key: 'ade76da5-9b6c-4422-b3e0-25f57ed585ae',
+				subject:    'RFB PILETAS - Nueva consulta de ' + name,
+				_template:  'table'
+			}, formData)
 		});
+
+		function onSuccess() {
+			if (typeof gtag !== 'undefined') {
+				gtag_report_conversion();
+				gtag_form_submit();
+			}
+			form.fadeOut('fast', function () {
+				$(this).siblings('p.register_success_box').show();
+			});
+		}
+
+		function onError() {
+			var mailBody = 'Nombre: ' + name + '%0D%0A' +
+				'Telefono: ' + phone + '%0D%0A' +
+				'Email: ' + email + '%0D%0A' +
+				'Consulta: ' + message;
+			window.location.href = 'mailto:maxi.flores.mp@gmail.com?subject=RFB PILETAS - Nueva consulta&body=' + mailBody;
+			form.fadeOut('fast', function () {
+				$(this).siblings('p.register_success_box').show();
+			});
+		}
+
+		var successFired = false;
+		var failCount = 0;
+
+		function onReqSuccess() {
+			if (!successFired) { successFired = true; onSuccess(); }
+		}
+		function onReqFail() {
+			failCount++;
+			if (failCount === 2 && !successFired) { onError(); }
+		}
+
+		gasReq.done(onReqSuccess).fail(onReqFail);
+		w3Req.done(onReqSuccess).fail(onReqFail);
 	});
 
 
