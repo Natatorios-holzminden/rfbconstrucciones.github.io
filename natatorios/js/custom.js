@@ -244,14 +244,16 @@ $('a.popup4').on('click', function(e) {
 		items: { src: '#video-popup', type: 'inline' },
 		callbacks: {
 			open: function() {
+				var iframe = document.querySelector('#video-popup iframe');
+				if (iframe && iframe.dataset.src) {
+					iframe.src = iframe.dataset.src;
+				}
 				gtag('event', 'video_play', { 'event_category': 'engagement', 'event_label': 'Mariana Fabbiani DDM' });
 			},
 			close: function() {
 				var iframe = document.querySelector('#video-popup iframe');
 				if (iframe) {
-					var src = iframe.src;
 					iframe.src = '';
-					iframe.src = src;
 				}
 			}
 		}
