@@ -65,7 +65,16 @@ $(window).on('load', function () {
 		var full_url = this.href;
 		var parts = full_url.split("#");
 		var trgt = parts[1];
+
+		// Links externos (WhatsApp, etc.) no tienen ancla interna: dejarlos navegar normal
+		if (!trgt) {
+			return true;
+		}
+
 		var target_offset = $("#" + trgt).offset();
+		if (!target_offset) {
+			return true;
+		}
 		var target_top = target_offset.top;
 
 		$('html,body').animate({ scrollTop: target_top - 70 }, 1000);
