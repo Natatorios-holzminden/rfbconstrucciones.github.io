@@ -80,17 +80,24 @@ function gtag_form_submit() {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com">
 
+    <!-- Prioridad para la imagen del hero (LCP) -->
+    <link rel="preload" as="image" href="images/bg10.jpg">
+
     <title>RFB Construcciones | Piletas de Hormigón Armado | 20 Años de Garantía</title>
-    
+
     <!-- Loading Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Loading Template CSS -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/pe-icon-7-stroke.css">
-    <link href="css/style-magnific-popup.css" rel="stylesheet">
 
+    <!-- CSS no crítico: se cargan sin bloquear el primer render -->
+    <link rel="preload" href="css/animate.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/style-magnific-popup.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link href="css/animate.css" rel="stylesheet">
+      <link href="css/style-magnific-popup.css" rel="stylesheet">
+    </noscript>
 
     <!-- Awsome Fonts -->
     <link rel="stylesheet" href="css/all.min.css">
@@ -225,7 +232,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Google Ads noscript fallback -->
     <noscript><img height="1" width="1" style="display:none" src="https://www.googleadservices.com/pagead/conversion/932575203/?label=b9_WCKv99sgZEOPv17wD&guid=ON&script=0"/></noscript>
 
-    <a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" class="whatsapp_float" onclick="gtag_whatsapp_click();">
+    <a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" class="whatsapp_float" onclick="gtag_whatsapp_click();" aria-label="Contactar por WhatsApp">
     <i class="fa-brands fa-whatsapp whatsapp-icon"></i>
 </a>
 
@@ -241,7 +248,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="container">
 
                     <!--begin logo -->
-                    <a class="navbar-brand logotipo"> <img src="images/logo.png" alt="Logo RFB"></a>
+                    <a class="navbar-brand logotipo"> <img src="images/logo.png" width="154" height="40" alt="Logo RFB"></a>
                     <!--end logo -->
 
                     <!--begin navbar-toggler -->
@@ -251,7 +258,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <!--end navbar-toggler -->
 
                     <!--begin whatsapp mobile navbar -->
-                    <a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" rel="noopener" class="navbar-wsp-mobile d-lg-none" onclick="gtag_whatsapp_click();" style="background-color: #25D366; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; flex-shrink: 0;">
+                    <a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" rel="noopener" class="navbar-wsp-mobile d-lg-none" onclick="gtag_whatsapp_click();" aria-label="Contactar por WhatsApp" style="background-color: #25D366; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; flex-shrink: 0;">
                         <i class="fab fa-whatsapp" style="font-size: 22px; line-height: 1;"></i>
                     </a>
                     <!--end whatsapp mobile navbar -->
@@ -317,7 +324,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-video-->
                         <div class="popup-gallery hero-gallery">
                             
-                            <a class="popup4 video-icon" href="#video-popup">
+                            <a class="popup4 video-icon" href="#video-popup" aria-label="Reproducir video con Mariana Fabbiani">
                                 <i class="fas fa-play"></i>
                             </a>
 
@@ -429,7 +436,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/1a.jpg">
-                                <img src="images/1a.jpg" class="width-100" loading="lazy" alt="Pileta de hormigón armado terminada con deck de madera">
+                                <img src="images/1a.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Pileta de hormigón armado terminada con deck de madera">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -440,7 +447,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/1b.jpg">
-                                <img src="images/1b.jpg" class="width-100" loading="lazy" alt="Construcción de natatorio residencial en Buenos Aires">
+                                <img src="images/1b.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Construcción de natatorio residencial en Buenos Aires">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -457,7 +464,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/1c.jpg">
-                                <img src="images/1c.jpg" class="width-100" loading="lazy" alt="Pileta de material con diseño personalizado">
+                                <img src="images/1c.jpg" class="width-100" loading="lazy" width="623" height="1060" alt="Pileta de material con diseño personalizado">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -474,7 +481,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/1d.jpg">
-                                <img src="images/1d.jpg" class="width-100" loading="lazy" alt="Pileta de hormigón armado para patio chico">
+                                <img src="images/1d.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Pileta de hormigón armado para patio chico">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -485,7 +492,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/1e.jpg">
-                                <img src="images/1e.jpg" class="width-100" loading="lazy" alt="Natatorio con iluminación y solarium">
+                                <img src="images/1e.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Natatorio con iluminación y solarium">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -609,7 +616,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                     <div class="margin-right-15">
 
-                        <img src="images/gallery3.jpg" class="width-100 image-shadow bottom-margins-images" loading="lazy" alt="Equipo de construcción de piletas RFB trabajando en obra">
+                        <img src="images/gallery3.jpg" class="width-100 image-shadow bottom-margins-images" loading="lazy" width="555" height="425" alt="Equipo de construcción de piletas RFB trabajando en obra">
 
                     </div>
                     
@@ -755,7 +762,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/2a.jpg">
-                                <img src="images/2a.jpg" class="width-100" loading="lazy" alt="Proceso de excavación para pileta de hormigón">
+                                <img src="images/2a.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Proceso de excavación para pileta de hormigón">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -766,7 +773,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/2b.jpg">
-                                <img src="images/2b.jpg" class="width-100" loading="lazy" alt="Estructura de hierro para pileta de material">
+                                <img src="images/2b.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Estructura de hierro para pileta de material">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -783,7 +790,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/2c.jpg">
-                                <img src="images/2c.jpg" class="width-100" loading="lazy" alt="Pileta de hormigón armado en zona norte Buenos Aires">
+                                <img src="images/2c.jpg" class="width-100" loading="lazy" width="623" height="1060" alt="Pileta de hormigón armado en zona norte Buenos Aires">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -800,7 +807,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/2d.jpg">
-                                <img src="images/2d.jpg" class="width-100" loading="lazy" alt="Pileta terminada con revestimiento y equipamiento">
+                                <img src="images/2d.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Pileta terminada con revestimiento y equipamiento">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -811,7 +818,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/2e.jpg">
-                                <img src="images/2e.jpg" class="width-100" loading="lazy" alt="Natatorio con cascada y diseño premium">
+                                <img src="images/2e.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Natatorio con cascada y diseño premium">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -902,7 +909,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/3a.jpg">
-                                <img src="images/3a.jpg" class="width-100" loading="lazy" alt="Paso 1 construcción pileta: excavación y preparación del terreno">
+                                <img src="images/3a.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Paso 1 construcción pileta: excavación y preparación del terreno">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -913,7 +920,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/3b.jpg">
-                                <img src="images/3b.jpg" class="width-100" loading="lazy" alt="Paso 2 construcción pileta: armado de estructura de hierro">
+                                <img src="images/3b.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Paso 2 construcción pileta: armado de estructura de hierro">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -930,7 +937,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/3c.jpg">
-                                <img src="images/3c.jpg" class="width-100" loading="lazy" alt="Paso 3 construcción pileta: hormigonado con norma CIRSOC">
+                                <img src="images/3c.jpg" class="width-100" loading="lazy" width="623" height="1060" alt="Paso 3 construcción pileta: hormigonado con norma CIRSOC">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -947,7 +954,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/3d.jpg">
-                                <img src="images/3d.jpg" class="width-100" loading="lazy" alt="Paso 4 construcción pileta: revestimiento y terminación">
+                                <img src="images/3d.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Paso 4 construcción pileta: revestimiento y terminación">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -958,7 +965,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <!--begin popup-gallery-->
                         <div class="popup-gallery popup-gallery-rounded portfolio-pic">
                             <a class="popup2" href="images/3e.jpg">
-                                <img src="images/3e.jpg" class="width-100" loading="lazy" alt="Pileta de hormigón armado terminada lista para usar">
+                                <img src="images/3e.jpg" class="width-100" loading="lazy" width="555" height="460" alt="Pileta de hormigón armado terminada lista para usar">
                                 <span class="eye-wrapper"><i class="fa fa-search-plus eye-icon" style="font-size: 38px;"></i></span>
                             </a>
                         </div>
@@ -1071,11 +1078,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                         <li>Seguinos:</li>
 
-                        <li><a href="https://www.instagram.com/natatorios_rfb/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="https://www.instagram.com/natatorios_rfb/" target="_blank" rel="noopener" aria-label="Seguinos en Instagram"><i class="fab fa-instagram"></i></a></li>
 
-                        <li><a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" rel="noopener" onclick="gtag_whatsapp_click();"><i class="fab fa-whatsapp"></i></a></li>
+                        <li><a href="https://wa.me/541154932199?text=Quiero%20construir%20una%20pileta" target="_blank" rel="noopener" onclick="gtag_whatsapp_click();" aria-label="Contactar por WhatsApp"><i class="fab fa-whatsapp"></i></a></li>
 
-                        <li><a href="https://www.youtube.com/clip/Ugkx3pz_RbIud-v3Pqy9JJmN5nxELlkEWHZv" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="https://www.youtube.com/clip/Ugkx3pz_RbIud-v3Pqy9JJmN5nxELlkEWHZv" target="_blank" rel="noopener" aria-label="Ver nuestro video en YouTube"><i class="fab fa-youtube"></i></a></li>
 
                     </ul>
                     <!--end footer_social -->
