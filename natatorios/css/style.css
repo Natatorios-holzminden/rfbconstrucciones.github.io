@@ -2033,6 +2033,12 @@ ul.benefits.white li i {
 		padding-left: 12px !important;
 	}
 
+	/* Al escribir (:focus) no debe volverse gris oscuro sobre el fondo oscuro */
+	#register-form input.register-input:focus {
+		color: #fff !important;
+		border-color: rgba(255, 255, 255, 0.9) !important;
+	}
+
 	/* Botón blanco con texto oscuro como Holzminden */
 	input.register-submit {
 		background: #fff !important;
